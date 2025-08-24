@@ -39,8 +39,18 @@ const Login = () => {
               <p>Used by 12k+ developers!</p>
             </div>
           </div>
+          <h1 className="text-3xl md:text-6xl md:pb-2 font-bold bg-gradient-to-r from-indigo-950 to-indigo-800 bg-clip-text text-transparent">
+            Stay Knected, We are making your life easier!
+          </h1>
+
+          <p className="text-xl md:text-3xl text-indigo-900 max-w-72 md:max-w-md">
+            Connect with people and make new friends on Knect.
+          </p>
         </div>
+        <span className="md:h-10"></span>
       </div>
+      {/* Right side: Login Form */}
+      <div className=" flex-1 flex items-center justify-center p-6 sm:p-10"></div>
     </div>
   );
 };
