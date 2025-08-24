@@ -14,12 +14,17 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       className={`w-60 xl:w-72 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-0 bottom-0 z-20 ${sideBarOpen ? "translate-x-0" : "max-sm:-translate-x-full"} transition-all duration-300 ease-in-out`}
     >
       <div className="w-full">
-        <img
+        {/* <img */}
+        {/*   onClick={() => navigate("/")} */}
+        {/*   src={assets.logo} */}
+        {/*   className="w-26 ml-7 my-2 cursor-pointer" */}
+        {/* /> */}
+        <h1
           onClick={() => navigate("/")}
-          src={assets.logo}
-          className="w-26 ml-7 my-2 cursor-pointer"
-        />
-        {/* <h1 className="w-26 ml-7 my-2">Knect</h1> */}
+          className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold"
+        >
+          Knect
+        </h1>
         <hr className="border-gray-300 mb-8" />
         <MenuItems setSideBarOpen={setSideBarOpen} />
         <Link
