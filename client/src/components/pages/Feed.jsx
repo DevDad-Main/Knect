@@ -3,6 +3,7 @@ import { assets, dummyPostsData } from "../../assets/assets";
 import Loading from "../Loading";
 import StoriesBar from "../StoriesBar";
 import PostCard from "../PostCard";
+import RecentMessages from "../RecentMessages";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
@@ -44,6 +45,7 @@ const Feed = () => {
           </p>
         </div>
         <h1>Recent Messages</h1>
+        <RecentMessages />
       </div>
     </div>
   ) : (
