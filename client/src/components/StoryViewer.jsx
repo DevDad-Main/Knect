@@ -1,9 +1,73 @@
 import { BadgeCheck, X } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const StoryViewer = ({ viewStory, setViewStory }) => {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    let timer, progressInterval;
+
+    //Media type is either text or image
+    if (viewStory && viewStory.media_type !== "video") {
+      setProgress(0);
+
+      const duration = 10000; // 10 seconds for text or image
+      const setTime = 100;
+      let elapsedTime = 0;
+
+      progressInterval = setInterval(() => {
+        elapsedTime += setTime;
+        setProgress((elapsedTime / duration) * 100);
+      }, setTime);
+
+      //Close story after the 10 seconds has finished
+      timer = setTimeout(() => {
+        setViewStory(null);
+      }, duration);
+    }
+    return () => {
+      clearTimeout(timer);
+      clearInterval(progressInterval);
+    };
+  }, [viewStory, setViewStory]);
+
   const handleCloseFunction = () => {
     setViewStory(null);
+  };
+
+  if (!viewStory) {
+    return null;
+  }
+  const renderContent = () => {
+    switch (viewStory.media_type) {
+      case "image":
+        return (
+          <img
+            src={viewStory.media_url}
+            alt=""
+            className="max-w-full max-h-scree object-contain"
+          />
+        );
+      case "video":
+        return (
+          <video
+            // Autoamtcally closes the story when we finish the video
+            onEnded={() => setViewStory(null)}
+            src={viewStory.media_url}
+            className="max-h-screen"
+            controls
+            autoPlay
+          />
+        );
+      case "text":
+        return (
+          <div className="w-full h-full flex items-center justify-center p-8 text-white text-2xl text-center">
+            {viewStory.content}
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
@@ -20,7 +84,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       <div className="absolute top-0 left-0 w-full h-1 bg-gray-700">
         <div
           className="h-full bg-white transition-all duration-100 linear"
-          style={{ width: "50" }}
+          style={{ width: `${progress}%` }}
         ></div>
       </div>
       {/* User Info - Top Left*/}
@@ -42,6 +106,10 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       >
         <X className="w-8 h-8 hover:scale-110 transition cursor-pointer" />
       </button>
+      {/* Content Wrapper */}
+      <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+        {renderContent()}
+      </div>
     </div>
   );
 };
