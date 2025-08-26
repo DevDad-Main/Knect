@@ -1,5 +1,6 @@
-import { PenBox, Verified } from "lucide-react";
+import { Calendar, MapPin, PenBox, Verified } from "lucide-react";
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 
 const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
   return (
@@ -30,7 +31,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
             {!profileId && (
               <button
                 onClick={() => setShowEdit(true)}
-                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0"
+                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"
               >
                 <PenBox className="w-4 h-4" />
                 Edit
@@ -38,6 +39,52 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
             )}
           </div>
           <p className="text-gray-700 text-sm max-w-md mt-4">{user.bio}</p>
+          {/* Location and Created At */}
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 mt-4">
+            <span className="flex items-center gap-1.5">
+              <MapPin className="w-4 h-4" />
+              {user.location ? user.location : "Add Location"}
+            </span>
+
+            <span className="flex items-center gap-1.5">
+              <Calendar className="w-4 h-4" />
+              Joined{" "}
+              <span className="font-medium">
+                {moment(user.createdAt).fromNow()}
+              </span>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-6 mt-6 border-t border-gray-200 pt-4">
+            {/* Posts */}
+            <div>
+              <span className="sm:text-xl font-bold text-gray-900">
+                {posts.length}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+                Posts
+              </span>
+            </div>
+
+            {/* Followers */}
+            <div>
+              <span className="sm:text-xl font-bold text-gray-900">
+                {user.followers.length}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+                Followers
+              </span>
+            </div>
+            {/* Following */}
+            <div>
+              <span className="sm:text-xl font-bold text-gray-900">
+                {user.following.length}
+              </span>
+              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+                Following
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
