@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { dummyUserData } from "../../assets/assets";
 import { Image, X } from "lucide-react";
+import toast from "react-hot-toast";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
@@ -8,6 +9,8 @@ const CreatePost = () => {
   const [loading, setLoading] = useState(false);
 
   const user = dummyUserData;
+
+  const handleSubmit = async () => {};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -74,7 +77,27 @@ const CreatePost = () => {
             >
               <Image className="size-6" />
             </label>
-            <input type="file" d="images" accept="image/*" hidden multiple onChange={(e) => setImages([[/>
+            <input
+              type="file"
+              id="images"
+              accept="image/*"
+              hidden
+              multiple
+              onChange={(e) => setImages([...images, ...e.target.files])}
+            />
+            <button
+              disabled={loading}
+              onClick={() =>
+                toast.promise(handleSubmit(), {
+                  loading: "Uploading...",
+                  success: <p>Post Added Successfully</p>,
+                  error: <p>Post Not Added!</p>,
+                })
+              }
+              className="text-sm bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:sacale-95 transition text-white font-medium px-8 py-2 rounded-md cursor-pointer"
+            >
+              Publish Post
+            </button>
           </div>
         </div>
       </div>
