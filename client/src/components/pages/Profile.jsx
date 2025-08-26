@@ -98,6 +98,8 @@ const Profile = () => {
           )}
         </div>
       </div>
+      {/* Edit Profile Modal */}
+      {showEdit && <p>show profile edit</p>}
     </div>
   ) : (
     <Loading />
