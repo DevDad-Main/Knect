@@ -15,7 +15,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
         </div>
 
         <div className="w-full pt-16 md:pt-0 md:pl-36">
-          <div className="flex flex-col md:flex-ro items-start justify-between">
+          <div className="flex flex-col md:flex-row items-start justify-between">
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900">
@@ -31,7 +31,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
             {!profileId && (
               <button
                 onClick={() => setShowEdit(true)}
-                className="flex items-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"
+                className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"
               >
                 <PenBox className="w-4 h-4" />
                 Edit
