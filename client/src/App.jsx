@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/pages/Login";
 import Feed from "./components/pages/Feed";
@@ -9,11 +9,25 @@ import Discover from "./components/pages/Discover";
 import Profile from "./components/pages/Profile";
 import CreatePost from "./components/pages/CreatePost";
 import Layout from "./components/pages/Layout";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
 
 export const App = () => {
   const { user } = useUser();
+  const { getToken } = useAuth();
+  // const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (user) {
+        const token = await getToken();
+        // dispatch(fetchUser(token));
+      }
+    };
+
+    fetchData();
+  }, [user, getToken]);
+
   return (
     <>
       <Toaster />

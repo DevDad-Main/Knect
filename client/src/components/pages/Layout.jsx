@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SideBar from "../SideBar";
 import { Outlet } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import { dummyUserData } from "../../assets/assets";
 import Loading from "../Loading";
+import { fetchData } from "../utils";
+import { useSelector } from "react-redux";
 
 const Layout = () => {
-  const user = dummyUserData;
+  const [user, setUserData] = useState(null);
+  // const user = useSelector((state) => state.user.value);
   const [sideBarOpen, setSideBarOpen] = React.useState(false);
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        setUserData(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return user ? (
     <div className="w-full flex h-screen">
       <SideBar sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} />

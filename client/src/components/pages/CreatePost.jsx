@@ -2,13 +2,32 @@ import React, { useState, useEffect } from "react";
 import { dummyUserData } from "../../assets/assets";
 import { Image, X } from "lucide-react";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { fetchData } from "../utils";
 
 const CreatePost = () => {
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
+  // const user = useSelector((state) => {
+  //   state.user.value;
+  // });
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        console.log("SideBar Data: ", data);
+        setUser(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const user = dummyUserData;
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const handleSubmit = async () => {};
 
@@ -29,12 +48,12 @@ const CreatePost = () => {
           <div className="flex items-center gap-3">
             <img
               className="w-12 h-12 rounded-full shadow"
-              src={user.profile_picture}
+              src={user?.profile_picture}
               alt=""
             />
             <div>
-              <h2 className="font-semibold">{user.full_name}</h2>
-              <p className="text-sm text-gray-500">@{user.username}</p>
+              <h2 className="font-semibold">{user?.full_name}</h2>
+              <p className="text-sm text-gray-500">@{user?.username}</p>
             </div>
           </div>
 

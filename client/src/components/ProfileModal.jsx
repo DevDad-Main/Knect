@@ -1,21 +1,57 @@
 import React, { useState, useEffect } from "react";
-import { dummyUserData } from "../assets/assets";
 import { Pencil } from "lucide-react";
+import { fetchData } from "./utils";
 
 const ProfileModal = ({ setShowEdit }) => {
-  const user = dummyUserData;
+  // const user = useSelector((state) => {
+  //   state.user.value;
+  // });
+
+  const [user, setUserData] = useState(null);
   const [editForm, setEditForm] = useState({
-    username: user.username,
-    bio: user.bio,
-    location: user.location,
+    username: "",
+    bio: "",
+    location: "",
     profile_picture: null,
     cover_photo: null,
-    full_name: user.full_name,
+    full_name: "",
   });
+
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        console.log(" ProfileModal:", data);
+        setUserData(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
   };
+
+  // fetch user once
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  // sync editForm when user is fetched
+  useEffect(() => {
+    if (user) {
+      setEditForm({
+        username: user.username || "",
+        bio: user.bio || "",
+        location: user.location || "",
+        profile_picture: user.profile_picture || null,
+        cover_photo: user.cover_photo || null,
+        full_name: user.full_name || "",
+      });
+    }
+  }, [user]);
+  // const user = useSelector((state) => state.user.value);
 
   return (
     <div className="fixed top-0 bottom-0 left-0 right-0 z-110 h-screen overflow-y-scroll bg-black/50">
@@ -47,11 +83,19 @@ const ProfileModal = ({ setShowEdit }) => {
                   }}
                 />
                 <div className="group/profile relative">
+                  {/* <img */}
+                  {/*   src={ */}
+                  {/*     editForm.profile_picture */}
+                  {/*       ? URL.createObjectURL(editForm.profile_picture) */}
+                  {/*       : user?.profile_picture */}
+                  {/*   } */}
+                  {/*   className="w-24 h-24 rounded-full object-cover" */}
+                  {/* /> */}
                   <img
                     src={
-                      editForm.profile_picture
+                      editForm.profile_picture instanceof File
                         ? URL.createObjectURL(editForm.profile_picture)
-                        : user.profile_picture
+                        : editForm.profile_picture || null
                     }
                     className="w-24 h-24 rounded-full object-cover"
                   />
@@ -85,9 +129,9 @@ const ProfileModal = ({ setShowEdit }) => {
                 <div className="group/cover relative">
                   <img
                     src={
-                      editForm.cover_photo
-                        ? URL.createObjectURL(editForm)
-                        : user.cover_photo
+                      editForm.cover_photo instanceof File
+                        ? URL.createObjectURL(editForm.cover_photo)
+                        : editForm.cover_photo || null
                     }
                     className="w-80 h-40 rounded-lg bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 object-cover mt-2"
                   />
@@ -105,7 +149,7 @@ const ProfileModal = ({ setShowEdit }) => {
               <input
                 type="text"
                 className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeHolder="Please enter your full name.."
+                placeholder="Please enter your full name.."
                 onChange={(e) =>
                   setEditForm({ ...editForm, full_name: e.target.value })
                 }
@@ -121,7 +165,7 @@ const ProfileModal = ({ setShowEdit }) => {
               <input
                 type="text"
                 className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeHolder="Please enter a username.."
+                placeholder="Please enter a username.."
                 onChange={(e) =>
                   setEditForm({ ...editForm, username: e.target.value })
                 }
@@ -137,7 +181,7 @@ const ProfileModal = ({ setShowEdit }) => {
               <textarea
                 rows={3}
                 className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeHolder="Please enter your bio here.."
+                placeholder="Please enter your bio here.."
                 onChange={(e) =>
                   setEditForm({ ...editForm, bio: e.target.value })
                 }
@@ -153,7 +197,7 @@ const ProfileModal = ({ setShowEdit }) => {
               <input
                 type="text"
                 className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeHolder="Please enter your location.."
+                placeholder="Please enter your location.."
                 onChange={(e) =>
                   setEditForm({ ...editForm, location: e.target.value })
                 }

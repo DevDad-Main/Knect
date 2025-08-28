@@ -1,14 +1,31 @@
-import React from "react";
-import { assets, dummyUserData } from "../assets/assets";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut } from "lucide-react";
 import { UserButton, useClerk } from "@clerk/clerk-react";
+import { fetchData } from "./utils";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const navigate = useNavigate();
-  const user = dummyUserData;
+
+  const [user, setUserData] = useState(null);
+  // const user = useSelector((state) => state.user.value);
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        setUserData(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
   const { signOut } = useClerk();
+
   return (
     <div
       className={`w-60 xl:w-72 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-0 bottom-0 z-20 ${sideBarOpen ? "translate-x-0" : "max-sm:-translate-x-full"} transition-all duration-300 ease-in-out`}
@@ -40,8 +57,8 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         <div className="flex gap-2 items-center curosr-pointer">
           <UserButton />
           <div>
-            <h1 className="text-sm font-medium">{user.full_name}</h1>
-            <p className="text-xs text-gray-500">@{user.username}</p>
+            <h1 className="text-sm font-medium">{user?.full_name}</h1>
+            <p className="text-xs text-gray-500">@{user?.username}</p>
           </div>
         </div>
         <LogOut
