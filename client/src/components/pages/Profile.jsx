@@ -132,7 +132,12 @@ const Profile = () => {
         </div>
       </div>
       {/* Edit Profile Modal */}
-      {showEdit && <ProfileModal setShowEdit={setShowEdit} />}
+      {showEdit && (
+        <ProfileModal
+          setShowEdit={setShowEdit}
+          onSaved={(updatedUser) => setUser(updatedUser)}
+        />
+      )}
     </div>
   ) : (
     <Loading />

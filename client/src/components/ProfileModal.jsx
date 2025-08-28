@@ -3,8 +3,10 @@ import { Pencil } from "lucide-react";
 import { fetchData, updateWithFormData } from "./utils";
 import toast from "react-hot-toast";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
-const ProfileModal = ({ setShowEdit }) => {
+const ProfileModal = ({ setShowEdit, onSaved }) => {
+  const navigate = useNavigate();
   const { getToken } = useAuth();
   const [user, setUserData] = useState({});
   const [editForm, setEditForm] = useState({
@@ -29,15 +31,23 @@ const ProfileModal = ({ setShowEdit }) => {
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
+    e.persist();
     const userData = new FormData();
 
     userData.append("username", editForm.username);
     userData.append("bio", editForm.bio);
     userData.append("location", editForm.location);
     userData.append("full_name", editForm.full_name);
-    editForm.profile_picture &&
+    // editForm.profile_picture &&
+    //   userData.append("profile", editForm.profile_picture);
+    // editForm.cover_photo && userData.append("cover", editForm.cover_photo);
+    // ✅ Only append if it’s a File, not a string URL
+    if (editForm.profile_picture instanceof File) {
       userData.append("profile", editForm.profile_picture);
-    editForm.cover_photo && userData.append("cover", editForm.cover_photo);
+    }
+    if (editForm.cover_photo instanceof File) {
+      userData.append("cover", editForm.cover_photo);
+    }
 
     try {
       const data = await updateWithFormData(
@@ -51,7 +61,9 @@ const ProfileModal = ({ setShowEdit }) => {
       );
 
       if (data) {
+        onSaved?.(data);
         setShowEdit(false);
+        // navigate("/");
       }
     } catch (error) {
       toast.error(error.message);
@@ -80,7 +92,7 @@ const ProfileModal = ({ setShowEdit }) => {
   // const user = useSelector((state) => state.user.value);
 
   return (
-    <div className="fixed top1 bottom-0 left-0 right-0 z-110 h-screen overflow-y-scroll bg-black/50">
+    <div className="fixed top-0 bottom-0 left-0 right-0 z-110 h-screen overflow-y-scroll bg-black/50">
       <div className="max-w-2xl sm:py-6 mx-auto">
         <div className="bg-white rounded-lg shadow p-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">
@@ -89,9 +101,10 @@ const ProfileModal = ({ setShowEdit }) => {
 
           <form
             className="space-y-4"
-            onSubmit={(e) =>
-              toast.promise(handleSaveProfile(e), { loading: "Saving..." })
-            }
+            onSubmit={(e) => {
+              e.preventDefault();
+              toast.promise(handleSaveProfile(e), { loading: "Saving..." });
+            }}
           >
             {/* Profile Picture */}
             <div className="flex flex-col items-start gap-3">
