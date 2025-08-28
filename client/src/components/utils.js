@@ -28,7 +28,7 @@ async function updateWithFormData(
       return null; // so frontend knows request failed
     }
   } catch (error) {
-    alert(error);
+    // alert(error);
     return null;
   }
 }
@@ -49,7 +49,8 @@ async function fetchData(path, header = {}) {
       return null;
     }
   } catch (error) {
-    toast.warn(`Please try again in a moment..`);
+    // toast.error(`Please try again in a moment..`);
+    toast.error(error.message);
   }
 }
 
@@ -79,7 +80,8 @@ async function updateData(path, content, methodType = "POST") {
       return null; // so frontend knows request failed
     }
   } catch (error) {
-    toast.warn(`Please try again in a moment..`);
+    // toast.error(`Please try again in a moment..`);
+    toast.error(error.message);
   }
 }
 

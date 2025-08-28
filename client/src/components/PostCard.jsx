@@ -5,6 +5,7 @@ import { dummyUserData } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { fetchData } from "./utils";
+import toast from "react-hot-toast";
 
 const PostCard = ({ post }) => {
   const postWithHashtag = post.content.replace(
@@ -24,7 +25,7 @@ const PostCard = ({ post }) => {
         setCurrentUser(data);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 

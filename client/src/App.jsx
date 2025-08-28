@@ -11,22 +11,25 @@ import CreatePost from "./components/pages/CreatePost";
 import Layout from "./components/pages/Layout";
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
+import Loading from "./components/Loading";
 
 export const App = () => {
-  const { user } = useUser();
+  const { isLoaded, user } = useUser();
   const { getToken } = useAuth();
-  // const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
       if (user) {
         const token = await getToken();
-        // dispatch(fetchUser(token));
       }
     };
 
     fetchData();
   }, [user, getToken]);
+
+  if (!isLoaded) {
+    return <Loading />;
+  }
 
   return (
     <>

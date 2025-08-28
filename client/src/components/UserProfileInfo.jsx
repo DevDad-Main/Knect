@@ -10,7 +10,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
           <img
             src={user.profile_picture}
             alt=""
-            className="absolute rounded-full z-2"
+            className=" w-32 h-32 rounded-full z-2 object-cover"
           />
         </div>
 

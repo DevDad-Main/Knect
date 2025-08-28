@@ -17,7 +17,6 @@ const CreatePost = () => {
     try {
       const data = await fetchData(`api/v1/user/user`);
       if (data) {
-        console.log("SideBar Data: ", data);
         setUser(data);
       }
     } catch (error) {

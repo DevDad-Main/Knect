@@ -7,6 +7,7 @@ import moment from "moment";
 import PostCard from "../PostCard";
 import ProfileModal from "../ProfileModal";
 import { fetchData, updateData } from "../utils";
+import toast from "react-hot-toast";
 
 const Profile = () => {
   const { profileId } = useParams();
@@ -43,13 +44,13 @@ const Profile = () => {
         setPosts(data.posts);
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
     if (profileId) {
-      fetchUser();
+      fetchUser(profileId);
     } else {
       fetchUser(currentUser?._id);
     }
