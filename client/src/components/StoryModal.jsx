@@ -1,8 +1,14 @@
 import { ArrowLeft, Sparkle, TextIcon, Upload } from "lucide-react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { updateWithFormData } from "./utils";
+import { useAuth } from "@clerk/clerk-react";
 
 const StoryModal = ({ setShowModal, fetchStories }) => {
+  const { getToken } = useAuth();
+  const MAX_VID_DUR = 60;
+  const MAX_VID_SIZE_MB = 50;
+
   const bgColours = [
     "#4f46e5",
     "#7c3aed",
@@ -20,12 +26,77 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
   const handleMediaUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      setMedia(file);
-      setPreviewUrl(URL.createObjectURL(file));
+      if (file.type.startsWith("video")) {
+        if (file.size > MAX_VID_SIZE_MB * 1024 * 1024) {
+          toast.error("Video File size should be less than 50MB");
+          setMedia(null);
+          setPreviewUrl(null);
+          return;
+        }
+        const video = document.createElement("video");
+        video.preload = "metadata";
+        video.onloadedmetadata = () => {
+          window.URL.revokeObjectURL(video.src);
+          if (video.duration > MAX_VID_DUR) {
+            toast.error("Video duration should be less than 1 minute");
+            setMedia(null);
+            setPreviewUrl(null);
+          } else {
+            setMedia(file);
+            setPreviewUrl(URL.createObjectURL(file));
+            setText("");
+            setMode("media");
+          }
+        };
+
+        video.src = URL.createObjectURL(file);
+      } else if (file.type.startsWith("image")) {
+        setMedia(file);
+        setPreviewUrl(URL.createObjectURL(file));
+        setText("");
+        setMode("media");
+      }
     }
   };
 
-  const handleCreateStory = async () => {};
+  const handleCreateStory = async () => {
+    const media_type =
+      mode === "media"
+        ? media.type.startsWith("image")
+          ? "image"
+          : "video"
+        : "text";
+
+    if (media_type === "text" && !text) {
+      toast.error("Please enter some text!");
+    }
+
+    let formData = new FormData();
+    formData.append("content", text);
+    formData.append("media_type", media_type);
+    formData.append("media", media);
+    formData.append("background_color", background);
+
+    try {
+      const data = await updateWithFormData(
+        "api/v1/story/add-story",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${await getToken()}`,
+          },
+        },
+      );
+
+      if (data) {
+        setShowModal(false);
+        toast.success("Story created successfully!");
+        fetchStories();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-110 min-h-screen bg-black/80 backdrop-blur text-white flex items-center justify-center p-4">
@@ -91,10 +162,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
             className={`flex-1 flex items-center justify-center gap-2 p-2 rounded cursor-pointer ${mode === "media" ? "bg-white text-black" : "bg-zinc-800"}`}
           >
             <input
-              onChange={(e) => {
-                handleMediaUpload(e);
-                setMode("media");
-              }}
+              onChange={handleMediaUpload}
               type="file"
               accept="image/*, video/*"
               className="hidden"
@@ -105,10 +173,8 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
         </div>
         <button
           onClick={() => {
-            toast.promise(handleCreateStory, {
+            toast.promise(handleCreateStory(), {
               loading: "Saving...",
-              success: <p>Story Added!</p>,
-              error: (e) => <p>{e.message}</p>,
             });
           }}
           className="flex items-center justify-center gap-2 text-white py-3 mt-4 w-full rounded bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition cursor-pointer"

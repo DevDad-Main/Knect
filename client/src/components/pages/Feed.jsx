@@ -4,13 +4,29 @@ import Loading from "../Loading";
 import StoriesBar from "../StoriesBar";
 import PostCard from "../PostCard";
 import RecentMessages from "../RecentMessages";
+import { useAuth } from "@clerk/clerk-react";
+import { fetchData } from "../utils";
+import toast from "react-hot-toast";
 
 const Feed = () => {
+  const { getToken } = useAuth();
+
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const fetchFeeds = async () => {
-    setFeeds(dummyPostsData);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = await fetchData("api/v1/post/feed");
+
+      if (data) {
+        setFeeds(data);
+        setLoading(false);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    // setFeeds(dummyPostsData);
   };
 
   useEffect(() => {

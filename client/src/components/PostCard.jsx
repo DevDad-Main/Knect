@@ -4,8 +4,9 @@ import React, { useState, useEffect } from "react";
 import { dummyUserData } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { fetchData } from "./utils";
+import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
+import { useAuth } from "@clerk/clerk-react";
 
 const PostCard = ({ post }) => {
   const postWithHashtag = post.content.replace(
@@ -13,6 +14,8 @@ const PostCard = ({ post }) => {
     '<span class="text-indigo-600">$1</span>',
   );
 
+  const navigate = useNavigate();
+  // const { getToken } = useAuth();
   const [currentUser, setCurrentUser] = useState(null);
   const [likes, setLikes] = useState(post.likes_count);
   // const currentUser = useSelector((state) => {
@@ -29,12 +32,29 @@ const PostCard = ({ post }) => {
     }
   };
 
+  const handleLike = async () => {
+    try {
+      const data = await updateData("api/v1/post/like", { postId: post._id });
+
+      if (data) {
+        // toast.success(data.message);
+        setLikes((prev) => {
+          if (prev.includes(currentUser._id)) {
+            return prev.filter((id) => id !== currentUser._id);
+          } else {
+            return [...prev, currentUser._id];
+          }
+        });
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
+    // handleLike();
   }, []);
-
-  const handleLike = async () => {};
-  const navigate = useNavigate();
 
   return (
     <div className="bg-white rounded-xl shadow p-4 space-y-4 w-full max-w-2xl">
@@ -45,7 +65,7 @@ const PostCard = ({ post }) => {
       >
         <img
           src={post.user?.profile_picture}
-          className="w-10 h-10 rounded-full shadow"
+          className="w-10 h-10 rounded-full shadow object-cover"
         />
         <div>
           <div className="flex items-center space-x-1">
