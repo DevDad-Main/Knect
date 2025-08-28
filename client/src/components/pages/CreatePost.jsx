@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { dummyUserData } from "../../assets/assets";
 import { Image, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { fetchData } from "../utils";
+import { fetchData, updateWithFormData } from "../utils";
+import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 const CreatePost = () => {
+  const navigate = useNavigate();
+  const { getToken } = useAuth();
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -28,7 +30,41 @@ const CreatePost = () => {
     fetchUser();
   }, []);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    if (!images.length && !content) {
+      toast.error("Please add at least one image or write something");
+    }
+
+    setLoading(true);
+    const postType =
+      images.length && content
+        ? "text_with_image"
+        : images.length
+          ? "image"
+          : "text";
+
+    try {
+      const formData = new FormData();
+      formData.append("content", content);
+      formData.append("post_type", postType);
+      images.map((image) => {
+        formData.append("images", image);
+      });
+
+      const data = await updateWithFormData("api/v1/post/add", formData, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
+      });
+
+      if (data) {
+        navigate("/");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
