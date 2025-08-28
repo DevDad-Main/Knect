@@ -6,23 +6,54 @@ import UserProfileInfo from "../UserProfileInfo";
 import moment from "moment";
 import PostCard from "../PostCard";
 import ProfileModal from "../ProfileModal";
+import { fetchData, updateData } from "../utils";
 
 const Profile = () => {
   const { profileId } = useParams();
+  const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [showEdit, setShowEdit] = useState(false);
 
-  const fetchUser = async () => {
-    setUser(dummyUserData);
-    setPosts(dummyPostsData);
+  // const fetchUser = async () => {
+  //   setUser(dummyUserData);
+  //   setPosts(dummyPostsData);
+  // };
+  const fetchLoggedInUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        setCurrentUser(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  // Whenever comp gets loaded we will fetch the users
   useEffect(() => {
-    fetchUser();
+    fetchLoggedInUser();
   }, []);
+
+  const fetchUser = async (profileId) => {
+    try {
+      const data = await updateData(`api/v1/user/profiles`, { profileId });
+      if (data) {
+        setUser(data.profile);
+        setPosts(data.posts);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (profileId) {
+      fetchUser();
+    } else {
+      fetchUser(currentUser?._id);
+    }
+  }, [profileId, currentUser]);
 
   return user ? (
     <div className="relatvie h-full overflow-y-scroll bg-gray-50 p-6">

@@ -21,7 +21,6 @@ const ProfileModal = ({ setShowEdit }) => {
     try {
       const data = await fetchData(`api/v1/user/user`);
       if (data) {
-        console.log(" ProfileModal:", data);
         setUserData(data);
       }
     } catch (error) {
