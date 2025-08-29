@@ -42,7 +42,6 @@ function Register() {
       );
 
       if (data) {
-        toast.success("User created successfully 🎉");
         navigate("/login");
       }
     } catch (err) {

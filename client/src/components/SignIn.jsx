@@ -33,8 +33,8 @@ function SignIn() {
       const data = await updateData("api/v1/user/login", { ...formData });
 
       if (data) {
+        console.log(data);
         sessionStorage.setItem("token", data?.accessToken);
-
         navigate("/");
       }
     } catch (err) {

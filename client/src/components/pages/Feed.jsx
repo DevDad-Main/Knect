@@ -9,8 +9,6 @@ import { fetchData } from "../utils";
 import toast from "react-hot-toast";
 
 const Feed = () => {
-  const { getToken } = useAuth();
-
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
 

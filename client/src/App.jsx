@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/pages/Login";
 import Feed from "./components/pages/Feed";
@@ -12,10 +12,13 @@ import Layout from "./components/pages/Layout";
 import { Toaster } from "react-hot-toast";
 import Loading from "./components/Loading";
 import Register from "./components/pages/Register";
+import { fetchData } from "./components/utils";
+import Protected from "./components/Protected";
 
 export const App = () => {
   const user = sessionStorage.getItem("token");
-  const isLoggedIn = !!user;
+  // const isLoggedIn = !!user;
+  const [currentUser, setCurrentUser] = useState(null);
 
   // if (!isLoggedIn) {
   //   return <Loading />;
@@ -30,8 +33,15 @@ export const App = () => {
         <Route path="/register" element={<Register />} />
 
         {/* Protected routes */}
-        <Route path="/" element={isLoggedIn ? <Layout /> : <Login />}>
-          <Route index element={<Feed />} />
+        <Route path="/" element={user ? <Layout /> : <Login />}>
+          <Route
+            index
+            element={
+              <Protected>
+                <Feed />{" "}
+              </Protected>
+            }
+          />
           <Route path="messages" element={<Messages />} />
           <Route path="messages/:userId" element={<ChatBox />} />
           <Route path="connections" element={<Connections />} />
