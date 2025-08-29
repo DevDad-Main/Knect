@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User } from "lucide-react";
-import { fetchData } from "./utils";
+import { fetchData, updateData } from "./utils";
+import toast from "react-hot-toast";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const navigate = useNavigate();
@@ -16,6 +17,19 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         setUserData(data);
       }
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const signoutUser = async () => {
+    try {
+      const data = await updateData("api/v1/user/logout");
+      if (data) {
+        navigate("/login");
+        console.log(data);
+      }
+    } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   };
@@ -61,7 +75,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
           </div>
         </div>
         <LogOut
-          onClick={() => console.log("Sign Out")}
+          onClick={signoutUser}
           className="w-4.5 text-gray-400 hover:text-gray-700 transition cursor-pointer"
         />
       </div>

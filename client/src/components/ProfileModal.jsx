@@ -51,6 +51,11 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
       const data = await updateWithFormData(
         "api/v1/user/update-user",
         userData,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        },
       );
 
       if (data) {
