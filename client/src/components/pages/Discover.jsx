@@ -11,12 +11,16 @@ const Discover = () => {
 
   const handleSearch = async (e) => {
     if (e.key === "Enter") {
-      setUsers([]);
-      setLoading(true);
-      setTimeout(() => {
-        setUsers(dummyConnectionsData);
-        setLoading(false);
-      }, 1000);
+      try {
+      } catch (error) {
+        toast.error(error.message);
+      }
+      // setUsers([]);
+      // setLoading(true);
+      // setTimeout(() => {
+      //   setUsers(dummyConnectionsData);
+      //   setLoading(false);
+      // }, 1000);
     }
   };
 

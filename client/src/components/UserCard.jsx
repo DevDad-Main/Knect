@@ -2,11 +2,25 @@ import React, { useState, useEffect } from "react";
 import { dummyUserData } from "../assets/assets";
 import { MapPin, MessageCircle, Plus, UserPlus } from "lucide-react";
 import { useSelector } from "react-redux";
-
+import { fetchData } from "./utils";
 const UserCard = ({ user }) => {
-  const currentUser = useSelector((state) => state.user.value);
+  // const currentUser = useSelector((state) => state.user.value);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  console.log("User Card: ", currentUser);
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        setCurrentUser(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
   const handleFollow = async () => {};
 
   const handleConnectionRequest = async () => {};
