@@ -2,10 +2,8 @@ import { ArrowLeft, Sparkle, TextIcon, Upload } from "lucide-react";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { updateWithFormData } from "./utils";
-import { useAuth } from "@clerk/clerk-react";
 
 const StoryModal = ({ setShowModal, fetchStories }) => {
-  const { getToken } = useAuth();
   const MAX_VID_DUR = 60;
   const MAX_VID_SIZE_MB = 50;
 
@@ -83,7 +81,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${await getToken()}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         },
       );

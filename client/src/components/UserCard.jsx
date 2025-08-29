@@ -5,26 +5,27 @@ import { useSelector } from "react-redux";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const UserCard = ({ user }) => {
   // const currentUser = useSelector((state) => state.user.value);
-  const [currentUser, setCurrentUser] = useState(null);
   const navigate = useNavigate();
+  const currentUser = useCurrentUser();
 
-  const fetchUser = async () => {
-    try {
-      const data = await fetchData(`api/v1/user/user`);
-      if (data) {
-        setCurrentUser(data);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const data = await fetchData(`api/v1/user/user`);
+  //     if (data) {
+  //       setCurrentUser(data);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    // fetchUser();
+  }, [currentUser]);
 
   const handleFollow = async () => {
     try {
@@ -54,13 +55,13 @@ const UserCard = ({ user }) => {
   return (
     <div
       key={user._id}
-      className="p-4 pt-6 flex flex-col justify-between w-72 shadow border border-gray-200 rounded-md"
+      className="p-4 pt-6 flex flex-col justify-between w-72 shadow-lg border border-gray-200 rounded-lg"
     >
       <div className="CSS">
         <img
           src={user.profile_picture}
           alt=""
-          className="rounded-full w-16 shadow-md mx-auto"
+          className="rounded-full w-16 h-16 shadow-md mx-auto object-cover"
         />
         <p className="mt-4 font-semibold">{user.full_name}</p>
         {user.username && (

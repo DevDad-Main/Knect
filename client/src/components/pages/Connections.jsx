@@ -27,10 +27,6 @@ const Connections = () => {
     }
   };
 
-  useEffect(() => {
-    fetchConnections();
-  }, []);
-
   const handleUnfollow = async (userId) => {
     try {
       const data = await updateData("api/v1/user/unfollow", { id: userId });
@@ -55,6 +51,10 @@ const Connections = () => {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
 
   const dataArray = [
     {
