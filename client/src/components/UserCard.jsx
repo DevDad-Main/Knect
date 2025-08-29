@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { dummyUserData } from "../assets/assets";
 import { MapPin, MessageCircle, Plus, UserPlus } from "lucide-react";
 import { useSelector } from "react-redux";
-import { fetchData } from "./utils";
+import { fetchData, updateData } from "./utils";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
 const UserCard = ({ user }) => {
   // const currentUser = useSelector((state) => state.user.value);
   const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   const fetchUser = async () => {
     try {
@@ -21,9 +25,32 @@ const UserCard = ({ user }) => {
   useEffect(() => {
     fetchUser();
   }, []);
-  const handleFollow = async () => {};
 
-  const handleConnectionRequest = async () => {};
+  const handleFollow = async () => {
+    try {
+      const data = await updateData("api/v1/user/follow", {
+        id: user._id,
+      });
+
+      if (data) {
+        toast.success(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleConnectionRequest = async () => {
+    if (currentUser.connections.includes(user._id)) {
+      return navigate(`/messages/${user._id}`);
+    }
+
+    try {
+      const data = await updateData(`api/v1/user/connect`, { id: user._id });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div
       key={user._id}
@@ -47,7 +74,7 @@ const UserCard = ({ user }) => {
       </div>
 
       <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-600">
-        <div className="flx items-center gap-1 border border-gray-300 rounded-full px-3 py-1">
+        <div className="flex items-center gap-1 border border-gray-300 rounded-full px-3 py-1">
           <MapPin className="w-4 h-4" />
           {user.location}
         </div>

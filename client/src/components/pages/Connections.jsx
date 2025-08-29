@@ -7,12 +7,6 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  dummyConnectionsData as connections,
-  dummyFollowersData as followers,
-  dummyFollowingData as following,
-  dummyPendingConnectionsData as pendingConnections,
-} from "../../assets/assets";
 import toast from "react-hot-toast";
 import { updateData, fetchData } from "../utils";
 
@@ -26,9 +20,7 @@ const Connections = () => {
       const data = await fetchData("api/v1/user/connections");
 
       if (data) {
-        console.log(data);
         setUser(data);
-        toast.success(data.message || "Connections fetched");
       }
     } catch (error) {
       toast.error(error.message);
@@ -44,7 +36,7 @@ const Connections = () => {
       const data = await updateData("api/v1/user/unfollow", { id: userId });
 
       if (data) {
-        toast.success(data.message);
+        fetchConnections();
       }
     } catch (error) {
       toast.error(error.message);
@@ -57,6 +49,7 @@ const Connections = () => {
 
       if (data) {
         toast.success(data.message);
+        fetchConnections();
       }
     } catch (error) {
       toast.error(error.message);
