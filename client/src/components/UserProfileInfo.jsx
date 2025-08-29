@@ -1,8 +1,11 @@
 import { Calendar, MapPin, PenBox, Verified } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
+  const currentUser = useCurrentUser();
+
   return (
     <div className="relative py-4 px-6 md:px-8 bg-white">
       <div className="flex flex-col md:flex-row items-start gap-6">
@@ -28,7 +31,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
               </p>
             </div>
             {/* If user is not on other profile that means he is opening jis profile so we give the edit butto */}
-            {!profileId && (
+            {profileId === currentUser?._id && (
               <button
                 onClick={() => setShowEdit(true)}
                 className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"

@@ -1,8 +1,21 @@
 import React from "react";
-import { menuItemsData } from "../assets/assets";
 import { NavLink } from "react-router-dom";
+import { Home, MessageCircle, Search, UserIcon, Users } from "lucide-react";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const MenuItems = ({ setSideBarOpen }) => {
+  const currentUser = useCurrentUser();
+  const menuItemsData = [
+    { to: "/", label: "Feed", Icon: Home },
+    { to: "/messages", label: "Messages", Icon: MessageCircle },
+    { to: "/connections", label: "Connections", Icon: Users },
+    { to: "/discover", label: "Discover", Icon: Search },
+    {
+      to: `/profile/${currentUser?._id || ""}`, // your profile
+      label: "Profile",
+      Icon: UserIcon,
+    },
+  ];
   return (
     <div className="px-6 text-gray-600 space-y-1 font-medium">
       {menuItemsData.map(({ to, label, Icon }) => (

@@ -37,7 +37,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         {/* /> */}
         <h1
           onClick={() => navigate("/")}
-          className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold"
+          className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer"
         >
           Knect
         </h1>

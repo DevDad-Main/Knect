@@ -32,13 +32,11 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    fetchLoggedInUser();
-  }, []);
-
-  const fetchUser = async (profileId) => {
+  // Fetch profile by ID
+  const fetchUser = async (id) => {
     try {
-      const data = await updateData(`api/v1/user/profiles`, { profileId });
+      if (!id) return; // safeguard
+      const data = await updateData(`api/v1/user/profiles/${id}`);
       if (data) {
         setUser(data.profile);
         setPosts(data.posts);
@@ -48,6 +46,9 @@ const Profile = () => {
     }
   };
 
+  useEffect(() => {
+    fetchLoggedInUser();
+  }, []);
   useEffect(() => {
     if (profileId) {
       fetchUser(profileId);

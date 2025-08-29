@@ -5,10 +5,8 @@ import StoryModal from "./StoryModal";
 import StoryViewer from "./StoryViewer";
 import { fetchData } from "./utils";
 import toast from "react-hot-toast";
-import { useAuth } from "@clerk/clerk-react";
 
 const StoriesBar = () => {
-  const { getToken, userId } = useAuth();
   const [stories, setStories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [viewStory, setViewStory] = useState(false);

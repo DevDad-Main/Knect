@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Pencil } from "lucide-react";
 import { fetchData, updateWithFormData } from "./utils";
 import toast from "react-hot-toast";
-import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 
 const ProfileModal = ({ setShowEdit, onSaved }) => {
   const navigate = useNavigate();
-  const { getToken } = useAuth();
   const [user, setUserData] = useState({});
   const [editForm, setEditForm] = useState({
     username: "",
@@ -53,11 +51,6 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
       const data = await updateWithFormData(
         "api/v1/user/update-user",
         userData,
-        {
-          headers: {
-            Authorization: `Bearer ${await getToken()}`,
-          },
-        },
       );
 
       if (data) {
