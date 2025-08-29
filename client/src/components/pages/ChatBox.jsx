@@ -1,15 +1,76 @@
 import React, { useState, useEffect, useRef } from "react";
-import { dummyMessagesData, dummyUserData } from "../../assets/assets";
 import { ImageIcon, SendHorizonalIcon, SendIcon } from "lucide-react";
+import { updateWithFormData, fetchData, updateData } from "../utils";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 
 const ChatBox = () => {
-  const messages = dummyMessagesData;
+  const { getToken } = useAuth();
+  const { userId } = useParams();
+  const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
-  const [user, setUser] = useState(dummyUserData);
+  const [user, setUser] = useState({});
   const messagesEndRef = useRef(null);
 
-  const sendMessage = async () => {};
+  const fetchUserMessages = async () => {
+    try {
+      const data = await updateData(`api/v1/message/get`, {
+        to_user_id: userId,
+      });
+      if (data) {
+        setMessages(data);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!text && !image) return;
+
+    const formData = new FormData();
+    formData.append("to_user_id", userId);
+    formData.append("text", text);
+    image && formData.append("image", image);
+
+    try {
+      const data = await updateWithFormData("api/v1/message/send", formData, {
+        headers: {
+          Authorization: `Bearer ${await getToken()}`,
+        },
+      });
+      if (data) {
+        setText("");
+        setImage(null);
+        fetchUserMessages();
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const data = await updateData(`api/v1/user/profiles`, {
+          profileId: userId,
+        });
+
+        if (data) {
+          setUser(data.profile);
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+
+    if (userId) {
+      fetchUser();
+      fetchUserMessages();
+    }
+  }, [userId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
