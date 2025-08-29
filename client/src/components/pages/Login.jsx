@@ -1,7 +1,7 @@
 import React from "react";
 import { assets } from "../../assets/assets";
 import { Star, Link } from "lucide-react";
-import { SignIn } from "@clerk/clerk-react";
+import SignIn from "../SignIn";
 
 const Login = () => {
   return (
@@ -54,7 +54,7 @@ const Login = () => {
         <span className="md:h-10"></span>
       </div>
       {/* Right side: Login Form */}
-      <div className=" flex-1 flex items-center justify-center p-6 sm:p-10">
+      <div className="flex-1  items-center justify-center p-1 sm:p-10">
         <SignIn />
       </div>
     </div>

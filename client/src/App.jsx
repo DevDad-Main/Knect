@@ -9,33 +9,28 @@ import Discover from "./components/pages/Discover";
 import Profile from "./components/pages/Profile";
 import CreatePost from "./components/pages/CreatePost";
 import Layout from "./components/pages/Layout";
-import { useAuth, useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
 import Loading from "./components/Loading";
+import Register from "./components/pages/Register";
 
 export const App = () => {
-  const { isLoaded, user } = useUser();
-  const { getToken } = useAuth();
+  const user = sessionStorage.getItem("token");
+  const isLoggedIn = !!user;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (user) {
-        const token = await getToken();
-      }
-    };
-
-    fetchData();
-  }, [user, getToken]);
-
-  if (!isLoaded) {
-    return <Loading />;
-  }
+  // if (!isLoggedIn) {
+  //   return <Loading />;
+  // }
 
   return (
     <>
       <Toaster />
       <Routes>
-        <Route path="/" element={!user ? <Login /> : <Layout />}>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Protected routes */}
+        <Route path="/" element={isLoggedIn ? <Layout /> : <Login />}>
           <Route index element={<Feed />} />
           <Route path="messages" element={<Messages />} />
           <Route path="messages/:userId" element={<ChatBox />} />
