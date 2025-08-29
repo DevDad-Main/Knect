@@ -1,29 +1,33 @@
-import React, { useState } from "react";
-import { dummyConnectionsData } from "../../assets/assets";
+import React, { useState, useEffect } from "react";
 import { Search, UserPlus } from "lucide-react";
 import UserCard from "../UserCard";
 import Loading from "../Loading";
+import { fetchData, updateData } from "../utils";
+import toast from "react-hot-toast";
 
 const Discover = () => {
   const [input, setInput] = useState("");
-  const [users, setUsers] = useState(dummyConnectionsData);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (e) => {
     if (e.key === "Enter") {
       try {
+        setUsers([]);
+        setLoading(true);
+        const data = await updateData("api/v1/user/discover", { input: input });
+
+        if (data) {
+          setUsers(data);
+          setLoading(false);
+          setInput("");
+        }
       } catch (error) {
         toast.error(error.message);
       }
-      // setUsers([]);
-      // setLoading(true);
-      // setTimeout(() => {
-      //   setUsers(dummyConnectionsData);
-      //   setLoading(false);
-      // }, 1000);
+      setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-6xl mx-auto p-6">
