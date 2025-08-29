@@ -83,7 +83,7 @@ const ChatBox = () => {
           <img
             src={user.profile_picture}
             alt=""
-            className="size-8 rounded-full"
+            className="size-8 rounded-full object-cover"
           />
           <div>
             <p className="font-medium">{user.full_name}</p>
@@ -112,6 +112,9 @@ const ChatBox = () => {
                       />
                     )}
                     <p>{message.text}</p>
+                    <div className="text-sm pt-1 text-slate-600">
+                      <p>{new Date(message.createdAt).toLocaleTimeString()}</p>
+                    </div>
                   </div>
                 </div>
               ))}
