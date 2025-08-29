@@ -4,6 +4,7 @@ import { updateWithFormData, fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
+import { io } from "socket.io-client";
 
 const ChatBox = () => {
   const { getToken } = useAuth();
@@ -12,7 +13,24 @@ const ChatBox = () => {
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const [user, setUser] = useState({});
+  const [currentUser, setCurrentUser] = useState(null);
   const messagesEndRef = useRef(null);
+  const socket = useRef(null);
+
+  const fetchUser = async () => {
+    try {
+      const data = await fetchData(`api/v1/user/user`);
+      if (data) {
+        setCurrentUser(data);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const fetchUserMessages = async () => {
     try {
@@ -31,25 +49,63 @@ const ChatBox = () => {
     if (!text && !image) return;
 
     const formData = new FormData();
+    formData.append("from_user_id", currentUser._id);
     formData.append("to_user_id", userId);
     formData.append("text", text);
-    image && formData.append("image", image);
+    if (image) formData.append("image", image);
 
     try {
-      const data = await updateWithFormData("api/v1/message/send", formData, {
-        headers: {
-          Authorization: `Bearer ${await getToken()}`,
-        },
-      });
+      const data = await updateWithFormData("api/v1/message/send", formData);
       if (data) {
         setText("");
         setImage(null);
-        fetchUserMessages();
+
+        // Emit real-time event after saving to DB
+        socket.current.emit("send_message", data);
+        setMessages((prev) => [...prev, data]);
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
+  useEffect(() => {
+    if (!currentUser?._id) return; // wait until currentUser is loaded
+
+    socket.current = io(import.meta.env.VITE_BASEURL, {
+      query: { userId: currentUser._id },
+    });
+
+    // Listen for incoming messages
+    socket.current.on("receive_message", (message) => {
+      setMessages((prev) => [...prev, message]);
+    });
+
+    return () => socket.current.disconnect();
+  }, [currentUser]);
+  // const sendMessage = async () => {
+  //   if (!text && !image) return;
+  //
+  //   const formData = new FormData();
+  //   formData.append("to_user_id", userId);
+  //   formData.append("text", text);
+  //   image && formData.append("image", image);
+  //
+  //   try {
+  //     const data = await updateWithFormData("api/v1/message/send", formData, {
+  //       headers: {
+  //         Authorization: `Bearer ${await getToken()}`,
+  //       },
+  //     });
+  //     if (data) {
+  //       setText("");
+  //       setImage(null);
+  //       fetchUserMessages();
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -87,7 +143,9 @@ const ChatBox = () => {
           />
           <div>
             <p className="font-medium">{user.full_name}</p>
-            <p className="text-sm text-gra-500 -mt-1.5">@{user.username}</p>
+            <p className="text-sm text-gra-500 -mt-1.5">
+              @{user.username}
+            </p>{" "}
           </div>
         </div>
 
