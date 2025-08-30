@@ -81,7 +81,11 @@ const ChatBox = () => {
     const token = Cookies.get("accessToken");
     if (!token) return;
 
-    socket.current = io(import.meta.env.VITE_BASEURL);
+    socket.current = io(import.meta.env.VITE_BASEURL, {
+      auth: { token },
+      transports: ["websocket"],
+      withCredentials: true,
+    });
 
     socket.current.on("connect", () => setSocketReady(true));
 
