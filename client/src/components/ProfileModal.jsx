@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pencil } from "lucide-react";
+import { Pencil, UserIcon } from "lucide-react";
 import { fetchData, updateWithFormData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -133,14 +133,18 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                   {/*   } */}
                   {/*   className="w-24 h-24 rounded-full object-cover" */}
                   {/* /> */}
-                  <img
-                    src={
-                      editForm.profile_picture instanceof File
-                        ? URL.createObjectURL(editForm.profile_picture)
-                        : editForm.profile_picture || null
-                    }
-                    className="w-24 h-24 rounded-full object-cover"
-                  />
+                  {user?.profile_picture ? (
+                    <img
+                      src={
+                        editForm.profile_picture instanceof File
+                          ? URL.createObjectURL(editForm.profile_picture)
+                          : editForm.profile_picture || null
+                      }
+                      className="w-24 h-24 rounded-full object-cover"
+                    />
+                  ) : (
+                    <UserIcon className="w-24 h-24 rounded-full object-cover" />
+                  )}
 
                   <div className="absolute hidden group-hover/profile:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-full items-center justify-center">
                     <Pencil className="w-5 h-5 text-white" />

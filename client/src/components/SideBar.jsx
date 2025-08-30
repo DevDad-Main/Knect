@@ -75,7 +75,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
               className="w-10 h-10 object-cover rounded-full "
             />
           ) : (
-            <UserIcon />
+            <UserIcon onClick={() => navigate(`/profile/${user?._id}`)} />
           )}
           <div>
             <h1 className="text-sm font-medium">{user?.full_name}</h1>
