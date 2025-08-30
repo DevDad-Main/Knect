@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { updateData } from "./utils";
 import toast from "react-hot-toast";
 
-function SignIn() {
+function SignIn({ setUser }) {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -33,8 +33,8 @@ function SignIn() {
       const data = await updateData("api/v1/user/login", { ...formData });
 
       if (data) {
-        console.log(data);
         sessionStorage.setItem("token", data?.accessToken);
+        setUser(data.user);
         navigate("/");
       }
     } catch (err) {
