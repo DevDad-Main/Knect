@@ -26,7 +26,6 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       const data = await updateData("api/v1/user/logout");
       if (data) {
         navigate("/login");
-        console.log(data);
       }
     } catch (error) {
       toast.error(error.message);

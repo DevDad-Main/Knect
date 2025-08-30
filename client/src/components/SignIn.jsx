@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 function SignIn() {
   const navigate = useNavigate();
 
+  // after successful login:
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -33,10 +34,17 @@ function SignIn() {
       const data = await updateData("api/v1/user/login", { ...formData });
 
       if (data) {
-        sessionStorage.setItem("token", data?.accessToken);
+        sessionStorage.setItem("token", data.accessToken);
 
-        navigate("/");
+        // Redirect
+        navigate("/feed"); // go to feed immediately
       }
+
+      // if (data) {
+      //   sessionStorage.setItem("token", data?.accessToken);
+      //   setUser(data); // updates <App> instantly
+      //   navigate("/feed");
+      // }
     } catch (err) {
       if (err.errors) {
         err.errors.forEach((error) => {

@@ -7,9 +7,9 @@ import { fetchData } from "../utils";
 import { useSelector } from "react-redux";
 
 const Layout = () => {
+  const [sideBarOpen, setSideBarOpen] = React.useState(false);
   const [user, setUserData] = useState(null);
   // const user = useSelector((state) => state.user.value);
-  const [sideBarOpen, setSideBarOpen] = React.useState(false);
   const fetchUser = async () => {
     try {
       const data = await fetchData(`api/v1/user/user`);
@@ -24,6 +24,7 @@ const Layout = () => {
   useEffect(() => {
     fetchUser();
   }, []);
+
   return user ? (
     <div className="w-full flex h-screen">
       <SideBar sideBarOpen={sideBarOpen} setSideBarOpen={setSideBarOpen} />
