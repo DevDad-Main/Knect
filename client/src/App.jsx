@@ -17,7 +17,7 @@ import Protected from "./components/Protected";
 
 export const App = () => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
   // useEffect(() => {
   //   const checkUser = async () => {
   //     try {
@@ -32,7 +32,9 @@ export const App = () => {
   //   checkUser();
   // }, []);
 
-  if (loading) return <Loading />; // or a spinner
+  useEffect(() => {}, [user]);
+
+  // if (loading) return <Loading />; // or a spinner
   // // inside App
   // const userToken = getCookie("accessToken");
   // const user = sessionStorage.getItem("token");
