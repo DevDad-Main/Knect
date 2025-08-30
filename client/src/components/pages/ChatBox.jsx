@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 
 const ChatBox = () => {
   const token = Cookies.get("token");
+  const [socketReady, setSocketReady] = useState(false);
   const { userId } = useParams();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -47,7 +48,9 @@ const ChatBox = () => {
   };
 
   const sendMessage = async () => {
-    if (!text && !image) return;
+    if (!text && !image) return toast.error("You can't send an empty message");
+
+    if (!socketReady) return toast.error("Socket not connected yet");
 
     const formData = new FormData();
     // formData.append("from_user_id", currentUser._id);
@@ -75,45 +78,22 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
-    if (!currentUser?._id) return; // wait until currentUser is loaded
-
-    const token = Cookies.get("accessToken"); // ✅ must be access token
+    const token = Cookies.get("accessToken");
     if (!token) return;
+
     socket.current = io(import.meta.env.VITE_BASEURL, {
       query: { token },
       withCredentials: true,
     });
 
-    // Listen for incoming messages
+    socket.current.on("connect", () => setSocketReady(true));
+
     socket.current.on("receive_message", (message) => {
       setMessages((prev) => [...prev, message]);
     });
 
     return () => socket.current.disconnect();
-  }, [currentUser]);
-  // const sendMessage = async () => {
-  //   if (!text && !image) return;
-  //
-  //   const formData = new FormData();
-  //   formData.append("to_user_id", userId);
-  //   formData.append("text", text);
-  //   image && formData.append("image", image);
-  //
-  //   try {
-  //     const data = await updateWithFormData("api/v1/message/send", formData, {
-  //       headers: {
-  //         Authorization: `Bearer ${await getToken()}`,
-  //       },
-  //     });
-  //     if (data) {
-  //       setText("");
-  //       setImage(null);
-  //       fetchUserMessages();
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
+  }, []);
 
   useEffect(() => {
     const fetchUser = async (id) => {
