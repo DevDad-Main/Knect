@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import { Star, Link } from "lucide-react";
 import SignIn from "../SignIn";
 
-const Login = ({ setUser }) => {
+const Login = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       {/* Background image */}
@@ -55,7 +55,7 @@ const Login = ({ setUser }) => {
       </div>
       {/* Right side: Login Form */}
       <div className="flex-1  items-center justify-center p-1 sm:p-10">
-        <SignIn setUser={setUser} />
+        <SignIn />
       </div>
     </div>
   );

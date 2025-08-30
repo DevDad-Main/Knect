@@ -17,24 +17,22 @@ import Protected from "./components/Protected";
 
 export const App = () => {
   const [user, setUser] = useState(null);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   const checkUser = async () => {
-  //     try {
-  //       const data = await fetchData("api/v1/user/user"); // endpoint returns current user if JWT is valid
-  //       setUser(data);
-  //     } catch (err) {
-  //       setUser(null);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   checkUser();
-  // }, []);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const data = await fetchData("api/v1/user/user"); // endpoint returns current user if JWT is valid
+        setUser(data);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkUser();
+  }, []);
 
-  useEffect(() => {}, [user]);
-
-  // if (loading) return <Loading />; // or a spinner
+  if (loading) return <Loading />; // or a spinner
   // // inside App
   // const userToken = getCookie("accessToken");
   // const user = sessionStorage.getItem("token");
@@ -46,14 +44,11 @@ export const App = () => {
       <Toaster />
       <Routes>
         {/* Public routes */}
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
         {/* Protected routes */}
-        <Route
-          path="/"
-          element={user ? <Layout /> : <Login setUser={setUser} />}
-        >
+        <Route path="/" element={user ? <Layout /> : <Login />}>
           <Route
             index
             element={
