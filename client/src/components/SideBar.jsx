@@ -49,7 +49,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         {/*   className="w-26 ml-7 my-2 cursor-pointer" */}
         {/* /> */}
         <h1
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/feed")}
           className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer"
         >
           Knect
@@ -66,8 +66,13 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       </div>
 
       <div className="w-full border-t border-gray-200 p-4 px-7 flex items-center justify-between">
-        <div className="flex gap-2 items-center curosr-pointer">
-          <User />
+        <div className="flex gap-2 items-center cursor-pointer">
+          {/* <User /> */}
+          <img
+            onClick={() => navigate(`/profile/${user?._id}`)}
+            src={user?.profile_picture}
+            className="w-10 h-10 object-cover rounded-full "
+          />
           <div>
             <h1 className="text-sm font-medium">{user?.full_name}</h1>
             <p className="text-xs text-gray-500">@{user?.username}</p>

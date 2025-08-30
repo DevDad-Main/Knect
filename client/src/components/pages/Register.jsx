@@ -39,6 +39,11 @@ function Register() {
       const data = await updateWithFormData(
         "api/v1/user/register",
         formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        },
       );
 
       if (data) {
@@ -66,7 +71,11 @@ function Register() {
         </h2>
 
         <form
-          onSubmit={onSubmit}
+          onSubmit={() => {
+            toast.promise(onSubmit, {
+              loading: "Registering...",
+            });
+          }}
           className="space-y-4"
           encType="multipart/form-data"
         >
