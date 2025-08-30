@@ -61,6 +61,7 @@ async function updateData(path, content, methodType = "POST") {
       body: JSON.stringify(content),
       headers: {
         "content-type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
       },
       credentials: "include",
     });
