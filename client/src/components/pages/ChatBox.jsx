@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { ImageIcon, SendHorizonalIcon, SendIcon } from "lucide-react";
 import { updateWithFormData, fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import Cookies from "js-cookie";
 
 const ChatBox = () => {
+  const navigate = useNavigate();
   const token = Cookies.get("token");
   const [socketReady, setSocketReady] = useState(false);
   const { userId } = useParams();
@@ -125,9 +126,10 @@ const ChatBox = () => {
       <div className="flex flex-col h-screen">
         <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-300">
           <img
+            onClick={() => navigate(`/profile/${user._id}`)}
             src={user.profile_picture}
             alt=""
-            className="size-8 rounded-full object-cover"
+            className="size-8 rounded-full object-cover cursor-pointer"
           />
           <div>
             <p className="font-medium">{user.full_name}</p>
@@ -199,7 +201,11 @@ const ChatBox = () => {
               />
             </label>
             <button
-              onClick={sendMessage}
+              onClick={() => {
+                toast.promise(sendMessage, {
+                  loading: "Sending message...",
+                });
+              }}
               className="bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 active:scale-95 cursor-pointer text-white p-2 rounded-full"
             >
               <SendHorizonalIcon size={18} className="ml-0.5" />

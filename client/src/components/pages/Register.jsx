@@ -29,21 +29,28 @@ function Register() {
     e.preventDefault();
 
     const formDataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key]) {
-        formDataToSend.append(key, formData[key]);
-      }
-    });
+    // Object.keys(formData).forEach((key) => {
+    //   if (formData[key]) {
+    //     formDataToSend.append(key, formData[key]);
+    //   }
+    // });
+    formDataToSend.append("firstName", formData.firstName);
+    formDataToSend.append("lastName", formData.lastName);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("password", formData.password);
+
+    if (formData.profile_picture) {
+      formDataToSend.append("profile_picture", formData.profile_picture);
+    }
+    if (formData.cover_photo) {
+      formDataToSend.append("cover_photo", formData.cover_photo);
+    }
 
     try {
       const data = await updateWithFormData(
         "api/v1/user/register",
         formDataToSend,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        },
       );
 
       if (data) {
@@ -71,13 +78,15 @@ function Register() {
         </h2>
 
         <form
-          onSubmit={() => {
-            toast.promise(onSubmit, {
+          onSubmit={(e) => {
+            toast.promise(onSubmit(e), {
               loading: "Registering...",
+              error: "Failed to register",
             });
           }}
           className="space-y-4"
           encType="multipart/form-data"
+          method="POST"
         >
           {/* Name fields side by side */}
           <div className="grid grid-cols-2 gap-4">

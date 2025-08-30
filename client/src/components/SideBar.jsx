@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
-import { CirclePlus, LogOut, User } from "lucide-react";
+import { CirclePlus, LogOut, User, UserIcon } from "lucide-react";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
 
@@ -68,11 +68,15 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       <div className="w-full border-t border-gray-200 p-4 px-7 flex items-center justify-between">
         <div className="flex gap-2 items-center cursor-pointer">
           {/* <User /> */}
-          <img
-            onClick={() => navigate(`/profile/${user?._id}`)}
-            src={user?.profile_picture}
-            className="w-10 h-10 object-cover rounded-full "
-          />
+          {user?.profile_picture ? (
+            <img
+              onClick={() => navigate(`/profile/${user?._id}`)}
+              src={user?.profile_picture}
+              className="w-10 h-10 object-cover rounded-full "
+            />
+          ) : (
+            <UserIcon />
+          )}
           <div>
             <h1 className="text-sm font-medium">{user?.full_name}</h1>
             <p className="text-xs text-gray-500">@{user?.username}</p>
