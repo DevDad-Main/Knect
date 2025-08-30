@@ -82,7 +82,7 @@ const ChatBox = () => {
     if (!token) return;
 
     socket.current = io(import.meta.env.VITE_BASEURL, {
-      query: { token },
+      query: { token: sessionStorage.getItem("token") },
       withCredentials: true,
     });
 
