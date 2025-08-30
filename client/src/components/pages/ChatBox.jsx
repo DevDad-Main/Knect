@@ -78,7 +78,8 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
-    const token = Cookies.get("accessToken");
+    // const token = Cookies.get("accessToken");
+    const token = sessionStorage.getItem("token");
     if (!token) return;
 
     socket.current = io(import.meta.env.VITE_BASEURL, {
