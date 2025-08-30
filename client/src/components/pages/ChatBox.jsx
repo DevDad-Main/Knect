@@ -3,34 +3,35 @@ import { ImageIcon, SendHorizonalIcon, SendIcon } from "lucide-react";
 import { updateWithFormData, fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
 import { io } from "socket.io-client";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import Cookies from "js-cookie";
 
 const ChatBox = () => {
-  const { getToken } = useAuth();
+  const token = Cookies.get("token");
   const { userId } = useParams();
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const [user, setUser] = useState({});
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const messagesEndRef = useRef(null);
   const socket = useRef(null);
 
-  const fetchUser = async () => {
-    try {
-      const data = await fetchData(`api/v1/user/user`);
-      if (data) {
-        setCurrentUser(data);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const data = await fetchData(`api/v1/user/user`);
+  //     if (data) {
+  //       setCurrentUser(data);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   useEffect(() => {
-    fetchUser();
-  }, []);
+    // fetchUser();
+  }, [currentUser]);
 
   const fetchUserMessages = async () => {
     try {
@@ -49,13 +50,17 @@ const ChatBox = () => {
     if (!text && !image) return;
 
     const formData = new FormData();
-    formData.append("from_user_id", currentUser._id);
+    // formData.append("from_user_id", currentUser._id);
     formData.append("to_user_id", userId);
     formData.append("text", text);
     if (image) formData.append("image", image);
 
     try {
-      const data = await updateWithFormData("api/v1/message/send", formData);
+      const data = await updateWithFormData("api/v1/message/send", formData, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      });
       if (data) {
         setText("");
         setImage(null);
@@ -72,8 +77,11 @@ const ChatBox = () => {
   useEffect(() => {
     if (!currentUser?._id) return; // wait until currentUser is loaded
 
+    const token = Cookies.get("accessToken"); // ✅ must be access token
+    if (!token) return;
     socket.current = io(import.meta.env.VITE_BASEURL, {
-      query: { userId: currentUser._id },
+      query: { token },
+      withCredentials: true,
     });
 
     // Listen for incoming messages
@@ -108,11 +116,9 @@ const ChatBox = () => {
   // };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = async (id) => {
       try {
-        const data = await updateData(`api/v1/user/profiles`, {
-          profileId: userId,
-        });
+        const data = await updateData(`api/v1/user/profiles/${id}`);
 
         if (data) {
           setUser(data.profile);
@@ -123,7 +129,7 @@ const ChatBox = () => {
     };
 
     if (userId) {
-      fetchUser();
+      fetchUser(userId);
       fetchUserMessages();
     }
   }, [userId]);

@@ -16,14 +16,29 @@ import { fetchData } from "./components/utils";
 import Protected from "./components/Protected";
 
 export const App = () => {
-  const user = sessionStorage.getItem("token");
-  // const isLoggedIn = !!user;
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const data = await fetchData("api/v1/user/user"); // endpoint returns current user if JWT is valid
+        setUser(data);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkUser();
+  }, []);
 
-  // if (!isLoggedIn) {
-  //   return <Loading />;
-  // }
-
+  if (loading) return <Loading />; // or a spinner
+  // // inside App
+  // const userToken = getCookie("accessToken");
+  // const user = sessionStorage.getItem("token");
+  // // const isLoggedIn = !!user;
+  // const [currentUser, setCurrentUser] = useState(null);
+  //
   return (
     <>
       <Toaster />

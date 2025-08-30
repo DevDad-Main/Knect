@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
 import { useAuth } from "@clerk/clerk-react";
+import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const PostCard = ({ post }) => {
   const postWithHashtag = post.content.replace(
@@ -16,21 +17,21 @@ const PostCard = ({ post }) => {
 
   const navigate = useNavigate();
   // const { getToken } = useAuth();
-  const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [likes, setLikes] = useState(post.likes_count);
   // const currentUser = useSelector((state) => {
   // state.user.value; });
 
-  const fetchUser = async () => {
-    try {
-      const data = await fetchData(`api/v1/user/user`);
-      if (data) {
-        setCurrentUser(data);
-      }
-    } catch (error) {
-      toast.error(error.message);
-    }
-  };
+  // const fetchUser = async () => {
+  //   try {
+  //     const data = await fetchData(`api/v1/user/user`);
+  //     if (data) {
+  //       setCurrentUser(data);
+  //     }
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // };
 
   const handleLike = async () => {
     try {
@@ -52,9 +53,9 @@ const PostCard = ({ post }) => {
   };
 
   useEffect(() => {
-    fetchUser();
+    // fetchUser();
     // handleLike();
-  }, []);
+  }, [currentUser]);
 
   return (
     <div className="bg-white rounded-xl shadow p-4 space-y-4 w-full max-w-2xl">
