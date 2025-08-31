@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ImageIcon, SendHorizonalIcon, SendIcon } from "lucide-react";
+import { ImageIcon, SendHorizonalIcon, SendIcon, UserIcon } from "lucide-react";
 import { updateWithFormData, fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
@@ -37,9 +37,8 @@ const ChatBox = () => {
 
   const fetchUserMessages = async () => {
     try {
-      const data = await updateData(`api/v1/message/get`, {
-        to_user_id: userId,
-      });
+      const to_user_id = userId;
+      const data = await fetchData(`api/v1/message/get/${to_user_id}`);
       if (data) {
         setMessages(data);
       }
@@ -125,12 +124,19 @@ const ChatBox = () => {
     user && (
       <div className="flex flex-col h-screen">
         <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-300">
-          <img
-            onClick={() => navigate(`/profile/${user._id}`)}
-            src={user.profile_picture}
-            alt=""
-            className="size-8 rounded-full object-cover cursor-pointer"
-          />
+          {user?.profile_picture ? (
+            <img
+              onClick={() => navigate(`/profile/${user._id}`)}
+              src={user.profile_picture}
+              alt=""
+              className="size-8 rounded-full object-cover cursor-pointer"
+            />
+          ) : (
+            <UserIcon
+              onClick={() => navigate(`/profile/${user._id}`)}
+              className="size-8 rounded-full object-cover cursor-pointer"
+            />
+          )}
           <div>
             <p className="font-medium">{user.full_name}</p>
             <p className="text-sm text-gra-500 -mt-1.5">

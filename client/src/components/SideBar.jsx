@@ -4,6 +4,7 @@ import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User, UserIcon } from "lucide-react";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
+import RecentMessages from "./RecentMessages";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const navigate = useNavigate();
@@ -56,6 +57,9 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         </h1>
         <hr className="border-gray-300 mb-8" />
         <MenuItems setSideBarOpen={setSideBarOpen} />
+        <div className="m-3 lg:hidden">
+          <RecentMessages />
+        </div>
         <Link
           to="/create-post"
           className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 active:scale-95 transition text-white cursor-pointer"
