@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User, UserIcon } from "lucide-react";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
 import RecentMessages from "./RecentMessages";
+import NotificationBell from "./NotificationBell";
+import { io } from "socket.io-client";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
+  const [notifications, setNotifications] = useState([]);
+  const socket = useRef(null);
+
+  useEffect(() => {
+    socket.current = io(import.meta.env.VITE_BASEURL, {
+      auth: { token: sessionStorage.getItem("token") },
+      transports: ["websocket"],
+      withCredentials: true,
+    });
+
+    socket.current.on("notification", (notification) => {
+      setNotifications((prev) => [notification, ...prev]);
+
+      // Optional: live toast
+      toast.success(`${notification.from.full_name} sent you a message`);
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
   const navigate = useNavigate();
 
   const [user, setUserData] = useState(null);
@@ -49,17 +72,25 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         {/*   src={assets.logo} */}
         {/*   className="w-26 ml-7 my-2 cursor-pointer" */}
         {/* /> */}
-        <h1
-          onClick={() => navigate("/feed")}
-          className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer"
-        >
-          Knect
-        </h1>
+        <div className="flex mt-2">
+          <h1
+            onClick={() => navigate("/feed")}
+            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex flex-1"
+          >
+            Knect
+          </h1>
+          <NotificationBell
+            className="flex justify-end"
+            notifications={notifications}
+            setNotifications={setNotifications}
+            setIsOpen={sideBarOpen}
+          />
+        </div>
         <hr className="border-gray-300 mb-8" />
         <MenuItems setSideBarOpen={setSideBarOpen} />
-        <div className="m-3 lg:hidden">
-          <RecentMessages />
-        </div>
+        {/* <div className="m-3 lg:hidden"> */}
+        {/*   <RecentMessages /> */}
+        {/* </div> */}
         <Link
           to="/create-post"
           className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 active:scale-95 transition text-white cursor-pointer"
