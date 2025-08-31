@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { dummyUserData } from "../assets/assets";
-import { MapPin, MessageCircle, Plus, UserPlus } from "lucide-react";
-import { useSelector } from "react-redux";
-import { fetchData, updateData } from "./utils";
+import {
+  Link,
+  MapPin,
+  MessageCircle,
+  Plus,
+  UserIcon,
+  UserPlus,
+} from "lucide-react";
+import { updateData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const UserCard = ({ user }) => {
-  // const currentUser = useSelector((state) => state.user.value);
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
+  const [isFollowing, setIsFollowing] = useState(
+    currentUser?.following.includes(user._id),
+  );
 
   // const fetchUser = async () => {
   //   try {
@@ -34,7 +41,8 @@ const UserCard = ({ user }) => {
       });
 
       if (data) {
-        toast.success(data.message);
+        // toast.success(data.message);
+        setIsFollowing(true);
       }
     } catch (error) {
       toast.error(error.message);
@@ -58,11 +66,15 @@ const UserCard = ({ user }) => {
       className="p-4 pt-6 flex flex-col justify-between w-72 shadow-lg border border-gray-200 rounded-lg"
     >
       <div className="CSS">
-        <img
-          src={user.profile_picture}
-          alt=""
-          className="rounded-full w-16 h-16 shadow-md mx-auto object-cover"
-        />
+        {user?.profile_picture ? (
+          <img
+            src={user.profile_picture}
+            alt=""
+            className="rounded-full w-24 h-24 shadow-md mx-auto object-cover"
+          />
+        ) : (
+          <UserIcon className="rounded-full w-24 h-24 shadow-md mx-auto object-cover" />
+        )}
         <p className="mt-4 font-semibold">{user.full_name}</p>
         {user.username && (
           <p className="text-gray-500 font-light">@{user.username}</p>
@@ -93,7 +105,7 @@ const UserCard = ({ user }) => {
           className="w-full py-2 rounded-md flex justify-center items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition text-white cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
-          {currentUser?.following.includes(user._id) ? "Following" : "Follow"}
+          {isFollowing ? "Following" : "Follow"}
         </button>
         {/* Connection Request Button / Message Button */}
         <button
@@ -103,7 +115,7 @@ const UserCard = ({ user }) => {
           {currentUser?.connections.includes(user._id) ? (
             <MessageCircle className="w-5 h-5 group-hover:scale-105 transition" />
           ) : (
-            <Plus className="w-5 h-5 group-hover:scale-105 transition" />
+            <Link className="w-5 h-5 group-hover:scale-105 transition" />
           )}
         </button>
       </div>
