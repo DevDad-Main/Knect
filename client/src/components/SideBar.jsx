@@ -75,12 +75,11 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         <div className="flex mt-2">
           <h1
             onClick={() => navigate("/feed")}
-            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex flex-1"
+            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex-1 "
           >
             Knect
           </h1>
           <NotificationBell
-            className="flex justify-end"
             notifications={notifications}
             setNotifications={setNotifications}
             setIsOpen={sideBarOpen}
