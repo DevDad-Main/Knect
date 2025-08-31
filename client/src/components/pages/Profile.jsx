@@ -14,6 +14,7 @@ const Profile = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [showEdit, setShowEdit] = useState(false);
 
@@ -40,6 +41,8 @@ const Profile = () => {
       if (data) {
         setUser(data.profile);
         setPosts(data.posts);
+        setLikes(data.likes);
+        console.log(data.likes);
       }
     } catch (error) {
       toast.error(error.message);
@@ -128,6 +131,14 @@ const Profile = () => {
                     ))}
                   </>
                 ))}
+            </div>
+          )}
+          {/* Likes */}
+          {activeTab === "likes" && (
+            <div className="mt-6 flex flex-col items-center gap-6">
+              {likes.map((post) => (
+                <PostCard key={post._id} post={post} />
+              ))}
             </div>
           )}
         </div>
