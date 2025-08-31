@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -10,17 +10,16 @@ const NotificationBell = ({ notifications, setNotifications }) => {
 
   const handleNotificationClick = async (notification) => {
     setOpen(false);
-    navigate(`/messages/${notification.from._id}`);
 
+    const fromUserId = notification.from._id;
     try {
-      const messgageId = notification._id;
       // Mark as seen in backend
-      const data = await updateData("api/v1/message/mark-as-seen", messgageId);
+      await updateData("api/v1/message/mark-as-seen", {
+        fromUserId,
+      });
+      setNotifications((prev) => prev.filter((n) => n.from._id !== fromUserId));
 
-      // Remove from local state
-      setNotifications((prev) =>
-        prev.filter((n) => n._id !== notification._id),
-      );
+      navigate(`/messages/${fromUserId}`);
     } catch (err) {
       console.error(err);
     }
