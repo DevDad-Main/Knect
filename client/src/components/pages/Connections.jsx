@@ -45,7 +45,6 @@ const Connections = () => {
       const data = await updateData("api/v1/user/accept", { id: userId });
 
       if (data) {
-        toast.success(data.message);
         fetchConnections();
       }
     } catch (error) {

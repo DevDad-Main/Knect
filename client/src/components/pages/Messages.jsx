@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { dummyConnectionsData } from "../../assets/assets";
-import { Eye, MessageSquare, User } from "lucide-react";
+import { Eye, MessageSquare, User, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../utils";
 import toast from "react-hot-toast";
@@ -42,14 +42,18 @@ const Messages = () => {
               key={user._id}
               className="max-w-xl flex flex-warp gap-5 p-6 bg-white shadow rounded-md"
             >
-              <img
-                src={user.profile_picture}
-                alt=""
-                className="rounded-full size-12 mx-auto"
-              />
+              {user?.profile_picture ? (
+                <img
+                  src={user.profile_picture}
+                  alt=""
+                  className="mt-4.5 rounded-full size-12 mx-auto"
+                />
+              ) : (
+                <UserIcon className=" mt-4.5 rounded-full size-12 mx-auto" />
+              )}
               <div className="flex-1">
                 <p className="font-medium text-slate-700">{user.full_name}</p>
-                <p className="text-slate-500">@{user.username}</p>
+                <p className="text-slate-500 mb-2">@{user.username}</p>
                 <p className="text-sm text-gray-600">{user.bio}</p>
               </div>
 

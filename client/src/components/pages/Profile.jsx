@@ -58,10 +58,10 @@ const Profile = () => {
   }, [profileId, currentUser]);
 
   return user ? (
-    <div className="relatvie h-full overflow-y-scroll bg-gray-50 p-6">
+    <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto">
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl shadow overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Cover Photo */}
           <div className="h-40 md:h-56 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200">
             {user.cover_photo && (
@@ -82,7 +82,7 @@ const Profile = () => {
         </div>
         {/* Tabs */}
         <div className="mt-6">
-          <div className="bg-white rounded-xl shadow p-1 flex max-w-md mx-auto">
+          <div className="bg-white rounded-xl shadow-md p-1 flex max-w-md mx-auto">
             {["posts", "media", "likes"].map((tab) => (
               <button
                 onClick={() => setActiveTab(tab)}
