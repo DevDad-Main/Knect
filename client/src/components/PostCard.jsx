@@ -106,9 +106,12 @@ const PostCard = ({ post }) => {
           <span>{likes.length}</span>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div
+          onClick={() => navigate(`/post/${post._id}`)}
+          className="flex items-center gap-1 cursor-pointer hover:text-indigo-600"
+        >
           <MessageCircle className="w-4 h-4" />
-          <span>{}</span>
+          <span>{post.comments_count || 0}</span>
         </div>
 
         <div className="flex items-center gap-1">

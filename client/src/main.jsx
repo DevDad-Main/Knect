@@ -17,8 +17,8 @@ import Profile from "./components/pages/Profile";
 import CreatePost from "./components/pages/CreatePost";
 import Register from "./components/pages/Register";
 import Protected from "./components/Protected";
-import { UserProvider } from "./components/UserProvider.jsx";
 import Layout from "./components/pages/Layout.jsx";
+import PostDetails from "./components/pages/PostDetails.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +38,8 @@ const router = createBrowserRouter(
         <Route path="feed" element={<Feed />} />
         <Route path="messages" element={<Messages />} />
         <Route path="messages/:userId" element={<ChatBox />} />
+
+        <Route path="post/:postId" element={<PostDetails />} />
         <Route path="connections" element={<Connections />} />
         <Route path="discover" element={<Discover />} />
         <Route path="profile/:profileId" element={<Profile />} />
