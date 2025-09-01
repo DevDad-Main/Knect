@@ -111,7 +111,7 @@ const PostCard = ({ post }) => {
           className="flex items-center gap-1 cursor-pointer hover:text-indigo-600"
         >
           <MessageCircle className="w-4 h-4" />
-          <span>{post.comments_count || 0}</span>
+          <span>{post.commentsCount || 0}</span>
         </div>
 
         <div className="flex items-center gap-1">

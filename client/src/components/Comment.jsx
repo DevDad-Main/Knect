@@ -53,6 +53,7 @@ function Comment({ comment, onReply, level = 0 }) {
           </button>
           <button className="flex items-center gap-1 hover:text-rose-600">
             <ThumbsDown className="w-4 h-4" />
+            <span>{comment.dislikes || 0}</span>
           </button>
           <button
             onClick={() => setShowReplyInput(!showReplyInput)}

@@ -18,7 +18,7 @@ const Feed = () => {
       const data = await fetchData("api/v1/post/feed");
 
       if (data) {
-        setFeeds(data);
+        setFeeds(data.posts);
         setLoading(false);
       }
     } catch (error) {
