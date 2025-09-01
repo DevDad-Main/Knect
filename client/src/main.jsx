@@ -19,10 +19,13 @@ import Register from "./components/pages/Register";
 import Protected from "./components/Protected";
 import Layout from "./components/pages/Layout.jsx";
 import PostDetails from "./components/pages/PostDetails.jsx";
+import { Navigate } from "react-router-dom";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
+      {/* Redirect root */}
+      <Route index element={<Navigate to="/login" replace />} />
       {/* Public routes */}
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
