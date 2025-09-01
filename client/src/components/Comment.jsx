@@ -6,13 +6,26 @@ import {
   ChevronUp,
   UserIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import moment from "moment";
+import { updateData } from "./utils";
 
 function Comment({ comment, onReply, level = 0 }) {
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [showReplies, setShowReplies] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
+  const [likes, setLikes] = useState(comment.likes || 0);
+  const [dislikes, setDislikes] = useState(comment.dislikes || 0);
+
+  // tiny pop animation flag
+  const [pop, setPop] = useState(false);
+  useEffect(() => {
+    setPop(true);
+    const t = setTimeout(() => setPop(false), 150);
+    return () => clearTimeout(t);
+  }, [isLiked, likes]);
 
   const handleReply = () => {
     if (!replyText.trim()) return;
@@ -20,6 +33,36 @@ function Comment({ comment, onReply, level = 0 }) {
     setReplyText("");
     setShowReplyInput(false);
     setShowReplies(true);
+  };
+
+  const handleLikeComment = async (commentId) => {
+    // onLike(comment._id);
+    try {
+      const data = await updateData(`api/v1/comment/toggle-like`, {
+        commentId,
+      });
+      if (data) {
+        setIsLiked(data.isLiked);
+        setLikes(data.likes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDislikeComment = async (commentId) => {
+    // onLike(comment._id);
+    try {
+      const data = await updateData(`api/v1/comment/toggle-dislike`, {
+        commentId,
+      });
+      if (data) {
+        setIsDisliked(data.isDisliked);
+        setDislikes(data.dislikes);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -51,14 +94,40 @@ function Comment({ comment, onReply, level = 0 }) {
         <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
 
         {/* Actions */}
-        <div className="flex items-center gap-3 mt-1 text-gray-500 text-xs">
-          <button className="flex items-center gap-1 hover:text-indigo-600">
-            <ThumbsUp className="w-4 h-4" />
-            <span>{comment.likes || 0}</span>
+        <div className="flex items-center gap-4 mt-1 text-gray-500 text-xs">
+          <button
+            onClick={() => handleLikeComment(comment._id)}
+            className={`flex items-center gap-1 hover:text-indigo-600 ${isLiked && "text-blue-700 fill-blue-700"}`}
+          >
+            <ThumbsUp
+              className={[
+                "w-4 h-4 transition-transform duration-150 will-change-transform",
+                pop ? "scale-125" : "scale-100",
+                isLiked ? "text-blue-700" : "text-gray-500",
+              ].join("")}
+            />
+            <span
+              className={[
+                "w-4 h-4 transition-transform duration-150 will-change-transform",
+                pop ? "scale-125" : "scale-100",
+                isLiked ? "text-blue-700" : "text-gray-500",
+              ].join("")}
+            >
+              {likes || 0}
+            </span>
           </button>
-          <button className="flex items-center gap-1 hover:text-rose-600">
-            <ThumbsDown className="w-4 h-4" />
-            <span>{comment.dislikes || 0}</span>
+          <button
+            onClick={() => handleDislikeComment(comment._id)}
+            className="flex items-center gap-1 hover:text-rose-600"
+          >
+            <ThumbsDown
+              className={[
+                "w-4 h-4 transition-transform duration-150 will-change-transform",
+                pop ? "scale-125" : "scale-100",
+                isDisliked ? "text-rose-600" : "text-gray-500",
+              ].join("")}
+            />
+            <span>{dislikes || 0}</span>
           </button>
           <button
             onClick={() => setShowReplyInput(!showReplyInput)}
@@ -77,11 +146,11 @@ function Comment({ comment, onReply, level = 0 }) {
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write a reply..."
-              className="flex-1 border rounded-full px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
               onClick={handleReply}
-              className="text-white bg-indigo-600 px-3 py-1 rounded-full text-sm hover:bg-indigo-700"
+              className="text-white bg-indigo-600 px-3 py-1 rounded-lg text-sm hover:bg-indigo-700"
             >
               Post
             </button>
