@@ -4,6 +4,7 @@ import {
   Reply,
   ChevronDown,
   ChevronUp,
+  UserIcon,
 } from "lucide-react";
 import { useState } from "react";
 import moment from "moment";
@@ -28,11 +29,15 @@ function Comment({ comment, onReply, level = 0 }) {
         {/* Header: Avatar + Username + Timestamp */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img
-              src={comment.owner?.profile_picture}
-              alt={comment.owner?.full_name}
-              className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0"
-            />
+            {comment.owner?.profile_picture ? (
+              <img
+                src={comment.owner?.profile_picture}
+                // alt={comment.owner?.full_name}
+                className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0"
+              />
+            ) : (
+              <UserIcon className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0" />
+            )}
             <p className="text-sm font-semibold text-gray-800">
               {comment.owner?.full_name}
             </p>

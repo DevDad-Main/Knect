@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Comment from "../Comment";
-import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp, UserIcon } from "lucide-react";
 import { fetchData, updateData } from "../utils";
 import PostCard from "../PostCard";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
@@ -99,11 +99,20 @@ export default function PostDetails() {
 
         {/* Comment input */}
         <div className="flex items-center gap-3 border-t pt-4 mt-4">
-          <img
-            src={currentUser?.profile_picture}
-            alt="me"
-            className="w-9 h-9 rounded-full object-cover"
-          />
+          {currentUser?.profile_picture ? (
+            <img
+              onClick={() => navigate(`/profile/${currentUser._id}`)}
+              src={currentUser?.profile_picture}
+              alt="me"
+              className="w-9 h-9 rounded-full object-cover cursor-pointer"
+            />
+          ) : (
+            <UserIcon
+              className="w-9 h-9 rounded-full object-cover cursor-pointer"
+              onClick={() => navigate(`/profile/${currentUser._id}`)}
+            />
+          )}
+
           <input
             type="text"
             placeholder="Write a comment..."
