@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Comment from "../Comment";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { fetchData, updateData } from "../utils";
 import PostCard from "../PostCard";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
@@ -84,51 +84,54 @@ export default function PostDetails() {
   if (!post) return <Loading />;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 space-y-6">
+    <div className="max-w-3xl mx-auto px-4 ">
       {/* Back */}
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center text-gray-600 hover:text-gray-900"
+        className="flex items-center text-gray-600 hover:text-gray-900 mt-2"
       >
         <ArrowLeft className="h-5 w-5 mr-1" />
         Back
       </button>
+      <div className="max-w-3xl mx-auto px-4 py-6 h-[calc(100vh-2rem)] flex flex-col">
+        {/* Post at the top */}
+        <PostCard post={post} />
 
-      {/* Post */}
-      <PostCard post={post} />
-
-      {/* Add Comment */}
-      <div className="flex items-center gap-3 border-t pt-4">
-        <img
-          src={currentUser?.profile_picture || "/default-avatar.png"}
-          alt="me"
-          className="w-9 h-9 rounded-full object-cover"
-        />
-        <input
-          type="text"
-          placeholder="Write a comment..."
-          className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <button
-          onClick={handleAddComment}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700"
+        {/* Comment input */}
+        <div className="flex items-center gap-3 border-t pt-4 mt-4">
+          <img
+            src={currentUser?.profile_picture}
+            alt="me"
+            className="w-9 h-9 rounded-full object-cover"
+          />
+          <input
+            type="text"
+            placeholder="Write a comment..."
+            className="flex-1 border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button
+            onClick={handleAddComment}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700"
+          >
+            Post
+          </button>
+        </div>
+        {/* Comments scrollable area */}
+        <div
+          id="comments-container"
+          className="flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 mb-4"
         >
-          Post
-        </button>
-      </div>
-
-      {/* Comments */}
-      <div className="space-y-4">
-        {comments.length === 0 ? (
-          <p className="text-gray-500 text-sm">No comments yet.</p>
-        ) : (
-          comments.map((c) => (
-            <Comment key={c._id} comment={c} onReply={handleAddReply} />
-          ))
-        )}
-      </div>
+          {comments.length === 0 ? (
+            <p className="text-gray-500 text-sm">No comments yet.</p>
+          ) : (
+            comments.map((c) => (
+              <Comment key={c._id} comment={c} onReply={handleAddReply} />
+            ))
+          )}
+        </div>
+      </div>{" "}
     </div>
   );
 }
