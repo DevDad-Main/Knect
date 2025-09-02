@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import MenuItems from "./MenuItems";
-import { CirclePlus, LogOut, User, UserIcon } from "lucide-react";
+import { CirclePlus, LogOut, User, UserIcon, Bell } from "lucide-react";
 import { fetchData, updateData } from "./utils";
 import toast from "react-hot-toast";
 import RecentMessages from "./RecentMessages";
@@ -12,6 +12,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
   const socket = useRef(null);
 
+  const unreadCount = notifications.filter((n) => !n.read).length;
   useEffect(() => {
     socket.current = io(import.meta.env.VITE_BASEURL, {
       auth: { token: sessionStorage.getItem("token") },
@@ -23,13 +24,13 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       setNotifications((prev) => [notification, ...prev]);
 
       // Optional: show toast based on type
-      if (notification.type === "message") {
-        toast(`${notification.from.full_name} sent you a message`);
-      } else if (notification.type === "like") {
-        toast(`${notification.from.full_name} liked your post`);
-      } else if (notification.type === "comment") {
-        toast(`${notification.from.full_name} commented on your post`);
-      }
+      // if (notification.type === "message") {
+      //   toast(`${notification.from.full_name} sent you a message`);
+      // } else if (notification.type === "like") {
+      //   toast(`${notification.from.full_name} liked your post`);
+      // } else if (notification.type === "comment") {
+      //   toast(`${notification.from.full_name} commented on your post`);
+      // }
       // // Optional: live toast
       // toast.success(`${notification.from.full_name} sent you a message`);
     });
@@ -52,6 +53,21 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       console.log(error);
     }
   };
+
+  const fetchNotifications = async () => {
+    try {
+      const data = await fetchData("api/v1/notification/get-all");
+      if (data) {
+        setNotifications(data); // preload from DB
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   const signoutUser = async () => {
     try {
@@ -87,10 +103,9 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
           >
             Knect
           </h1>
-          <NotificationBell
-            notifications={notifications}
-            setNotifications={setNotifications}
-            setIsOpen={sideBarOpen}
+          <Bell
+            onClick={() => navigate("/notifications")}
+            className="w-6 h-6 text-gray-700 mt-3 mr-2 cursor-pointer"
           />
         </div>
         <hr className="border-gray-300 mb-8" />

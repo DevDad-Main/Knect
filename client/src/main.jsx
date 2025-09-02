@@ -19,6 +19,7 @@ import Register from "./components/pages/Register";
 import Protected from "./components/Protected";
 import Layout from "./components/pages/Layout.jsx";
 import PostDetails from "./components/pages/PostDetails.jsx";
+import NotificationsPage from "./components/pages/NotificationsPage";
 import { Navigate } from "react-router-dom";
 
 const router = createBrowserRouter(
@@ -41,11 +42,11 @@ const router = createBrowserRouter(
         <Route path="feed" element={<Feed />} />
         <Route path="messages" element={<Messages />} />
         <Route path="messages/:userId" element={<ChatBox />} />
-
         <Route path="post/:postId" element={<PostDetails />} />
         <Route path="connections" element={<Connections />} />
         <Route path="discover" element={<Discover />} />
         <Route path="profile/:profileId" element={<Profile />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         <Route path="create-post" element={<CreatePost />} />
       </Route>
     </Route>,
