@@ -36,7 +36,6 @@ function Comment({ comment, onReply, level = 0 }) {
   };
 
   const handleLikeComment = async (commentId) => {
-    // onLike(comment._id);
     try {
       const data = await updateData(`api/v1/comment/toggle-like`, {
         commentId,
@@ -51,7 +50,6 @@ function Comment({ comment, onReply, level = 0 }) {
   };
 
   const handleDislikeComment = async (commentId) => {
-    // onLike(comment._id);
     try {
       const data = await updateData(`api/v1/comment/toggle-dislike`, {
         commentId,
@@ -68,7 +66,7 @@ function Comment({ comment, onReply, level = 0 }) {
   return (
     <div className={`flex ${level > 0 ? "ml-4" : ""} gap-2`}>
       {/* Content */}
-      <div className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 shadow-sm">
+      <div className="flex-1 bg-white border border-gray-200 rounded-2xl px-3 py-2 shadow-lg">
         {/* Header: Avatar + Username + Timestamp */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

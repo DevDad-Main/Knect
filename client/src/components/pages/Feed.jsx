@@ -32,13 +32,13 @@ const Feed = () => {
   }, []);
 
   return !loading ? (
-    <div className="h-full overflow-y-scroll no-scrollbar py-10 xl:pr-5 flex items-start justify-center xl:gap-8">
+    <div className="h-full overflow-y-scroll no-scrollbar py-10 xl:pr-5 flex items-start justify-center xl:gap-8 border-indigo-300 bg-gradient-to-b from-indigo-50 to-white">
       {/* Stories and List of Posts*/}
       <div>
         <StoriesBar />
         <div className="p-4 space-y-6">
           {feeds.map((post) => (
-            <PostCard key={post._id} post={post} />
+            <PostCard key={post._id} post={post} onDelete={fetchFeeds} />
           ))}
         </div>
       </div>

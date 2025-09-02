@@ -14,7 +14,6 @@ const RecentMessages = () => {
       const data = await fetchData("api/v1/message/recent-messages");
 
       if (data) {
-        console.log(data);
         // toast.success(data.message);
         const groupedMessages = data.messages.reduce((acc, message) => {
           const senderId = message.from_user_id._id;

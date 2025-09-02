@@ -65,9 +65,9 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
           : "video"
         : "text";
 
-    if (media_type === "text" && !text) {
-      toast.error("Please enter some text!");
-    }
+    // if (media_type === "text" && !text) {
+    //   toast.error("Please enter some text!");
+    // }
 
     let formData = new FormData();
     formData.append("content", text);

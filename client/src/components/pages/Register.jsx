@@ -151,6 +151,10 @@ function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
+            <p className="block text-sm font-mono text-gray-400 mb-1">
+              Password must be 6–12 characters and include at least 1 uppercase,
+              3 numbers, and 1 symbol.
+            </p>
             <input
               type="password"
               name="password"
@@ -165,6 +169,9 @@ function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Profile Picture
             </label>
+            <p className="flex justify-end text-sm font-mono text-gray-400 mb-1">
+              * optional
+            </p>
             <input
               type="file"
               name="profile_picture"
@@ -178,6 +185,9 @@ function Register() {
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Cover Photo
             </label>
+            <p className="flex justify-end text-sm font-mono text-gray-400 mb-1">
+              * optional
+            </p>
             <input
               type="file"
               name="cover_photo"

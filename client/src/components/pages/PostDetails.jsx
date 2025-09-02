@@ -28,8 +28,6 @@ export default function PostDetails() {
             .filter((c) => c.parent === null)
             .map((c) => ({ ...c, replies: c.replies || [] }));
           setComments(topLevelComments);
-
-          console.log(comments);
         }
       } catch (error) {
         console.log(error);

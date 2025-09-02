@@ -8,10 +8,12 @@ import PostCard from "../PostCard";
 import ProfileModal from "../ProfileModal";
 import { fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const Profile = () => {
   const { profileId } = useParams();
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
+  const currentUser = useCurrentUser();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -26,7 +28,7 @@ const Profile = () => {
     try {
       const data = await fetchData(`api/v1/user/user`);
       if (data) {
-        setCurrentUser(data);
+        // setCurrentUser(data);
       }
     } catch (error) {
       console.log(error);
@@ -42,7 +44,6 @@ const Profile = () => {
         setUser(data.profile);
         setPosts(data.posts);
         setLikes(data.likes);
-        console.log(data.likes);
       }
     } catch (error) {
       toast.error(error.message);
@@ -50,8 +51,8 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    fetchLoggedInUser();
-  }, []);
+    // fetchLoggedInUser();
+  }, [currentUser]);
   useEffect(() => {
     if (profileId) {
       fetchUser(profileId);

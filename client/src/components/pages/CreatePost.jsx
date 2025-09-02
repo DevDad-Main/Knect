@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Image, X } from "lucide-react";
+import { Image, UserIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { fetchData, updateWithFormData } from "../utils";
 import { useAuth } from "@clerk/clerk-react";
@@ -59,7 +59,7 @@ const CreatePost = () => {
       });
 
       if (data) {
-        navigate("/");
+        navigate("/feed");
       }
     } catch (error) {
       toast.error(error.message);
@@ -83,11 +83,15 @@ const CreatePost = () => {
         <div className="max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <img
-              className="w-12 h-12 rounded-full shadow object-cover"
-              src={user?.profile_picture}
-              alt=""
-            />
+            {user?.profile_picture ? (
+              <img
+                className="w-12 h-12 rounded-full shadow object-cover"
+                src={user?.profile_picture}
+                alt=""
+              />
+            ) : (
+              <UserIcon className="w-12 h-12 rounded-full shadow object-cover" />
+            )}
             <div>
               <h2 className="font-semibold">{user?.full_name}</h2>
               <p className="text-sm text-gray-500">@{user?.username}</p>
