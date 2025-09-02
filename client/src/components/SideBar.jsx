@@ -22,8 +22,16 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
     socket.current.on("notification", (notification) => {
       setNotifications((prev) => [notification, ...prev]);
 
-      // Optional: live toast
-      toast.success(`${notification.from.full_name} sent you a message`);
+      // Optional: show toast based on type
+      if (notification.type === "message") {
+        toast(`${notification.from.full_name} sent you a message`);
+      } else if (notification.type === "like") {
+        toast(`${notification.from.full_name} liked your post`);
+      } else if (notification.type === "comment") {
+        toast(`${notification.from.full_name} commented on your post`);
+      }
+      // // Optional: live toast
+      // toast.success(`${notification.from.full_name} sent you a message`);
     });
 
     return () => {
