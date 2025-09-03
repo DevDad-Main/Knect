@@ -67,7 +67,7 @@ const NotificationsPage = () => {
 
   const handleClearAll = async () => {
     try {
-      await updateData(`api/v1/notification/clear-all`);
+      await updateData(`api/v1/notification/clear-all`, {}, "DELETE");
       setNotifications([]);
     } catch (err) {
       console.error(err);
@@ -150,20 +150,23 @@ const NotificationsPage = () => {
                         {moment(n.createdAt).fromNow()}
                       </p>
                     </div>
-                    <button
-                      onClick={() => handleDeleteNotification(n._id)}
-                      className="text-gray-400 hover:text-red-500 p-1 rounded-full"
-                      title="Delete Notification"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                    <button
-                      onClick={() => handleReadNotifcation(n)}
-                      className="text-gray-400 hover:text-green-500 p-1 rounded-full absolute right-21"
-                      title="Read Notification"
-                    >
-                      <Eye size={18} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleReadNotifcation(n)}
+                        className="text-gray-400 hover:text-green-500 p-1 rounded-full"
+                        title="Read Notification"
+                      >
+                        <Eye size={20} />
+                      </button>
+
+                      <button
+                        onClick={() => handleDeleteNotification(n._id)}
+                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                        title="Delete Notification"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
