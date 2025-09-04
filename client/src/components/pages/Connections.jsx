@@ -134,7 +134,7 @@ const Connections = () => {
                   <img
                     src={user.profile_picture}
                     alt=""
-                    className=" mt-6 rounded-full w-16 h-16 shadow-md mx-auto"
+                    className="mt-6 rounded-full w-16 h-16 shadow-md mx-auto object-cover"
                   />
                 ) : (
                   <UserIcon className=" mt-6 rounded-full w-16 h-16 shadow-md mx-auto" />

@@ -10,7 +10,9 @@ import {
   Trash2,
   ArrowLeft,
   Eye,
+  Link,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
@@ -35,6 +37,9 @@ const NotificationsPage = () => {
       if (n.type === "message") {
         navigate(`/messages/${n.from._id}`);
         handleReadNotifcation(n);
+      } else if (n.type === "connection") {
+        navigate(`/profile/${n.from._id}`);
+        handleReadNotifcation(n);
       } else if (n.type === "like" || n.type === "comment") {
         navigate(`/post/${n.entityId}`);
         handleReadNotifcation(n);
@@ -43,7 +48,6 @@ const NotificationsPage = () => {
       console.error(err);
     }
   };
-
   const handleReadNotifcation = async (n) => {
     try {
       if (!n.read) {
@@ -83,9 +87,11 @@ const NotificationsPage = () => {
   };
 
   const getIcon = (type) => {
-    if (type === "message") return <MessageCircle className="text-blue-500" />;
+    if (type === "message") return <MessageCircle className="text-green-500" />;
     if (type === "like") return <Heart className="text-red-500" />;
-    if (type === "comment") return <MessageSquare className="text-green-500" />;
+    if (type === "comment")
+      return <MessageSquare className="text-purple-500" />;
+    if (type === "connection") return <Link className="text-blue-500" />;
   };
 
   const groupedNotifications = notifications.reduce((groups, n) => {

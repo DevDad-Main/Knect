@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, matchPath } from "react-router-dom";
 import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User, UserIcon, Bell } from "lucide-react";
 import { fetchData, updateData } from "./utils";
@@ -11,6 +11,11 @@ import { io } from "socket.io-client";
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
   const socket = useRef(null);
+  const location = useLocation();
+
+  const isInChatWith = (userId) => {
+    return matchPath(`/messages/${userId}`, location.pathname);
+  };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
   useEffect(() => {
@@ -20,7 +25,33 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       withCredentials: true,
     });
 
-    socket.current.on("notification", (notification) => {
+    socket.current.on("notification", async (notification) => {
+      // If we are already in the chat with this person then we dont receive notifications
+
+      if (
+        notification.type === "message" &&
+        isInChatWith(notification.from._id)
+      ) {
+        // console.log(
+        //   "Skipping notification while in chat with:",
+        //   notification.from._id,
+        // );
+
+        // delete it from DB
+        const id = notification._id;
+        await updateData(
+          `api/v1/notification/delete/${id}`,
+          {},
+          "DELETE",
+          false,
+        );
+
+        // also remove it locally (just in case it sneaks in)
+        setNotifications((prev) => prev.filter((n) => n._id !== id));
+
+        return; // 🚀 stop here so we don’t add it
+      }
+
       setNotifications((prev) => [notification, ...prev]);
 
       // Optional: show toast based on type

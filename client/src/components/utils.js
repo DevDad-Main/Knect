@@ -54,7 +54,12 @@ async function fetchData(path, header = {}) {
   }
 }
 
-async function updateData(path, content, methodType = "POST") {
+async function updateData(
+  path,
+  content,
+  methodType = "POST",
+  showToast = true,
+) {
   try {
     const response = await fetch(`${import.meta.env.VITE_BASEURL}/${path}`, {
       method: methodType,
@@ -66,7 +71,9 @@ async function updateData(path, content, methodType = "POST") {
     });
     const data = await response.json();
     if (data.success) {
-      toast.success(`${data.message}`);
+      if (showToast) {
+        toast.success(`${data.message}`);
+      }
       return data.data;
     } else {
       if (data.errors && Array.isArray(data.errors)) {
