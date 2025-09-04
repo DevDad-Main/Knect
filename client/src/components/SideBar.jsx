@@ -13,8 +13,14 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const socket = useRef(null);
   const location = useLocation();
 
+  // Ref to always have the latest pathname
+  const locationRef = useRef(location.pathname);
+  useEffect(() => {
+    locationRef.current = location.pathname;
+  }, [location.pathname]);
+
   const isInChatWith = (userId) => {
-    return matchPath(`/messages/${userId}`, location.pathname);
+    return locationRef.current === `/messages/${userId}`;
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
