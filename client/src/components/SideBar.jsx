@@ -84,6 +84,12 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   useEffect(() => {
     fetchUser();
   }, []);
+
+  useEffect(() => {
+    const refresh = () => fetchNotifications();
+    window.addEventListener("refreshNotifications", refresh);
+    return () => window.removeEventListener("refreshNotifications", refresh);
+  }, []);
   // const { signOut } = console.log("Sign Out");
 
   return (
@@ -96,17 +102,25 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         {/*   src={assets.logo} */}
         {/*   className="w-26 ml-7 my-2 cursor-pointer" */}
         {/* /> */}
-        <div className="flex mt-2">
+        <div className="flex mt-2 relative">
           <h1
             onClick={() => navigate("/feed")}
-            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex-1 "
+            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex-1"
           >
             Knect
           </h1>
-          <Bell
-            onClick={() => navigate("/notifications")}
-            className="w-6 h-6 text-gray-700 mt-3 mr-2 cursor-pointer"
-          />
+
+          <div className="relative mr-3 mt-3">
+            <Bell
+              onClick={() => navigate("/notifications")}
+              className="w-6 h-6 text-gray-700 cursor-pointer"
+            />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full min-w-[18px] h-4 px-1 flex items-center justify-center text-xs font-medium">
+                {unreadCount}
+              </span>
+            )}
+          </div>
         </div>
         <hr className="border-gray-300 mb-8" />
         <MenuItems setSideBarOpen={setSideBarOpen} />

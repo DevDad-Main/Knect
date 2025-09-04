@@ -32,9 +32,13 @@ const NotificationsPage = () => {
 
   const handleNotificationClick = async (n) => {
     try {
-      if (n.type === "message") navigate(`/messages/${n.from._id}`);
-      else if (n.type === "like" || n.type === "comment")
+      if (n.type === "message") {
+        navigate(`/messages/${n.from._id}`);
+        handleReadNotifcation(n);
+      } else if (n.type === "like" || n.type === "comment") {
         navigate(`/post/${n.entityId}`);
+        handleReadNotifcation(n);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -50,6 +54,8 @@ const NotificationsPage = () => {
             notif._id === n._id ? { ...notif, read: true } : notif,
           ),
         );
+
+        window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
       console.error(error);
@@ -60,6 +66,8 @@ const NotificationsPage = () => {
     try {
       await updateData(`api/v1/notification/delete/${id}`, {}, "DELETE");
       setNotifications((prev) => prev.filter((n) => n._id !== id));
+
+      window.dispatchEvent(new Event("refreshNotifications"));
     } catch (err) {
       console.error(err);
     }
