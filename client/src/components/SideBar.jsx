@@ -14,6 +14,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const location = useLocation();
 
   const isInChatWith = (userId) => {
+    console.log("location.pathname:", location.pathname);
     return matchPath(`/messages/${userId}`, location.pathname);
   };
 
