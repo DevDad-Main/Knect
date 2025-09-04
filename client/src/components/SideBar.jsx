@@ -14,11 +14,11 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const location = useLocation();
 
   const isInChatWith = (userId) => {
-    console.log("location.pathname:", location.pathname);
     return matchPath(`/messages/${userId}`, location.pathname);
   };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
+
   useEffect(() => {
     socket.current = io(import.meta.env.VITE_BASEURL, {
       auth: { token: sessionStorage.getItem("token") },
@@ -27,17 +27,10 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
     });
 
     socket.current.on("notification", async (notification) => {
-      // If we are already in the chat with this person then we dont receive notifications
-
       if (
         notification.type === "message" &&
         isInChatWith(notification.from._id)
       ) {
-        // console.log(
-        //   "Skipping notification while in chat with:",
-        //   notification.from._id,
-        // );
-
         // delete it from DB
         const id = notification._id;
         await updateData(
@@ -53,24 +46,15 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         return; // 🚀 stop here so we don’t add it
       }
 
+      // otherwise add to notifications
       setNotifications((prev) => [notification, ...prev]);
-
-      // Optional: show toast based on type
-      // if (notification.type === "message") {
-      //   toast(`${notification.from.full_name} sent you a message`);
-      // } else if (notification.type === "like") {
-      //   toast(`${notification.from.full_name} liked your post`);
-      // } else if (notification.type === "comment") {
-      //   toast(`${notification.from.full_name} commented on your post`);
-      // }
-      // // Optional: live toast
-      // toast.success(`${notification.from.full_name} sent you a message`);
     });
 
     return () => {
       socket.current.disconnect();
     };
   }, []);
+
   const navigate = useNavigate();
 
   const [user, setUserData] = useState(null);
