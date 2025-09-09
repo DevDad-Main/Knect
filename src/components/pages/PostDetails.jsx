@@ -82,7 +82,7 @@ export default function PostDetails() {
   if (!post) return <Loading />;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 ">
+    <div className="max-w-3xl mx-auto px-4 h-[100vh] flex flex-col">
       {/* Back */}
       <button
         onClick={() => navigate(-1)}
@@ -91,7 +91,7 @@ export default function PostDetails() {
         <ArrowLeft className="h-5 w-5 mr-1" />
         Back
       </button>
-      <div className="max-w-3xl mx-auto px-4 py-6 h-[calc(100vh-2rem)] flex flex-col">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {/* Post at the top */}
         <PostCard post={post} />
 
@@ -126,10 +126,7 @@ export default function PostDetails() {
           </button>
         </div>
         {/* Comments scrollable area */}
-        <div
-          id="comments-container"
-          className="flex-1 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mt-2 mb-4"
-        >
+        <div className="space-y-4 mt-4">
           {comments.length === 0 ? (
             <p className="text-gray-500 text-sm">No comments yet.</p>
           ) : (

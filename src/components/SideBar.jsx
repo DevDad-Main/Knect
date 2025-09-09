@@ -116,7 +116,10 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   return (
     <div
-      className={`w-60 xl:w-72 bg-white border-r border-gray-200 flex flex-col justify-between items-center max-sm:absolute top-0 bottom-0 z-20 ${sideBarOpen ? "translate-x-0" : "max-sm:-translate-x-full"} transition-all duration-300 ease-in-out`}
+      className={`w-60 xl:w-72 bg-white border-r border-gray-200 flex flex-col justify-between items-center
+    fixed top-0 left-0 bottom-0 z-20
+    ${sideBarOpen ? "translate-x-0" : "max-sm:-translate-x-full"}
+    transition-all duration-300 ease-in-out`}
     >
       <div className="w-full">
         {/* <img */}
@@ -134,7 +137,11 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
           <div className="relative mr-3 mt-3">
             <Bell
-              onClick={() => navigate("/notifications")}
+              setSideBarOpen={setSideBarOpen}
+              onClick={() => {
+                navigate("/notifications");
+                setSideBarOpen(false);
+              }}
               className="w-6 h-6 text-gray-700 cursor-pointer"
             />
             {unreadCount > 0 && (
