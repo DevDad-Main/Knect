@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 const ChatBox = () => {
   const navigate = useNavigate();
   const token = Cookies.get("token");
+  const [isSending, setIsSending] = useState(false);
   const [socketReady, setSocketReady] = useState(false);
   const { userId } = useParams();
   const [messages, setMessages] = useState([]);
@@ -48,9 +49,12 @@ const ChatBox = () => {
   };
 
   const sendMessage = async () => {
+    if (isSending) return;
     if (!text && !image) return toast.error("You can't send an empty message");
 
     if (!socketReady) return toast.error("Socket not connected yet");
+
+    setIsSending(true);
 
     const formData = new FormData();
     // formData.append("from_user_id", currentUser._id);
@@ -74,6 +78,8 @@ const ChatBox = () => {
       }
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -208,11 +214,14 @@ const ChatBox = () => {
             </label>
             <button
               onClick={() => {
-                toast.promise(sendMessage, {
+                toast.promise(sendMessage(), {
                   loading: "Sending message...",
                 });
               }}
-              className="bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 active:scale-95 cursor-pointer text-white p-2 rounded-full"
+              disabled={isSending}
+              className={`bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 
+    active:scale-95 text-white p-2 rounded-full 
+    ${isSending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <SendHorizonalIcon size={18} className="ml-0.5" />
             </button>
