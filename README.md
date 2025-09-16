@@ -103,7 +103,7 @@ Contributions are welcome! To contribute:
 
 ## 🧑‍💻 Author
 
-**Olly** - Aspiring _Backend Developer_  
+**Olly** - Aspiring Junior _Backend Developer_  
 📨 [softwaredevdad@gmail.com]
 
 ---
