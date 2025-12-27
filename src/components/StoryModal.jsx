@@ -77,15 +77,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
     formData.append("background_color", background);
 
     try {
-      const data = await updateWithFormData(
-        "v1/story/add-story",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        },
-      );
+      const data = await updateWithFormData("v1/story/add-story", formData);
 
       if (data) {
         setShowModal(false);

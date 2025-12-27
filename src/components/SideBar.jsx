@@ -28,7 +28,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   useEffect(() => {
     socket.current = io(import.meta.env.VITE_BASEURL, {
-      auth: { token: sessionStorage.getItem("token") },
+      // No manual token needed - cookies will be sent automatically
       transports: ["websocket"],
       withCredentials: true,
     });

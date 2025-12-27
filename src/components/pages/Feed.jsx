@@ -18,6 +18,8 @@ const Feed = () => {
       setLoading(true);
       const data = await getPosts();
 
+      console.log("FEED DATA", data);
+
       if (data) {
         setFeeds(data.posts);
         setLoading(false);

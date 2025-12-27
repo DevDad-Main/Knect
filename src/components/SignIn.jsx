@@ -36,8 +36,8 @@ function SignIn() {
       console.log("data", data);
 
       if (data) {
-        sessionStorage.setItem("token", data.accessToken);
-        // Redirect
+        // Token is now set as HTTP-only cookie by backend
+        // No need to store in sessionStorage
         navigate("/feed"); // go to feed immediately
       }
 

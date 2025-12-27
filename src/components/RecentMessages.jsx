@@ -39,9 +39,10 @@ const RecentMessages = () => {
   };
 
   useEffect(() => {
-    fetchRecentMessages(); // fetch immediately on mount
-    const interval = setInterval(fetchRecentMessages, 30000);
-    return () => clearInterval(interval);
+    //FIX: Uncomment this to fetch messages on mount
+    // fetchRecentMessages(); // fetch immediately on mount
+    // const interval = setInterval(fetchRecentMessages, 30000);
+    // return () => clearInterval(interval);
   }, []);
 
   return (

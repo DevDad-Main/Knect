@@ -10,6 +10,7 @@ async function updateWithFormData(
     const response = await fetch(`${import.meta.env.VITE_BASEURL}/${path}`, {
       method: methodType,
       body: formData,
+      credentials: "include",
       ...credential,
     });
     const data = await response.json();

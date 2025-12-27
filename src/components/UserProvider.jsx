@@ -8,17 +8,10 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper: fetch current user if token exists
+  // Helper: fetch current user - cookies are sent automatically
   const checkUser = async () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
     try {
-      const data = await fetchData("v1/auth/get-user"); // backend should read cookie/header
+      const data = await fetchData("v1/auth/get-user"); // backend should read cookie
       if (data) {
         setUser(data);
       } else {

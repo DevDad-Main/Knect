@@ -4,12 +4,10 @@ import { updateWithFormData, fetchData, updateData } from "../utils";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
-import { useCurrentUser } from "../../hooks/useCurrentUser";
-import Cookies from "js-cookie";
+import { useApp } from "../../components/AppContext";
 
 const ChatBox = () => {
   const navigate = useNavigate();
-  const token = Cookies.get("token");
   const [isSending, setIsSending] = useState(false);
   const [socketReady, setSocketReady] = useState(false);
   const { userId } = useParams();
@@ -17,7 +15,7 @@ const ChatBox = () => {
   const [text, setText] = useState("");
   const [image, setImage] = useState(null);
   const [user, setUser] = useState({});
-  const currentUser = useCurrentUser();
+  const { user: currentUser } = useApp();
   const messagesEndRef = useRef(null);
   const socket = useRef(null);
 
@@ -63,11 +61,7 @@ const ChatBox = () => {
     if (image) formData.append("image", image);
 
     try {
-      const data = await updateWithFormData("api/v1/message/send", formData, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const data = await updateWithFormData("api/v1/message/send", formData);
       if (data) {
         setText("");
         setImage(null);
@@ -84,12 +78,8 @@ const ChatBox = () => {
   };
 
   useEffect(() => {
-    // const token = Cookies.get("accessToken");
-    const token = sessionStorage.getItem("token");
-    if (!token) return;
-
+    // No token needed - cookies are sent automatically
     socket.current = io(import.meta.env.VITE_BASEURL, {
-      auth: { token },
       transports: ["websocket"],
       withCredentials: true,
     });

@@ -1,35 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Image, UserIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { fetchData, updateWithFormData } from "../utils";
-import { useAuth } from "@clerk/clerk-react";
+import { updateWithFormData } from "../utils";
 import { useNavigate } from "react-router-dom";
-import { useCurrentUser } from "../../hooks/useCurrentUser";
+import { useApp } from "../AppContext";
 
 const CreatePost = () => {
   const navigate = useNavigate();
-  const user = useCurrentUser();
+  const { user } = useApp();
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [user, setUser] = useState(null);
-  // const user = useSelector((state) => {
-  //   state.user.value;
-  // });
-  // const fetchUser = async () => {
-  //   try {
-  //     const data = await fetchData(`api/v1/user/user`);
-  //     if (data) {
-  //       setUser(data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  //
-  // useEffect(() => {
-  //   fetchUser();
-  // }, []);
 
   const handleSubmit = async () => {
     if (!images.length && !content) {
@@ -52,11 +33,8 @@ const CreatePost = () => {
         formData.append("images", image);
       });
 
-      const data = await updateWithFormData("v1/posts/create-post", formData, {
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-      });
+      const data = await updateWithFormData("v1/posts/create-post", formData);
+      console.log("CREATE POST DATA", data);
 
       if (data) {
         navigate("/feed");

@@ -14,13 +14,8 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const checkUser = useCallback(async () => {
-    const token = sessionStorage.getItem("token");
-    if (!token) {
-      setUser(null);
-      setLoading(false);
-      return;
-    }
-
+    // No token check needed - cookies are sent automatically
+    // The backend will handle authentication and return user data or 401
     try {
       const data = await fetchData("v1/auth/get-user");
       if (data) {
