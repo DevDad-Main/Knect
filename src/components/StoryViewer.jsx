@@ -90,7 +90,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       {/* User Info - Top Left*/}
       <div className="absolute top-4 left-4 flex items-center space-x-3 p-2 px-4 sm:p-4 sm:px-8 backdrop-blur-2xl rounded bg-black/50">
         <img
-          src={viewStory?.user?.profile_picture}
+          src={viewStory?.user?.profile_photo}
           alt=""
           className="size-7 sm:size-8 rounded-full object-cover border border-white"
         />

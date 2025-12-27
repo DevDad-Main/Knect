@@ -26,7 +26,10 @@ const PostCard = ({ post, onDelete }) => {
 
   const handleLike = async () => {
     try {
-      const data = await updateData(`v1/posts/toggle-post-like/${post._id}`, {});
+      const data = await updateData(
+        `v1/posts/toggle-post-like/${post._id}`,
+        {},
+      );
       if (data) {
         setLikes((prev) => {
           if (prev.includes(currentUser._id)) {
@@ -67,9 +70,9 @@ const PostCard = ({ post, onDelete }) => {
         onClick={() => navigate("/profile/" + post.user._id)}
         className="inline-flex items-center gap-3 cursor-pointer"
       >
-        {post.user?.profile_picture ? (
+        {post.user?.profile_photo ? (
           <img
-            src={post.user?.profile_picture}
+            src={post.user?.profile_photo}
             className="w-10 h-10 rounded-full shadow object-cover"
           />
         ) : (

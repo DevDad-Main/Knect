@@ -54,9 +54,9 @@ const RecentMessages = () => {
             key={index}
             className="flex items-start gap-2 py-2 hover:bg-slate-100"
           >
-            {message.from_user_id?.profile_picture ? (
+            {message.from_user_id?.profile_photo ? (
               <img
-                src={message.from_user_id.profile_picture}
+                src={message.from_user_id.profile_photo}
                 alt=""
                 className="w-8 h-8 rounded-full"
               />

@@ -11,7 +11,7 @@ function Register() {
     email: "",
     username: "",
     password: "",
-    profile_picture: null,
+    profile_photo: null,
     cover_photo: null,
   });
 
@@ -49,11 +49,11 @@ function Register() {
       );
 
       if (userData) {
-        if (formData.profile_picture || formData.cover_photo) {
+        if (formData.profile_photo || formData.cover_photo) {
           const mediaFormData = new FormData();
 
-          if (formData.profile_picture) {
-            mediaFormData.append("profile_photo", formData.profile_picture);
+          if (formData.profile_photo) {
+            mediaFormData.append("profile_photo", formData.profile_photo);
             mediaFormData.append("profile_photo_type", "profile");
           }
           if (formData.cover_photo) {
@@ -202,7 +202,7 @@ function Register() {
             </p>
             <input
               type="file"
-              name="profile_picture"
+              name="profile_photo"
               accept="image/*"
               onChange={handleFileChange}
               className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"

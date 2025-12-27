@@ -49,7 +49,10 @@ function Comment({ comment, onReply, level = 0 }) {
 
   const handleDislikeComment = async (commentId) => {
     try {
-      const data = await updateData(`v1/comments/toggle-dislike/${commentId}`, {});
+      const data = await updateData(
+        `v1/comments/toggle-dislike/${commentId}`,
+        {},
+      );
       if (data) {
         setIsDisliked(data.isDisliked);
         setDislikes(data.dislikes);
@@ -66,9 +69,9 @@ function Comment({ comment, onReply, level = 0 }) {
         {/* Header: Avatar + Username + Timestamp */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {comment.owner?.profile_picture ? (
+            {comment.owner?.profile_photo ? (
               <img
-                src={comment.owner?.profile_picture}
+                src={comment.owner?.profile_photo}
                 // alt={comment.owner?.full_name}
                 className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0"
               />

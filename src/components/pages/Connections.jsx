@@ -130,9 +130,9 @@ const Connections = () => {
                 key={user._id}
                 className="w-full max-w-88 flex gap-5 p-6 bg-white shadow rounded-md"
               >
-                {user?.profile_picture ? (
+                {user?.profile_photo ? (
                   <img
-                    src={user.profile_picture}
+                    src={user.profile_photo}
                     alt=""
                     className="mt-6 rounded-full w-16 h-16 shadow-md mx-auto object-cover"
                   />

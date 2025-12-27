@@ -43,9 +43,9 @@ const Messages = () => {
               key={user._id}
               className="max-w-xl flex flex-warp gap-5 p-6 bg-white shadow rounded-md"
             >
-              {user?.profile_picture ? (
+              {user?.profile_photo ? (
                 <img
-                  src={user.profile_picture}
+                  src={user.profile_photo}
                   alt=""
                   className="mt-4.5 rounded-full size-12 mx-auto"
                 />

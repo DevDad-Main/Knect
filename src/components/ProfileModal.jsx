@@ -11,7 +11,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     username: "",
     bio: "",
     location: "",
-    profile_picture: null,
+    profile_photo: null,
     cover_photo: null,
     full_name: "",
   });
@@ -36,12 +36,12 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     userData.append("bio", editForm.bio);
     userData.append("location", editForm.location);
     userData.append("fullName", editForm.full_name);
-    // editForm.profile_picture &&
-    //   userData.append("profile", editForm.profile_picture);
+    // editForm.profile_photo &&
+    //   userData.append("profile", editForm.profile_photo);
     // editForm.cover_photo && userData.append("cover", editForm.cover_photo);
     // ✅ Only append if it’s a File, not a string URL
-    if (editForm.profile_picture instanceof File) {
-      userData.append("profile_photo", editForm.profile_picture);
+    if (editForm.profile_photo instanceof File) {
+      userData.append("profile_photo", editForm.profile_photo);
       userData.append("profile_photo_type", "profile");
     }
     if (editForm.cover_photo instanceof File) {
@@ -79,7 +79,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
         username: user.username || "",
         bio: user.bio || "",
         location: user.location || "",
-        profile_picture: user.profile_picture || null,
+        profile_photo: user.profile_photo || null,
         cover_photo: user.cover_photo || null,
         full_name: user.full_name || "",
       });
@@ -105,7 +105,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
             {/* Profile Picture */}
             <div className="flex flex-col items-start gap-3">
               <label
-                htmlFor="profile_picture"
+                htmlFor="profile_photo"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
                 Profile Picture
@@ -113,30 +113,30 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                   hidden
                   type="file"
                   accept="image/*"
-                  id="profile_picture"
+                  id="profile_photo"
                   className="w-full p-3 border border-gray-200 rounded-lg"
                   onChange={(e) => {
                     setEditForm({
                       ...editForm,
-                      profile_picture: e.target.files[0],
+                      profile_photo: e.target.files[0],
                     });
                   }}
                 />
                 <div className="group/profile relative">
                   {/* <img */}
                   {/*   src={ */}
-                  {/*     editForm.profile_picture */}
-                  {/*       ? URL.createObjectURL(editForm.profile_picture) */}
-                  {/*       : user?.profile_picture */}
+                  {/*     editForm.profile_photo */}
+                  {/*       ? URL.createObjectURL(editForm.profile_photo) */}
+                  {/*       : user?.profile_photo */}
                   {/*   } */}
                   {/*   className="w-24 h-24 rounded-full object-cover" */}
                   {/* /> */}
-                  {user?.profile_picture ? (
+                  {user?.profile_photo ? (
                     <img
                       src={
-                        editForm.profile_picture instanceof File
-                          ? URL.createObjectURL(editForm.profile_picture)
-                          : editForm.profile_picture || null
+                        editForm.profile_photo instanceof File
+                          ? URL.createObjectURL(editForm.profile_photo)
+                          : editForm.profile_photo || null
                       }
                       className="w-24 h-24 rounded-full object-cover"
                     />

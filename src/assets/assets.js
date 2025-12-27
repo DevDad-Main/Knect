@@ -29,7 +29,7 @@ export const dummyUserData = {
   full_name: "John Warren",
   username: "john_warren",
   bio: "🌍 Dreamer | 📚 Learner | 🚀 Doer\r\nExploring life one step at a time.\r\n✨ Staying curious. Creating with purpose.",
-  profile_picture: sample_profile,
+  profile_photo: sample_profile,
   cover_photo: sample_cover,
   location: "New York, NY",
   followers: ["user_2", "user_3"],
@@ -46,7 +46,7 @@ const dummyUser2Data = {
   _id: "user_2",
   username: "Richard Hendricks",
   full_name: "Richard Hendricks",
-  profile_picture:
+  profile_photo:
     "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200",
 };
 
@@ -55,7 +55,7 @@ const dummyUser3Data = {
   _id: "user_3",
   username: "alexa_james",
   full_name: "Alexa james",
-  profile_picture:
+  profile_photo:
     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&h=200&auto=format&fit=crop",
 };
 

@@ -83,10 +83,10 @@ const CreatePost = () => {
         <div className="max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
-            {user?.profile_picture ? (
+            {user?.profile_photo ? (
               <img
                 className="w-12 h-12 rounded-full shadow object-cover"
-                src={user?.profile_picture}
+                src={user?.profile_photo}
                 alt=""
               />
             ) : (

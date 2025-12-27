@@ -66,9 +66,9 @@ const UserCard = ({ user }) => {
       className="p-4 pt-6 flex flex-col justify-between w-72 shadow-lg border border-gray-200 rounded-lg"
     >
       <div className="CSS">
-        {user?.profile_picture ? (
+        {user?.profile_photo ? (
           <img
-            src={user.profile_picture}
+            src={user.profile_photo}
             alt=""
             className="rounded-full w-24 h-24 shadow-md mx-auto object-cover"
           />

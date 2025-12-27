@@ -130,10 +130,10 @@ const ChatBox = () => {
     user && (
       <div className="flex flex-col h-screen">
         <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-300">
-          {user?.profile_picture ? (
+          {user?.profile_photo ? (
             <img
               onClick={() => navigate(`/profile/${user._id}`)}
-              src={user.profile_picture}
+              src={user.profile_photo}
               alt=""
               className="size-8 rounded-full object-cover cursor-pointer"
             />

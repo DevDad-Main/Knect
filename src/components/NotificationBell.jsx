@@ -53,9 +53,9 @@ const NotificationBell = ({ notifications, onClickBell }) => {
       {/*           key={i} */}
       {/*           className="flex items-start gap-2 p-2 hover:bg-gray-50 cursor-pointer rounded-md" */}
       {/*         > */}
-      {/*           {n.from?.profile_picture ? ( */}
+      {/*           {n.from?.profile_photo ? ( */}
       {/*             <img */}
-      {/*               src={n.from.profile_picture} */}
+      {/*               src={n.from.profile_photo} */}
       {/*               alt="" */}
       {/*               className="h-8 w-8 rounded-full" */}
       {/*             /> */}

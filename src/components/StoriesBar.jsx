@@ -57,7 +57,7 @@ const StoriesBar = () => {
           const content =
             typeof story.content === "string" ? story.content : "";
           const userName = story.user?.full_name || "Unknown";
-          const userImg = story.user?.profile_picture || "/fallback.png";
+          const userImg = story.user?.profile_photo || "/fallback.png";
           const createdAt = story.createdAt
             ? moment(story.createdAt).fromNow()
             : "";

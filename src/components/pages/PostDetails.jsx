@@ -95,10 +95,10 @@ export default function PostDetails() {
 
         {/* Comment input */}
         <div className="flex items-center gap-3 border-t pt-4 mt-4">
-          {currentUser?.profile_picture ? (
+          {currentUser?.profile_photo ? (
             <img
               onClick={() => navigate(`/profile/${currentUser._id}`)}
-              src={currentUser?.profile_picture}
+              src={currentUser?.profile_photo}
               alt="me"
               className="w-9 h-9 rounded-full object-cover cursor-pointer"
             />
