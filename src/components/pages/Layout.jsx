@@ -3,29 +3,14 @@ import SideBar from "../SideBar";
 import { Outlet } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import Loading from "../Loading";
-import { fetchData } from "../utils";
+import { useApp } from "../AppContext";
 import { useSelector } from "react-redux";
 
 const Layout = () => {
   const [sideBarOpen, setSideBarOpen] = React.useState(false);
-  const [user, setUserData] = useState(null);
-  // const user = useSelector((state) => state.user.value);
-  const fetchUser = async () => {
-    try {
-      const data = await fetchData(`v1/auth/get-user`);
-      if (data) {
-        setUserData(data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { user, loading } = useApp();
 
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  return user ? (
+  return !loading && user ? (
     <div className="w-full h-screen flex">
       {/* Sidebar */}
       <div className="hidden md:block fixed top-0 left-0 h-full w-60 xl:w-72">

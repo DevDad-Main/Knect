@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import { dummyConnectionsData } from "../../assets/assets";
 import { Eye, MessageSquare, User, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { fetchData } from "../utils";
+import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
 
 const Messages = () => {
   const navigate = useNavigate();
   const [connections, setConnections] = useState([]);
+  const { getConnections } = useApp();
 
   const fetchMessages = async () => {
     try {
-      const data = await fetchData("v1/auth/connections");
+      const data = await getConnections();
 
       if (data) {
         setConnections(data.connections);

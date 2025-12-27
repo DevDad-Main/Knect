@@ -1,21 +1,6 @@
-import { useState, useEffect } from "react";
-import { fetchData } from "../components/utils"; // your helper to call backend
+import { useApp } from "../components/AppContext";
 
 export const useCurrentUser = () => {
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const data = await fetchData("v1/auth/get-user");
-        console.log("Current user:", data);
-        if (data) setCurrentUser(data._id);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUser();
-  }, []);
-
-  return currentUser;
+  const { user } = useApp();
+  return user?._id;
 };

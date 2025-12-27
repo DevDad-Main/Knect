@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchData, updateData } from "../utils";
+import { useApp } from "../AppContext.jsx";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import {
@@ -17,11 +17,12 @@ import toast from "react-hot-toast";
 const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const navigate = useNavigate();
+  const { getNotifications, updateUser } = useApp();
 
   const unreadCount = notifications.filter((n) => !n.read).length;
   const fetchNotifications = async () => {
     try {
-      const data = await fetchData("v1/notifications/get-all");
+      const data = await getNotifications();
       if (data) setNotifications(data);
     } catch (err) {
       console.error(err);
@@ -52,7 +53,7 @@ const NotificationsPage = () => {
     try {
       if (!n.read) {
         const notificationId = n._id;
-        await updateData(`v1/notifications/read/${notificationId}`);
+        await updateUser(`v1/notifications/read/${notificationId}`, {}, "POST");
         setNotifications((prev) =>
           prev.map((notif) =>
             notif._id === n._id ? { ...notif, read: true } : notif,
@@ -68,7 +69,7 @@ const NotificationsPage = () => {
 
   const handleDeleteNotification = async (id) => {
     try {
-      await updateData(`v1/notifications/delete/${id}`, {}, "DELETE");
+      await updateUser(`v1/notifications/delete/${id}`, {}, "DELETE");
       setNotifications((prev) => prev.filter((n) => n._id !== id));
 
       window.dispatchEvent(new Event("refreshNotifications"));
@@ -79,7 +80,7 @@ const NotificationsPage = () => {
 
   const handleClearAll = async () => {
     try {
-      await updateData(`v1/notifications/clear-all`, {}, "DELETE");
+      await updateUser(`v1/notifications/clear-all`, {}, "DELETE");
       setNotifications([]);
     } catch (err) {
       console.error(err);

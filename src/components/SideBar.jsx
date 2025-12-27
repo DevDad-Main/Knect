@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate, matchPath } from "react-router-dom";
 import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User, UserIcon, Bell } from "lucide-react";
-import { fetchData, updateData } from "./utils";
+import { useApp } from "../components/AppContext";
 import toast from "react-hot-toast";
 import RecentMessages from "./RecentMessages";
 import NotificationBell from "./NotificationBell";
@@ -10,6 +10,7 @@ import { io } from "socket.io-client";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
+  const { user, getNotifications, updateUser } = useApp();
   const socket = useRef(null);
   const location = useLocation();
 
@@ -39,7 +40,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       ) {
         // delete it from DB
         const id = notification._id;
-        await updateData(`v1/notifications/delete/${id}`, {}, "DELETE", false);
+        await updateUser(`v1/notifications/delete/${id}`, {}, "DELETE");
 
         // also remove it locally (just in case it sneaks in)
         setNotifications((prev) => prev.filter((n) => n._id !== id));
@@ -58,22 +59,9 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   const navigate = useNavigate();
 
-  const [user, setUserData] = useState(null);
-  // const user = useSelector((state) => state.user.value);
-  const fetchUser = async () => {
-    try {
-      const data = await fetchData(`v1/auth/get-user`);
-      if (data) {
-        setUserData(data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const fetchNotifications = async () => {
     try {
-      const data = await fetchData("v1/notifications/get-all");
+      const data = await getNotifications();
       if (data) {
         setNotifications(data); // preload from DB
       }
@@ -88,7 +76,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   const signoutUser = async () => {
     try {
-      const data = await updateData("v1/users/logout");
+      const data = await updateUser("v1/users/logout", {}, "POST");
       if (data) {
         navigate("/login");
       }
@@ -97,10 +85,6 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     const refresh = () => fetchNotifications();
@@ -173,7 +157,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
             <UserIcon onClick={() => navigate(`/profile/${user?._id}`)} />
           )}
           <div>
-            <h1 className="text-sm font-medium">{user?.full_name}</h1>
+            <h1 className="text-sm font-medium">{user?.fullName}</h1>
             <p className="text-xs text-gray-500">@{user?.username}</p>
           </div>
         </div>

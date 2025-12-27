@@ -3,23 +3,18 @@ import { Plus, TrashIcon } from "lucide-react";
 import moment from "moment";
 import StoryModal from "./StoryModal";
 import StoryViewer from "./StoryViewer";
-import { fetchData, updateData } from "./utils"; // assuming updateData handles DELETE
+import { useApp } from "../components/AppContext";
 import toast from "react-hot-toast";
-import { useCurrentUser } from "../hooks/useCurrentUser";
 
 const StoriesBar = () => {
   const [stories, setStories] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [viewStory, setViewStory] = useState(false);
-
-  // 👇 get logged in user id from token/session
-  // const user = JSON.parse(sessionStorage.getItem("token"));
-  const user = useCurrentUser();
-  const userId = user?._id;
+  const { user, getStories, updateUser } = useApp();
 
   const fetchStories = async () => {
     try {
-      const data = await fetchData("v1/story/get-stories");
+      const data = await getStories();
       if (data) setStories(data);
     } catch (error) {
       toast.error(error.message);
@@ -28,11 +23,7 @@ const StoriesBar = () => {
 
   const handleDelete = async (storyId) => {
     try {
-      const data = await updateData(
-        `v1/story/delete/${storyId}`,
-        {},
-        "DELETE",
-      );
+      const data = await updateUser(`v1/story/delete/${storyId}`, {}, "DELETE");
       if (data) {
         fetchStories(); // refresh list
       }
@@ -71,7 +62,7 @@ const StoriesBar = () => {
             ? moment(story.createdAt).fromNow()
             : "";
 
-          const isOwner = story.user?._id === userId; // 👈 check owner
+          const isOwner = story.user?._id === user?._id; // 👈 check owner
 
           return (
             <div

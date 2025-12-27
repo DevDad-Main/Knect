@@ -6,40 +6,23 @@ import UserProfileInfo from "../UserProfileInfo";
 import moment from "moment";
 import PostCard from "../PostCard";
 import ProfileModal from "../ProfileModal";
-import { fetchData, updateData } from "../utils";
+import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
-import { useCurrentUser } from "../../hooks/useCurrentUser";
 
 const Profile = () => {
   const { profileId } = useParams();
-  // const [currentUser, setCurrentUser] = useState(null);
-  const currentUser = useCurrentUser();
+  const { user: currentUser, getProfile } = useApp();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [showEdit, setShowEdit] = useState(false);
 
-  // const fetchUser = async () => {
-  //   setUser(dummyUserData);
-  //   setPosts(dummyPostsData);
-  // };
-  const fetchLoggedInUser = async () => {
-    try {
-      const data = await fetchData(`v1/auth/get-user`);
-      if (data) {
-        // setCurrentUser(data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   // Fetch profile by ID
   const fetchUser = async (id) => {
     try {
       if (!id) return; // safeguard
-      const data = await fetchData(`v1/auth/profile/${id}`);
+      const data = await getProfile(id);
 
       console.log("data", data);
       if (data) {
@@ -52,9 +35,6 @@ const Profile = () => {
     }
   };
 
-  useEffect(() => {
-    // fetchLoggedInUser();
-  }, [currentUser]);
   useEffect(() => {
     if (profileId) {
       fetchUser(profileId);

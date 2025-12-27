@@ -13,7 +13,7 @@ async function updateWithFormData(
       ...credential,
     });
     const data = await response.json();
-    if (data.success) {
+    if (data.data?.success) {
       toast.success(`${data.message}`);
       return data.data;
     } else {

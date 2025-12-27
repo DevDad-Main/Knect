@@ -21,6 +21,7 @@ import Layout from "./components/pages/Layout.jsx";
 import PostDetails from "./components/pages/PostDetails.jsx";
 import NotificationsPage from "./components/pages/NotificationsPage";
 import { Navigate } from "react-router-dom";
+import { AppProvider } from "./components/AppContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,5 +54,7 @@ const router = createBrowserRouter(
   ),
 );
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />,
+  <AppProvider>
+    <RouterProvider router={router} />
+  </AppProvider>,
 );

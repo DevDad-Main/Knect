@@ -5,17 +5,18 @@ import StoriesBar from "../StoriesBar";
 import PostCard from "../PostCard";
 import RecentMessages from "../RecentMessages";
 import { useAuth } from "@clerk/clerk-react";
-import { fetchData } from "../utils";
+import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
 
 const Feed = () => {
   const [feeds, setFeeds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { getPosts } = useApp();
 
   const fetchFeeds = async () => {
     try {
       setLoading(true);
-      const data = await fetchData("v1/posts/get-posts");
+      const data = await getPosts();
 
       if (data) {
         setFeeds(data.posts);
@@ -24,7 +25,6 @@ const Feed = () => {
     } catch (error) {
       toast.error(error.message);
     }
-    // setFeeds(dummyPostsData);
   };
 
   useEffect(() => {
