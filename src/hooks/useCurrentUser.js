@@ -8,7 +8,8 @@ export const useCurrentUser = () => {
     const getUser = async () => {
       try {
         const data = await fetchData("v1/auth/get-user");
-        if (data) setCurrentUser(data);
+        console.log("Current user:", data);
+        if (data) setCurrentUser(data._id);
       } catch (err) {
         console.log(err);
       }

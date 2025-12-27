@@ -106,7 +106,7 @@ const ChatBox = () => {
   useEffect(() => {
     const fetchUser = async (id) => {
       try {
-        const data = await updateData(`api/v1/user/profiles/${id}`);
+        const data = await updateData(`api/v1/user/profile/${id}`);
 
         if (data) {
           setUser(data.profile);

@@ -39,12 +39,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
       ) {
         // delete it from DB
         const id = notification._id;
-        await updateData(
-          `v1/notifications/delete/${id}`,
-          {},
-          "DELETE",
-          false,
-        );
+        await updateData(`v1/notifications/delete/${id}`, {}, "DELETE", false);
 
         // also remove it locally (just in case it sneaks in)
         setNotifications((prev) => prev.filter((n) => n._id !== id));

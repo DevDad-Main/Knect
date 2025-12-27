@@ -42,7 +42,7 @@ async function fetchData(path, header = {}) {
       headers: header,
     });
     const data = await res.json();
-    if (data.success) {
+    if (data.data?.success || data.data) {
       return data.data;
     } else {
       toast.error(`${data.message}`);

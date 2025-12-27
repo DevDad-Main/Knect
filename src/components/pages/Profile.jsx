@@ -39,7 +39,9 @@ const Profile = () => {
   const fetchUser = async (id) => {
     try {
       if (!id) return; // safeguard
-      const data = await updateData(`v1/auth/profiles/${id}`);
+      const data = await fetchData(`v1/auth/profile/${id}`);
+
+      console.log("data", data);
       if (data) {
         setUser(data.profile);
         setPosts(data.posts);
