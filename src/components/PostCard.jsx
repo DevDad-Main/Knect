@@ -17,7 +17,7 @@ import { useCurrentUser } from "../hooks/useCurrentUser";
 const PostCard = ({ post, onDelete }) => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
-  const [likes, setLikes] = useState(post.likes_count);
+  const [likes, setLikes] = useState(post.likesCount);
 
   const postWithHashtag = post.content.replace(
     /(#\w+)/g,
@@ -80,7 +80,7 @@ const PostCard = ({ post, onDelete }) => {
         )}
         <div>
           <div className="flex items-center space-x-1">
-            <span>{post.user?.full_name}</span>
+            <span>{post.user?.fullName}</span>
             <BadgeCheck className="w-4 h-4 text-blue-500" />
           </div>
           <div className="text-gray-500 text-sm">

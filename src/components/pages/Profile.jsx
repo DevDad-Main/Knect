@@ -11,39 +11,47 @@ import toast from "react-hot-toast";
 
 const Profile = () => {
   const { profileId } = useParams();
-  const { user: currentUser, getProfile } = useApp();
+  const { user: currentUser, getProfile, loading } = useApp();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState([]);
   const [activeTab, setActiveTab] = useState("posts");
   const [showEdit, setShowEdit] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   // Fetch profile by ID
   const fetchUser = async (id) => {
     try {
       if (!id) return; // safeguard
+      setProfileLoading(true);
+      console.log("Fetching profile for ID:", id);
       const data = await getProfile(id);
 
-      console.log("data", data);
+      console.log("Profile data received:", data);
       if (data) {
         setUser(data.profile);
-        setPosts(data.posts);
-        setLikes(data.likes);
+        setPosts(data.posts || []);
+        setLikes(data.likes || []);
       }
     } catch (error) {
+      console.error("Failed to fetch profile:", error);
       toast.error(error.message);
+    } finally {
+      setProfileLoading(false);
     }
   };
 
   useEffect(() => {
+    // If we have a profileId from URL, use it immediately
     if (profileId) {
       fetchUser(profileId);
-    } else {
-      fetchUser(currentUser?._id);
+    } else if (!loading && currentUser) {
+      // Only use currentUser if loading is complete and we have a user
+      fetchUser(currentUser._id);
     }
-  }, [profileId, currentUser]);
+  }, [profileId, loading, currentUser?._id]);
 
-  return user ? (
+  return user && !profileLoading ? (
     <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto">
         {/* Profile Card */}
@@ -133,6 +141,12 @@ const Profile = () => {
           onSaved={(updatedUser) => setUser(updatedUser)}
         />
       )}
+    </div>
+  ) : profileLoading ? (
+    <Loading />
+  ) : user ? (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-gray-500">No profile data found</p>
     </div>
   ) : (
     <Loading />
