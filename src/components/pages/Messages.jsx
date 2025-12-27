@@ -11,7 +11,7 @@ const Messages = () => {
 
   const fetchMessages = async () => {
     try {
-      const data = await fetchData("api/v1/user/connections");
+      const data = await fetchData("v1/auth/connections");
 
       if (data) {
         setConnections(data.connections);

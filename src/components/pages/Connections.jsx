@@ -18,7 +18,7 @@ const Connections = () => {
 
   const fetchConnections = async () => {
     try {
-      const data = await fetchData("api/v1/user/connections");
+      const data = await fetchData("v1/auth/connections");
 
       if (data) {
         setUser(data);
@@ -30,7 +30,7 @@ const Connections = () => {
 
   const handleUnfollow = async (userId) => {
     try {
-      const data = await updateData("api/v1/user/unfollow", { id: userId });
+      const data = await updateData("v1/auth/unfollow", { id: userId });
 
       if (data) {
         fetchConnections();
@@ -42,7 +42,7 @@ const Connections = () => {
 
   const acceptConnection = async (userId) => {
     try {
-      const data = await updateData("api/v1/user/accept", { id: userId });
+      const data = await updateData("v1/auth/accept", { id: userId });
 
       if (data) {
         fetchConnections();

@@ -37,9 +37,7 @@ function Comment({ comment, onReply, level = 0 }) {
 
   const handleLikeComment = async (commentId) => {
     try {
-      const data = await updateData(`api/v1/comment/toggle-like`, {
-        commentId,
-      });
+      const data = await updateData(`v1/comments/toggle-like/${commentId}`, {});
       if (data) {
         setIsLiked(data.isLiked);
         setLikes(data.likes);
@@ -51,9 +49,7 @@ function Comment({ comment, onReply, level = 0 }) {
 
   const handleDislikeComment = async (commentId) => {
     try {
-      const data = await updateData(`api/v1/comment/toggle-dislike`, {
-        commentId,
-      });
+      const data = await updateData(`v1/comments/toggle-dislike/${commentId}`, {});
       if (data) {
         setIsDisliked(data.isDisliked);
         setDislikes(data.dislikes);

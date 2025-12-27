@@ -31,11 +31,12 @@ function SignIn() {
     e.preventDefault();
 
     try {
-      const data = await updateData("api/v1/user/login", { ...formData });
+      const data = await updateData("v1/users/login", { ...formData }, "POST");
+
+      console.log("data", data);
 
       if (data) {
         sessionStorage.setItem("token", data.accessToken);
-
         // Redirect
         navigate("/feed"); // go to feed immediately
       }
@@ -55,11 +56,16 @@ function SignIn() {
           });
         });
       } else {
-        toast.error("Something went wrong, please try again", {
+        toast.error("Something went wrong, please try again: " + err, {
           position: "top-center",
           autoClose: 3000,
           theme: "dark",
         });
+        // toast.error("Something went wrong, please try again", {
+        //   position: "top-center",
+        //   autoClose: 3000,
+        //   theme: "dark",
+        // });
       }
     }
   };

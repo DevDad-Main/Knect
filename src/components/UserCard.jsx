@@ -36,7 +36,7 @@ const UserCard = ({ user }) => {
 
   const handleFollow = async () => {
     try {
-      const data = await updateData("api/v1/user/follow", {
+      const data = await updateData("v1/auth/follow", {
         id: user._id,
       });
 
@@ -55,7 +55,7 @@ const UserCard = ({ user }) => {
     }
 
     try {
-      const data = await updateData(`api/v1/user/connect`, { id: user._id });
+      const data = await updateData(`v1/auth/connect`, { id: user._id });
     } catch (error) {
       toast.error(error.message);
     }

@@ -70,7 +70,7 @@ async function updateData(
       credentials: "include",
     });
     const data = await response.json();
-    if (data.success) {
+    if (data.data?.success) {
       if (showToast) {
         toast.success(`${data.message}`);
       }

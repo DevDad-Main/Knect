@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { updateWithFormData } from "../utils";
+import { updateWithFormData, updateData } from "../utils";
 import toast from "react-hot-toast";
 
 function Register() {
@@ -28,32 +28,60 @@ function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    const formDataToSend = new FormData();
-    // Object.keys(formData).forEach((key) => {
-    //   if (formData[key]) {
-    //     formDataToSend.append(key, formData[key]);
-    //   }
-    // });
-    formDataToSend.append("firstName", formData.firstName);
-    formDataToSend.append("lastName", formData.lastName);
-    formDataToSend.append("email", formData.email);
-    formDataToSend.append("username", formData.username);
-    formDataToSend.append("password", formData.password);
+    // Step 1: Register user with basic info only (NO FILES!) - Send as JSON
+    const userJsonData = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      username: formData.username,
+      password: formData.password,
+    };
 
-    if (formData.profile_picture) {
-      formDataToSend.append("profile_picture", formData.profile_picture);
-    }
-    if (formData.cover_photo) {
-      formDataToSend.append("cover_photo", formData.cover_photo);
-    }
+    console.log("JSON data being sent to register:", userJsonData);
 
     try {
-      const data = await updateWithFormData(
-        "api/v1/user/register",
-        formDataToSend,
+      // Register user first with JSON (no credentials for CORS)
+      const userData = await updateData(
+        "v1/users/register",
+        userJsonData,
+        "POST",
+        true,
       );
 
-      if (data) {
+      if (userData) {
+        if (formData.profile_picture || formData.cover_photo) {
+          const mediaFormData = new FormData();
+
+          if (formData.profile_picture) {
+            mediaFormData.append("profile_photo", formData.profile_picture);
+            mediaFormData.append("profile_photo_type", "profile");
+          }
+          if (formData.cover_photo) {
+            mediaFormData.append("cover_photo", formData.cover_photo);
+            mediaFormData.append("cover_photo_type", "cover");
+          }
+
+          try {
+            // Upload media files to media service
+            const mediaData = await updateWithFormData(
+              "v1/media/upload-user-media",
+              mediaFormData,
+            );
+
+            if (mediaData) {
+              toast.success("Profile Media uploaded successfully!");
+            }
+          } catch (mediaError) {
+            console.error("Media upload failed:", mediaError);
+            toast.success(
+              "Registration successful! You can upload photos later in your profile.",
+            );
+          }
+        } else {
+          toast.success("Registration successful! Please login to continue.");
+        }
+
+        // Always redirect to login after successful registration
         navigate("/login");
       }
     } catch (err) {

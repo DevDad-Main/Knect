@@ -40,7 +40,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         // delete it from DB
         const id = notification._id;
         await updateData(
-          `api/v1/notification/delete/${id}`,
+          `v1/notifications/delete/${id}`,
           {},
           "DELETE",
           false,
@@ -67,7 +67,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   // const user = useSelector((state) => state.user.value);
   const fetchUser = async () => {
     try {
-      const data = await fetchData(`api/v1/user/user`);
+      const data = await fetchData(`v1/auth/get-user`);
       if (data) {
         setUserData(data);
       }
@@ -78,7 +78,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   const fetchNotifications = async () => {
     try {
-      const data = await fetchData("api/v1/notification/get-all");
+      const data = await fetchData("v1/notifications/get-all");
       if (data) {
         setNotifications(data); // preload from DB
       }
@@ -93,7 +93,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
   const signoutUser = async () => {
     try {
-      const data = await updateData("api/v1/user/logout");
+      const data = await updateData("v1/users/logout");
       if (data) {
         navigate("/login");
       }

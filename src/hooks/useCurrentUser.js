@@ -7,7 +7,7 @@ export const useCurrentUser = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const data = await fetchData("api/v1/user/user");
+        const data = await fetchData("v1/auth/get-user");
         if (data) setCurrentUser(data);
       } catch (err) {
         console.log(err);

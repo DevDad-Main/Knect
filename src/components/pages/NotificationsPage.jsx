@@ -21,7 +21,7 @@ const NotificationsPage = () => {
   const unreadCount = notifications.filter((n) => !n.read).length;
   const fetchNotifications = async () => {
     try {
-      const data = await fetchData("api/v1/notification/get-all");
+      const data = await fetchData("v1/notifications/get-all");
       if (data) setNotifications(data);
     } catch (err) {
       console.error(err);
@@ -52,7 +52,7 @@ const NotificationsPage = () => {
     try {
       if (!n.read) {
         const notificationId = n._id;
-        await updateData(`api/v1/notification/read/${notificationId}`);
+        await updateData(`v1/notifications/read/${notificationId}`);
         setNotifications((prev) =>
           prev.map((notif) =>
             notif._id === n._id ? { ...notif, read: true } : notif,
@@ -68,7 +68,7 @@ const NotificationsPage = () => {
 
   const handleDeleteNotification = async (id) => {
     try {
-      await updateData(`api/v1/notification/delete/${id}`, {}, "DELETE");
+      await updateData(`v1/notifications/delete/${id}`, {}, "DELETE");
       setNotifications((prev) => prev.filter((n) => n._id !== id));
 
       window.dispatchEvent(new Event("refreshNotifications"));
@@ -79,7 +79,7 @@ const NotificationsPage = () => {
 
   const handleClearAll = async () => {
     try {
-      await updateData(`api/v1/notification/clear-all`, {}, "DELETE");
+      await updateData(`v1/notifications/clear-all`, {}, "DELETE");
       setNotifications([]);
     } catch (err) {
       console.error(err);

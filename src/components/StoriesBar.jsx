@@ -19,7 +19,7 @@ const StoriesBar = () => {
 
   const fetchStories = async () => {
     try {
-      const data = await fetchData("api/v1/story/stories");
+      const data = await fetchData("v1/story/get-stories");
       if (data) setStories(data);
     } catch (error) {
       toast.error(error.message);
@@ -29,7 +29,7 @@ const StoriesBar = () => {
   const handleDelete = async (storyId) => {
     try {
       const data = await updateData(
-        `api/v1/story/delete/${storyId}`,
+        `v1/story/delete/${storyId}`,
         {},
         "DELETE",
       );

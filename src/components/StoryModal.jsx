@@ -78,7 +78,7 @@ const StoryModal = ({ setShowModal, fetchStories }) => {
 
     try {
       const data = await updateWithFormData(
-        "api/v1/story/add-story",
+        "v1/story/add-story",
         formData,
         {
           headers: {

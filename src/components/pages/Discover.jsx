@@ -15,7 +15,7 @@ const Discover = () => {
       try {
         setUsers([]);
         setLoading(true);
-        const data = await updateData("api/v1/user/discover", { input: input });
+        const data = await updateData("v1/auth/discover", { input: input });
 
         if (data) {
           setUsers(data);

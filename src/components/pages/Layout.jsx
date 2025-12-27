@@ -12,7 +12,7 @@ const Layout = () => {
   // const user = useSelector((state) => state.user.value);
   const fetchUser = async () => {
     try {
-      const data = await fetchData(`api/v1/user/user`);
+      const data = await fetchData(`v1/auth/get-user`);
       if (data) {
         setUserData(data);
       }

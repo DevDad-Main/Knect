@@ -18,7 +18,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
 
   const fetchUser = async () => {
     try {
-      const data = await fetchData(`api/v1/user/user`);
+      const data = await fetchData(`v1/auth/get-user`);
       if (data) {
         setUserData(data);
       }
@@ -49,7 +49,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
 
     try {
       const data = await updateWithFormData(
-        "api/v1/user/update-user",
+        "v1/auth/update-user",
         userData,
         {
           headers: {

@@ -26,7 +26,7 @@ const PostCard = ({ post, onDelete }) => {
 
   const handleLike = async () => {
     try {
-      const data = await updateData("api/v1/post/like", { postId: post._id });
+      const data = await updateData(`v1/posts/toggle-post-like/${post._id}`, {});
       if (data) {
         setLikes((prev) => {
           if (prev.includes(currentUser._id)) {
@@ -46,7 +46,7 @@ const PostCard = ({ post, onDelete }) => {
     const postId = post._id;
     try {
       const data = await updateData(
-        `api/v1/post/delete/${postId}`,
+        `v1/posts/delete-post/${postId}`,
         {},
         "DELETE",
       );

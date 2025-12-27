@@ -47,12 +47,12 @@ const CreatePost = () => {
     try {
       const formData = new FormData();
       formData.append("content", content);
-      formData.append("post_type", postType);
+      formData.append("postType", postType);
       images.map((image) => {
         formData.append("images", image);
       });
 
-      const data = await updateWithFormData("api/v1/post/add", formData, {
+      const data = await updateWithFormData("v1/posts/create-post", formData, {
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },

@@ -26,7 +26,7 @@ const Profile = () => {
   // };
   const fetchLoggedInUser = async () => {
     try {
-      const data = await fetchData(`api/v1/user/user`);
+      const data = await fetchData(`v1/auth/get-user`);
       if (data) {
         // setCurrentUser(data);
       }
@@ -39,7 +39,7 @@ const Profile = () => {
   const fetchUser = async (id) => {
     try {
       if (!id) return; // safeguard
-      const data = await updateData(`api/v1/user/profiles/${id}`);
+      const data = await updateData(`v1/auth/profiles/${id}`);
       if (data) {
         setUser(data.profile);
         setPosts(data.posts);

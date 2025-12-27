@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-      const data = await fetchData("api/v1/user/user"); // backend should read cookie/header
+      const data = await fetchData("v1/auth/get-user"); // backend should read cookie/header
       if (data) {
         setUser(data);
       } else {

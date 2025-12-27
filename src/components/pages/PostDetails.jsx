@@ -19,7 +19,7 @@ export default function PostDetails() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const data = await fetchData(`api/v1/post/post/${postId}`);
+        const data = await fetchData(`v1/posts/get-post/${postId}`);
         if (data) {
           setPost(data.post);
 
@@ -40,8 +40,7 @@ export default function PostDetails() {
     if (!newComment.trim()) return;
 
     try {
-      const data = await updateData(`api/v1/comment/add-comment`, {
-        postId,
+      const data = await updateData(`v1/comments/add-comment/${postId}`, {
         content: newComment,
       });
       if (data) {
@@ -55,8 +54,7 @@ export default function PostDetails() {
 
   const handleAddReply = async (parentId, replyText) => {
     try {
-      const data = await updateData(`api/v1/comment/add-reply`, {
-        postId,
+      const data = await updateData(`v1/comments/add-reply/${postId}`, {
         parentId,
         content: replyText,
       });
