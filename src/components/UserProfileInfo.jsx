@@ -29,7 +29,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit }) => {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-gray-900">
-                  {user.full_name}
+                  {user.fullName}
                 </h1>
                 <Verified className="CSS" />
               </div>

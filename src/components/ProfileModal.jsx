@@ -35,28 +35,26 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     userData.append("username", editForm.username);
     userData.append("bio", editForm.bio);
     userData.append("location", editForm.location);
-    userData.append("full_name", editForm.full_name);
+    userData.append("fullName", editForm.full_name);
     // editForm.profile_picture &&
     //   userData.append("profile", editForm.profile_picture);
     // editForm.cover_photo && userData.append("cover", editForm.cover_photo);
     // ✅ Only append if it’s a File, not a string URL
     if (editForm.profile_picture instanceof File) {
-      userData.append("profile", editForm.profile_picture);
+      userData.append("profile_photo", editForm.profile_picture);
+      userData.append("profile_photo_type", "profile");
     }
     if (editForm.cover_photo instanceof File) {
-      userData.append("cover", editForm.cover_photo);
+      userData.append("cover_photo", editForm.cover_photo);
+      userData.append("cover_photo_type", "cover");
     }
 
     try {
-      const data = await updateWithFormData(
-        "v1/auth/update-user",
-        userData,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
+      const data = await updateWithFormData("v1/auth/update-user", userData, {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
-      );
+      });
 
       if (data) {
         onSaved?.(data);

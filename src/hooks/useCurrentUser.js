@@ -2,5 +2,6 @@ import { useApp } from "../components/AppContext";
 
 export const useCurrentUser = () => {
   const { user } = useApp();
-  return user?._id;
+  return user;
 };
+
