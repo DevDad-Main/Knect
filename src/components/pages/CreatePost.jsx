@@ -15,6 +15,18 @@ const CreatePost = () => {
   const handleSubmit = async () => {
     if (!images.length && !content) {
       toast.error("Please add at least one image or write something");
+      return;
+    }
+
+    // Check total image size (50MB limit = 50 * 1024 * 1024 bytes)
+    const totalSize = images.reduce((sum, image) => sum + image.size, 0);
+    const maxSize = 50 * 1024 * 1024; // 50MB
+
+    if (totalSize > maxSize) {
+      toast.error(
+        `Total image size exceeds 50MB. Current size: ${(totalSize / 1024 / 1024).toFixed(2)}MB`,
+      );
+      return;
     }
 
     setLoading(true);
@@ -123,7 +135,26 @@ const CreatePost = () => {
               accept="image/*"
               hidden
               multiple
-              onChange={(e) => setImages([...images, ...e.target.files])}
+              onChange={(e) => {
+                const newImages = Array.from(e.target.files);
+                const updatedImages = [...images, ...newImages];
+
+                // Check total size including new images
+                const totalSize = updatedImages.reduce(
+                  (sum, image) => sum + image.size,
+                  0,
+                );
+                const maxSize = 50 * 1024 * 1024; // 50MB
+
+                if (totalSize > maxSize) {
+                  toast.error(
+                    `Total image size exceeds 50MB. Current size: ${(totalSize / 1024 / 1024).toFixed(2)}MB`,
+                  );
+                  return;
+                }
+
+                setImages(updatedImages);
+              }}
             />
             <button
               disabled={loading}
