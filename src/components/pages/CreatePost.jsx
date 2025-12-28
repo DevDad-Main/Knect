@@ -73,7 +73,7 @@ const CreatePost = () => {
               <UserIcon className="w-12 h-12 rounded-full shadow object-cover" />
             )}
             <div>
-              <h2 className="font-semibold">{user?.full_name}</h2>
+              <h2 className="font-semibold">{user?.fullName}</h2>
               <p className="text-sm text-gray-500">@{user?.username}</p>
             </div>
           </div>

@@ -6,6 +6,7 @@ import {
   Share,
   TrashIcon,
   UserIcon,
+  X,
 } from "lucide-react";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
@@ -18,6 +19,7 @@ const PostCard = ({ post, onDelete }) => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
   const [likes, setLikes] = useState(post.likesCount);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const postWithHashtag = post.content.replace(
     /(#\w+)/g,
@@ -121,8 +123,9 @@ const PostCard = ({ post, onDelete }) => {
           <img
             key={index}
             src={img}
-            className={`w-full h-48 object-cover rounded-lg ${post.image_urls.length === 1 && "col-span-2 h-auto"}`}
+            className={`w-full h-48 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity ${post.image_urls.length === 1 && "col-span-2 h-auto"}`}
             alt=""
+            onClick={() => setSelectedImage(img)}
           />
         ))}
       </div>
@@ -149,6 +152,44 @@ const PostCard = ({ post, onDelete }) => {
           <Share className="w-4 h-4" />
         </div>
       </div>
+
+      {/* Image Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-7xl max-h-full">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            
+            {/* Image */}
+            <img
+              src={selectedImage}
+              alt="Full size image"
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {/* Download Button */}
+            <a
+              href={selectedImage}
+              download
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="absolute -top-12 left-0 bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 text-sm font-medium"
+            >
+              Save Image
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
