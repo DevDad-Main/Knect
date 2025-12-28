@@ -14,7 +14,7 @@ async function updateWithFormData(
       ...credential,
     });
     const data = await response.json();
-    if (data.data?.success) {
+    if (data.success) {
       toast.success(`${data.message}`);
       return data.data;
     } else {
@@ -43,7 +43,7 @@ async function fetchData(path, header = {}) {
       headers: header,
     });
     const data = await res.json();
-    if (data.data?.success || data.data) {
+    if (data.success || data.data) {
       return data.data;
     } else {
       toast.error(`${data.message}`);
@@ -71,7 +71,7 @@ async function updateData(
       credentials: "include",
     });
     const data = await response.json();
-    if (data.data?.success) {
+    if (data.success) {
       if (showToast) {
         toast.success(`${data.message}`);
       }

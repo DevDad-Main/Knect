@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import { dummyUserData, dummyPostsData } from "../../assets/assets";
 import Loading from "../Loading";
@@ -20,7 +20,7 @@ const Profile = () => {
   const [profileLoading, setProfileLoading] = useState(false);
 
   // Fetch profile by ID
-  const fetchUser = async (id) => {
+  const fetchUser = useCallback(async (id) => {
     try {
       if (!id) return; // safeguard
       setProfileLoading(true);
@@ -39,7 +39,7 @@ const Profile = () => {
     } finally {
       setProfileLoading(false);
     }
-  };
+  }, [getProfile]);
 
   useEffect(() => {
     // If we have a profileId from URL, use it immediately
@@ -49,7 +49,7 @@ const Profile = () => {
       // Only use currentUser if loading is complete and we have a user
       fetchUser(currentUser._id);
     }
-  }, [profileId, loading, currentUser?._id]);
+  }, [profileId, loading, currentUser?._id, fetchUser]);
 
   return user && !profileLoading ? (
     <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">

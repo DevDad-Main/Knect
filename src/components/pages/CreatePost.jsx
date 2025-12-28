@@ -33,6 +33,8 @@ const CreatePost = () => {
         formData.append("images", image);
       });
 
+      console.log("FORM DATA", formData);
+
       const data = await updateWithFormData("v1/posts/create-post", formData);
       console.log("CREATE POST DATA", data);
 

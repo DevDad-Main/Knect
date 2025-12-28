@@ -28,60 +28,37 @@ function Register() {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Step 1: Register user with basic info only (NO FILES!) - Send as JSON
-    const userJsonData = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      username: formData.username,
-      password: formData.password,
-    };
+    // Create FormData object with all fields including files
+    const formDataToSend = new FormData();
 
-    console.log("JSON data being sent to register:", userJsonData);
+    // Add all text fields
+    formDataToSend.append("firstName", formData.firstName);
+    formDataToSend.append("lastName", formData.lastName);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("username", formData.username);
+    formDataToSend.append("password", formData.password);
+
+    // Add files if they exist
+    if (formData.profile_photo) {
+      formDataToSend.append("profile_photo", formData.profile_photo);
+      formDataToSend.append("profile_photo_type", "profile");
+    }
+    if (formData.cover_photo) {
+      formDataToSend.append("cover_photo", formData.cover_photo);
+      formDataToSend.append("cover_photo_type", "cover");
+    }
+
+    console.log("FormData being sent to register:", formDataToSend);
 
     try {
-      // Register user first with JSON (no credentials for CORS)
-      const userData = await updateData(
+      // Send everything as FormData in a single request
+      const userData = await updateWithFormData(
         "v1/users/register",
-        userJsonData,
-        "POST",
-        true,
+        formDataToSend,
       );
 
       if (userData) {
-        if (formData.profile_photo || formData.cover_photo) {
-          const mediaFormData = new FormData();
-
-          if (formData.profile_photo) {
-            mediaFormData.append("profile_photo", formData.profile_photo);
-            mediaFormData.append("profile_photo_type", "profile");
-          }
-          if (formData.cover_photo) {
-            mediaFormData.append("cover_photo", formData.cover_photo);
-            mediaFormData.append("cover_photo_type", "cover");
-          }
-
-          try {
-            // Upload media files to media service
-            const mediaData = await updateWithFormData(
-              "v1/media/upload-user-media",
-              mediaFormData,
-            );
-
-            if (mediaData) {
-              toast.success("Profile Media uploaded successfully!");
-            }
-          } catch (mediaError) {
-            console.error("Media upload failed:", mediaError);
-            toast.success(
-              "Registration successful! You can upload photos later in your profile.",
-            );
-          }
-        } else {
-          toast.success("Registration successful! Please login to continue.");
-        }
-
-        // Always redirect to login after successful registration
+        toast.success("Registration successful!");
         navigate("/login");
       }
     } catch (err) {

@@ -12,10 +12,6 @@ function SignIn() {
     password: "",
   });
 
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  sessionStorage.clear();
-
   const handleInput = (e) => {
     const { name, value } = e.target;
 
