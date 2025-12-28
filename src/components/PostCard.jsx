@@ -167,7 +167,7 @@ const PostCard = ({ post, onDelete }) => {
             >
               <X className="w-8 h-8" />
             </button>
-            
+
             {/* Image */}
             <img
               src={selectedImage}
@@ -175,7 +175,7 @@ const PostCard = ({ post, onDelete }) => {
               className="max-w-full max-h-[80vh] object-contain rounded-lg"
               onClick={(e) => e.stopPropagation()}
             />
-            
+
             {/* Download Button */}
             <a
               href={selectedImage}

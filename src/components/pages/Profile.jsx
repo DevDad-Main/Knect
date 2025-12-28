@@ -20,26 +20,31 @@ const Profile = () => {
   const [profileLoading, setProfileLoading] = useState(false);
 
   // Fetch profile by ID
-  const fetchUser = useCallback(async (id) => {
-    try {
-      if (!id) return; // safeguard
-      setProfileLoading(true);
-      console.log("Fetching profile for ID:", id);
-      const data = await getProfile(id);
+  const fetchUser = useCallback(
+    async (id) => {
+      try {
+        if (!id) return; // safeguard
+        setProfileLoading(true);
+        console.log("Fetching profile for ID:", id);
+        const data = await getProfile(id);
 
-      console.log("Profile data received:", data);
-      if (data) {
-        setUser(data.profile);
-        setPosts(data.posts || []);
-        setLikes(data.likes || []);
+        if (data) {
+          setUser(data.user || data.profile);
+          setPosts(data.posts || []);
+          setLikes(data.likes || []);
+        } else {
+          // Handle case where data is null/undefined
+          console.log("No profile data received");
+        }
+      } catch (error) {
+        console.error("Failed to fetch profile:", error);
+        toast.error(error.message);
+      } finally {
+        setProfileLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch profile:", error);
-      toast.error(error.message);
-    } finally {
-      setProfileLoading(false);
-    }
-  }, [getProfile]);
+    },
+    [getProfile],
+  );
 
   useEffect(() => {
     // If we have a profileId from URL, use it immediately
@@ -51,7 +56,19 @@ const Profile = () => {
     }
   }, [profileId, loading, currentUser?._id, fetchUser]);
 
-  return user && !profileLoading ? (
+  if (profileLoading) {
+    return <Loading />;
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-gray-500">No profile data found</p>
+      </div>
+    );
+  }
+
+  return (
     <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">
       <div className="max-w-3xl mx-auto">
         {/* Profile Card */}
@@ -97,7 +114,7 @@ const Profile = () => {
           )}
           {/* Media */}
           {activeTab === "media" && (
-            <div className="flex flex-wrap mt-6 max-w-6xl gap-2">
+            <div className="flex-wrap mt-6 max-w-6xl gap-2">
               {posts
                 .filter((post) => post.image_urls.length > 0)
                 .map((post) => (
@@ -142,14 +159,6 @@ const Profile = () => {
         />
       )}
     </div>
-  ) : profileLoading ? (
-    <Loading />
-  ) : user ? (
-    <div className="flex items-center justify-center h-64">
-      <p className="text-gray-500">No profile data found</p>
-    </div>
-  ) : (
-    <Loading />
   );
 };
 

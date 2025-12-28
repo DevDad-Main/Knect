@@ -22,7 +22,6 @@ const Feed = () => {
       setLoading(true);
 
       const data = await getPosts(cursor);
-      console.log("FETCH FEEDS DATA", data);
 
       if (data?.posts?.length) {
         setFeeds((prev) => [...prev, ...data.posts]);

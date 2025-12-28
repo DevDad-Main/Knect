@@ -6,11 +6,13 @@ import { fetchData, updateData } from "../utils";
 import PostCard from "../PostCard";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import Loading from "../Loading";
+import { useApp } from "../AppContext";
 
 export default function PostDetails() {
   const { postId } = useParams();
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
+  const { getPost } = useApp();
 
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
@@ -19,12 +21,16 @@ export default function PostDetails() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const data = await fetchData(`v1/posts/get-post/${postId}`);
+        // const data = await fetchData(`v1/posts/get-post/${postId}`);
+        const data = await getPost(postId);
+
+        console.log("Post data received:", data);
+
         if (data) {
           setPost(data.post);
 
           // Only top-level comments
-          const topLevelComments = data.comments
+          const topLevelComments = data.post.comments
             .filter((c) => c.parent === null)
             .map((c) => ({ ...c, replies: c.replies || [] }));
           setComments(topLevelComments);
