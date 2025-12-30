@@ -7,6 +7,7 @@ import {
   TrashIcon,
   UserIcon,
   X,
+  ExternalLink,
 } from "lucide-react";
 import moment from "moment";
 import React, { useState, useEffect } from "react";
@@ -64,6 +65,8 @@ const PostCard = ({ post, onDelete }) => {
   };
 
   const isOwner = post.user?._id === currentUser?._id;
+
+  console.log("POST", post);
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-4 space-y-4 w-full max-w-2xl relative hover:shadow-xl transition-all duration-200 ">
@@ -144,12 +147,7 @@ const PostCard = ({ post, onDelete }) => {
           onClick={() => navigate(`/post/${post._id}`)}
           className="flex items-center gap-1 cursor-pointer hover:text-indigo-600"
         >
-          <MessageCircle className="w-4 h-4" />
-          <span>{post.commentsCount || 0}</span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          <Share className="w-4 h-4" />
+          <ExternalLink className="w-4 h-4" />
         </div>
       </div>
 
