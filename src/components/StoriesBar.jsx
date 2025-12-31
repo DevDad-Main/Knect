@@ -15,6 +15,7 @@ const StoriesBar = () => {
   const fetchStories = async () => {
     try {
       const data = await getStories();
+      console.log("STORY DATA", data)
       if (data) setStories(data);
     } catch (error) {
       toast.error(error.message);
@@ -54,10 +55,9 @@ const StoriesBar = () => {
 
         {/* Render story cards */}
         {stories.map((story) => {
-          const content =
-            typeof story.content === "string" ? story.content : "";
-          const userName = story.user?.full_name || "Unknown";
-          const userImg = story.user?.profile_photo || "/fallback.png";
+          const content = story.content || "";
+          const userName = story?.user?.username || "Unknown";
+          const userImg = story.profilePhoto || story.profile_photo || "/fallback.png";
           const createdAt = story.createdAt
             ? moment(story.createdAt).fromNow()
             : "";
@@ -68,8 +68,8 @@ const StoriesBar = () => {
             <div
               key={story._id}
               onClick={() => setViewStory(story)}
-              className="relative rounded-lg shadow min-w-30 max-w-30 max-h-40 cursor-pointer hover:shadow-lg transition-all duration-200 bg-gradient-to-b active:scale-95"
-              style={{ background: story.background_color }}
+              className="relative rounded-lg shadow-lg min-w-30 max-w-30 max-h-40 cursor-pointer hover:shadow-lg transition-all duration-200 bg-linear-to-b active:scale-95"
+              style={{ background: story.backgroundColour }}
             >
               <img
                 src={userImg}
@@ -86,20 +86,20 @@ const StoriesBar = () => {
                   }}
                   className="absolute right-1 top-2 text-white hover:text-red-500 transition"
                 >
-                  <TrashIcon className="w-6 h-6" />
+                  <TrashIcon className="w-6 h-6 text-white" />
                 </button>
               )}
 
-              <p className="absolute top-18 left-3 text-white/60 text-sm truncate max-w-24">
+              <p className="absolute top-18 left-3 text-white/90 text-sm truncate max-w-24 drop-shadow-lg">
                 {content}
               </p>
-              <p className="text-white absolute bottom-1 right-2 z-10 text-xs">
+              <p className="text-white absolute bottom-1 right-2 z-10 text-xs drop-shadow-lg">
                 {createdAt}
               </p>
 
-              {story.media_type !== "text" && (
+              {story.mediaType !== "text" && (
                 <div className="absolute inset-0 z-1 rounded-lg bg-black overflow-hidden">
-                  {story.media_type === "image" ? (
+                  {story.mediaType === "image" ? (
                     <img
                       src={story.media_url}
                       alt=""

@@ -8,7 +8,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
     let timer, progressInterval;
 
     //Media type is either text or image
-    if (viewStory && viewStory.media_type !== "video") {
+    if (viewStory && viewStory.mediaType !== "video") {
       setProgress(0);
 
       const duration = 10000; // 10 seconds for text or image
@@ -39,7 +39,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
     return null;
   }
   const renderContent = () => {
-    switch (viewStory.media_type) {
+    switch (viewStory.mediaType) {
       case "image":
         return (
           <img
@@ -75,8 +75,8 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       className="fixed inset-0 h-screen bg-black bg-opacity-90 z-110 flex items-center justify-center"
       style={{
         backgroundColor:
-          viewStory.media_type === "text"
-            ? viewStory.background_color
+          viewStory.mediaType === "text"
+            ? viewStory.backgroundColour
             : "#000000",
       }}
     >
@@ -90,12 +90,12 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       {/* User Info - Top Left*/}
       <div className="absolute top-4 left-4 flex items-center space-x-3 p-2 px-4 sm:p-4 sm:px-8 backdrop-blur-2xl rounded bg-black/50">
         <img
-          src={viewStory?.user?.profile_photo}
-          alt=""
+          src={viewStory?.profilePhoto || viewStory?.profile_photo}
+          alt="users profile photo"
           className="size-7 sm:size-8 rounded-full object-cover border border-white"
         />
         <div className="text-white font-medium flex items-center gap-1.5">
-          <span>{viewStory?.user?.full_name}</span>
+          <span>{viewStory?.user?.username}</span>
           <BadgeCheck size={18} />
         </div>
       </div>
