@@ -2,9 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { updateData } from "./utils";
 import toast from "react-hot-toast";
+import { useApp } from "../components/AppContext";
 
 function SignIn() {
   const navigate = useNavigate();
+  const { user, setUser } = useApp();
 
   // after successful login:
   const [formData, setFormData] = useState({
@@ -34,6 +36,7 @@ function SignIn() {
       if (data) {
         // Token is now set as HTTP-only cookie by backend
         // No need to store in sessionStorage
+        setUser(data?.user); // updates <App> instantly
         navigate("/feed"); // go to feed immediately
       }
 
