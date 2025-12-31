@@ -71,8 +71,10 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   };
 
   useEffect(() => {
-    fetchNotifications();
+    // fetchNotifications();
   }, []);
+
+  console.log("USER ", user)
 
   const signoutUser = async () => {
     try {

@@ -13,7 +13,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     location: "",
     profile_photo: null,
     cover_photo: null,
-    full_name: "",
+    fullName: "",
   });
 
   const fetchUser = async () => {
@@ -35,7 +35,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     userData.append("username", editForm.username);
     userData.append("bio", editForm.bio);
     userData.append("location", editForm.location);
-    userData.append("fullName", editForm.full_name);
+    userData.append("fullName", editForm.fullName);
     // editForm.profile_photo &&
     //   userData.append("profile", editForm.profile_photo);
     // editForm.cover_photo && userData.append("cover", editForm.cover_photo);
@@ -77,7 +77,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
         location: user.location || "",
         profile_photo: user.profile_photo || null,
         cover_photo: user.cover_photo || null,
-        full_name: user.full_name || "",
+        fullName: user.fullName || "",
       });
     }
   }, [user]);
@@ -191,9 +191,9 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                 className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
                 placeholder="Please enter your full name.."
                 onChange={(e) =>
-                  setEditForm({ ...editForm, full_name: e.target.value })
+                  setEditForm({ ...editForm, fullName: e.target.value })
                 }
-                value={editForm.full_name}
+                value={editForm.fullName}
               />
             </div>
 
