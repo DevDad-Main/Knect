@@ -6,7 +6,7 @@ import { useApp } from "../components/AppContext";
 
 function SignIn() {
   const navigate = useNavigate();
-  const { user, setUser } = useApp();
+  const { user, setUser, checkUser } = useApp();
 
   // after successful login:
   const [formData, setFormData] = useState({
@@ -35,8 +35,8 @@ function SignIn() {
 
       if (data) {
         // Token is now set as HTTP-only cookie by backend
-        // No need to store in sessionStorage
-        setUser(data?.user); // updates <App> instantly
+        // Fetch user data immediately after login
+        await checkUser();
         navigate("/feed"); // go to feed immediately
       }
 

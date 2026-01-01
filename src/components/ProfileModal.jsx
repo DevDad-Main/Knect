@@ -3,9 +3,11 @@ import { Pencil, UserIcon } from "lucide-react";
 import { fetchData, updateWithFormData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useApp } from "./AppContext";
 
 const ProfileModal = ({ setShowEdit, onSaved }) => {
   const navigate = useNavigate();
+  const { updateUser } = useApp();
   const [user, setUserData] = useState({});
   const [editForm, setEditForm] = useState({
     username: "",
@@ -30,27 +32,50 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     e.persist();
-    const userData = new FormData();
 
-    userData.append("username", editForm.username);
-    userData.append("bio", editForm.bio);
-    userData.append("location", editForm.location);
-    userData.append("fullName", editForm.fullName);
-    // editForm.profile_photo &&
-    //   userData.append("profile", editForm.profile_photo);
-    // editForm.cover_photo && userData.append("cover", editForm.cover_photo);
-    // ✅ Only append if it’s a File, not a string URL
-    if (editForm.profile_photo instanceof File) {
-      userData.append("profile_photo", editForm.profile_photo);
-      userData.append("profile_photo_type", "profile");
-    }
-    if (editForm.cover_photo instanceof File) {
-      userData.append("cover_photo", editForm.cover_photo);
-      userData.append("cover_photo_type", "cover");
-    }
+    // Check if we have files to upload
+    const hasProfilePhoto = editForm.profile_photo instanceof File;
+    const hasCoverPhoto = editForm.cover_photo instanceof File;
+
+    console.log("hasProfilePhoto:", hasProfilePhoto, "hasCoverPhoto:", hasCoverPhoto);
+    console.log("editForm:", editForm);
 
     try {
-      const data = await updateWithFormData("v1/auth/update-user", userData);
+      let data;
+
+      if (hasProfilePhoto || hasCoverPhoto) {
+        // Use FormData for file uploads
+        const userData = new FormData();
+        userData.append("username", editForm.username);
+        userData.append("bio", editForm.bio);
+        userData.append("location", editForm.location);
+        userData.append("fullName", editForm.fullName);
+
+        if (hasProfilePhoto) {
+          userData.append("profile_photo", editForm.profile_photo);
+          userData.append("profile_photo_type", "profile");
+        }
+        if (hasCoverPhoto) {
+          userData.append("cover_photo", editForm.cover_photo);
+          userData.append("cover_photo_type", "cover");
+        }
+
+        console.log("Sending FormData to update-user-with-files");
+        data = await updateWithFormData("v1/auth/update-user-with-files", userData);
+      } else {
+        // Use regular JSON for text-only updates
+        const userData = {
+          username: editForm.username,
+          bio: editForm.bio,
+          location: editForm.location,
+          fullName: editForm.fullName,
+        };
+
+        console.log("Sending JSON to update-user");
+        data = await updateUser("v1/auth/update-user", userData, "PUT");
+      }
+
+      console.log("UPDATE USER DATA", data);
 
       if (data) {
         onSaved?.(data);
@@ -63,6 +88,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     }
   };
 
+  console.log("USER UPDATE DATA", editForm);
   // fetch user once
   useEffect(() => {
     fetchUser();
