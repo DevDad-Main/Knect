@@ -3,9 +3,13 @@ import React, { useEffect, useState } from "react";
 
 const StoryViewer = ({ viewStory, setViewStory }) => {
   const [progress, setProgress] = useState(0);
+  const [videoDuration, setVideoDuration] = useState(0);
+  const [videoCurrentTime, setVideoCurrentTime] = useState(0);
+  const videoRef = React.useRef(null);
 
   useEffect(() => {
     let timer, progressInterval;
+    let animationFrameId;
 
     //Media type is either text or image
     if (viewStory && viewStory.mediaType !== "video") {
@@ -20,16 +24,57 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
         setProgress((elapsedTime / duration) * 100);
       }, setTime);
 
-      //Close story after the 10 seconds has finished
+      //Close story after 10 seconds has finished
       timer = setTimeout(() => {
         setViewStory(null);
       }, duration);
+    } else if (viewStory && viewStory.mediaType === "video") {
+      // Smooth progress animation for videos
+      let startTime = null;
+
+      const animateProgress = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        if (videoRef.current && videoDuration > 0) {
+          const currentTime = videoRef.current.currentTime;
+          const progress = (currentTime / videoDuration) * 100;
+          setProgress(progress);
+
+          if (currentTime < videoDuration) {
+            animationFrameId = requestAnimationFrame(animateProgress);
+          }
+        } else {
+          animationFrameId = requestAnimationFrame(animateProgress);
+        }
+      };
+
+      animationFrameId = requestAnimationFrame(animateProgress);
     }
+
     return () => {
       clearTimeout(timer);
       clearInterval(progressInterval);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
-  }, [viewStory, setViewStory]);
+  }, [viewStory, setViewStory, videoDuration]);
+
+  // Handle video time updates
+  const handleVideoTimeUpdate = () => {
+    if (videoRef.current && videoDuration > 0) {
+      const currentTime = videoRef.current.currentTime;
+      setVideoCurrentTime(currentTime);
+      setProgress((currentTime / videoDuration) * 100);
+    }
+  };
+
+  const handleVideoLoadedMetadata = () => {
+    if (videoRef.current) {
+      setVideoDuration(videoRef.current.duration);
+      setVideoCurrentTime(0);
+      setProgress(0);
+    }
+  };
 
   const handleCloseFunction = () => {
     setViewStory(null);
@@ -51,12 +96,16 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       case "video":
         return (
           <video
-            // Autoamtcally closes the story when we finish the video
+            ref={videoRef}
+            // Automatically closes the story when we finish the video
             onEnded={() => setViewStory(null)}
+            onTimeUpdate={handleVideoTimeUpdate}
+            onLoadedMetadata={handleVideoLoadedMetadata}
             src={viewStory.media_url}
-            className="max-h-screen"
-            // controls
+            className="max-h-screen w-full h-full object-contain"
             autoPlay
+            playsInline
+            muted
           />
         );
       case "text":
@@ -83,8 +132,11 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
       {/* Progress Bar*/}
       <div className="absolute top-0 left-0 w-full h-1 bg-gray-700">
         <div
-          className="h-full bg-white transition-all duration-100 linear"
-          style={{ width: `${progress}%` }}
+          className="h-full bg-white transition-none linear"
+          style={{
+            width: `${progress}%`,
+            transition: viewStory?.mediaType === 'video' ? 'none' : 'width 100ms linear'
+          }}
         ></div>
       </div>
       {/* User Info - Top Left*/}
