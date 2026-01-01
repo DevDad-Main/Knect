@@ -55,7 +55,7 @@ const StoryViewer = ({ viewStory, setViewStory }) => {
             onEnded={() => setViewStory(null)}
             src={viewStory.media_url}
             className="max-h-screen"
-            controls
+            // controls
             autoPlay
           />
         );
