@@ -87,16 +87,41 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
       console.log("UPDATE USER DATA", data);
 
       if (data) {
-        // Merge with existing media data if no new media was uploaded
-        const finalData = {
-          ...data,
-          // Preserve existing media URLs if they weren't updated
-          profile_photo: hasProfilePhoto ? data.profile_photo : user.profile_photo,
-          cover_photo: hasCoverPhoto ? data.cover_photo : user.cover_photo,
-        };
-
-        console.log("FINAL USER DATA WITH PRESERVED MEDIA", finalData);
-        onSaved?.(finalData);
+        // If media was uploaded, fetch fresh user data to get the new media URLs
+        if (hasProfilePhoto || hasCoverPhoto) {
+          console.log("Media uploaded, fetching fresh user data...");
+          const freshUserData = await fetchData("v1/auth/get-user");
+          
+          if (freshUserData) {
+            // Use the fresh data which includes new media URLs
+            const finalData = {
+              ...freshUserData,
+              // Merge any non-media updates from the text update
+              username: data.username || freshUserData.username,
+              bio: data.bio || freshUserData.bio,
+              location: data.location || freshUserData.location,
+              fullName: data.fullName || freshUserData.fullName,
+            };
+            
+            console.log("FINAL USER DATA WITH NEW MEDIA", finalData);
+            onSaved?.(finalData);
+          } else {
+            // Fallback: use the text update data
+            onSaved?.(data);
+          }
+        } else {
+          // No media uploaded, use existing logic
+          const finalData = {
+            ...data,
+            // Preserve existing media URLs if they weren't updated
+            profile_photo: user.profile_photo,
+            cover_photo: user.cover_photo,
+          };
+          
+          console.log("FINAL USER DATA WITH PRESERVED MEDIA", finalData);
+          onSaved?.(finalData);
+        }
+        
         setShowEdit(false);
         // navigate("/");
       }
