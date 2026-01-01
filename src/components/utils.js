@@ -13,6 +13,14 @@ async function updateWithFormData(
       credentials: "include",
       ...credential,
     });
+    
+    // Handle 401 Unauthorized - token is invalid/expired
+    if (response.status === 401) {
+      // Dispatch custom event for global auth error handling
+      window.dispatchEvent(new CustomEvent('auth-error'));
+      return null;
+    }
+    
     const data = await response.json();
     if (data.success) {
       toast.success(`${data.message}`);
@@ -42,6 +50,14 @@ async function fetchData(path, header = {}) {
       credentials: "include",
       headers: header,
     });
+    
+    // Handle 401 Unauthorized - token is invalid/expired
+    if (res.status === 401) {
+      // Dispatch custom event for global auth error handling
+      window.dispatchEvent(new CustomEvent('auth-error'));
+      return null;
+    }
+    
     const data = await res.json();
     if (data.success || data.data) {
       return data.data;
@@ -70,6 +86,14 @@ async function updateData(
       },
       credentials: "include",
     });
+    
+    // Handle 401 Unauthorized - token is invalid/expired
+    if (response.status === 401) {
+      // Dispatch custom event for global auth error handling
+      window.dispatchEvent(new CustomEvent('auth-error'));
+      return null;
+    }
+    
     const data = await response.json();
     if (data.success) {
       if (showToast) {

@@ -22,9 +22,13 @@ export const AppProvider = ({ children }) => {
         setUser(data);
       } else {
         setUser(null);
+        // Dispatch auth error to handle redirect
+        window.dispatchEvent(new CustomEvent('auth-error'));
       }
     } catch (error) {
       setUser(null);
+      // Dispatch auth error to handle redirect
+      window.dispatchEvent(new CustomEvent('auth-error'));
     } finally {
       setLoading(false);
     }
@@ -104,10 +108,18 @@ export const AppProvider = ({ children }) => {
       checkUser();
     };
 
+    const handleAuthError = () => {
+      console.log("Authentication error detected in AppContext");
+      setUser(null);
+      setLoading(false);
+    };
+
     window.addEventListener("storage-update", handleStorageUpdate);
+    window.addEventListener("auth-error", handleAuthError);
 
     return () => {
       window.removeEventListener("storage-update", handleStorageUpdate);
+      window.removeEventListener("auth-error", handleAuthError);
     };
   }, [checkUser]);
 

@@ -29,6 +29,27 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     }
   };
 
+  const uploadMedia = async (profilePhoto, coverPhoto) => {
+    const mediaFormData = new FormData();
+
+    if (profilePhoto) {
+      mediaFormData.append("profile_photo", profilePhoto);
+      mediaFormData.append("profile_photo_type", "profile");
+    }
+    if (coverPhoto) {
+      mediaFormData.append("cover_photo", coverPhoto);
+      mediaFormData.append("cover_photo_type", "cover");
+    }
+
+    try {
+      const mediaData = await updateWithFormData("v1/media/upload-user-media", mediaFormData, {}, "PUT");
+      return mediaData;
+    } catch (error) {
+      console.error("Media upload failed:", error);
+      throw error;
+    }
+  };
+
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     e.persist();
@@ -43,42 +64,39 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     try {
       let data;
 
+      // First, handle media uploads if there are any
       if (hasProfilePhoto || hasCoverPhoto) {
-        // Use FormData for file uploads
-        const userData = new FormData();
-        userData.append("username", editForm.username);
-        userData.append("bio", editForm.bio);
-        userData.append("location", editForm.location);
-        userData.append("fullName", editForm.fullName);
-
-        if (hasProfilePhoto) {
-          userData.append("profile_photo", editForm.profile_photo);
-          userData.append("profile_photo_type", "profile");
-        }
-        if (hasCoverPhoto) {
-          userData.append("cover_photo", editForm.cover_photo);
-          userData.append("cover_photo_type", "cover");
-        }
-
-        console.log("Sending FormData to update-user-with-files");
-        data = await updateWithFormData("v1/auth/update-user-with-files", userData);
-      } else {
-        // Use regular JSON for text-only updates
-        const userData = {
-          username: editForm.username,
-          bio: editForm.bio,
-          location: editForm.location,
-          fullName: editForm.fullName,
-        };
-
-        console.log("Sending JSON to update-user");
-        data = await updateUser("v1/auth/update-user", userData, "PUT");
+        console.log("Uploading media to /upload-user-media");
+        await uploadMedia(
+          hasProfilePhoto ? editForm.profile_photo : null,
+          hasCoverPhoto ? editForm.cover_photo : null
+        );
       }
+
+      // Then update user data (text fields only)
+      const userData = {
+        username: editForm.username,
+        bio: editForm.bio,
+        location: editForm.location,
+        fullName: editForm.fullName,
+      };
+
+      console.log("Updating user data with /update-user");
+      data = await updateUser("v1/auth/update-user", userData, "PUT");
 
       console.log("UPDATE USER DATA", data);
 
       if (data) {
-        onSaved?.(data);
+        // Merge with existing media data if no new media was uploaded
+        const finalData = {
+          ...data,
+          // Preserve existing media URLs if they weren't updated
+          profile_photo: hasProfilePhoto ? data.profile_photo : user.profile_photo,
+          cover_photo: hasCoverPhoto ? data.cover_photo : user.cover_photo,
+        };
+
+        console.log("FINAL USER DATA WITH PRESERVED MEDIA", finalData);
+        onSaved?.(finalData);
         setShowEdit(false);
         // navigate("/");
       }

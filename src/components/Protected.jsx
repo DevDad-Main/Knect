@@ -10,9 +10,14 @@ function Protected({ children }) {
     const checkAuth = async () => {
       try {
         // Try to fetch user data - if it works, we're authenticated
-        await fetchData("v1/auth/get-user");
-        setAuthenticated(true);
+        const userData = await fetchData("v1/auth/get-user");
+        if (userData) {
+          setAuthenticated(true);
+        } else {
+          setAuthenticated(false);
+        }
       } catch (error) {
+        console.error("Auth check failed:", error);
         setAuthenticated(false);
       } finally {
         setLoading(false);
@@ -20,6 +25,18 @@ function Protected({ children }) {
     };
 
     checkAuth();
+
+    // Listen for auth errors globally
+    const handleAuthError = () => {
+      setAuthenticated(false);
+      setLoading(false);
+    };
+
+    window.addEventListener("auth-error", handleAuthError);
+
+    return () => {
+      window.removeEventListener("auth-error", handleAuthError);
+    };
   }, []);
 
   if (loading) {
