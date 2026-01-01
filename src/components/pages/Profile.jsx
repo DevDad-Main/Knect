@@ -114,7 +114,7 @@ const Profile = () => {
           )}
           {/* Media */}
           {activeTab === "media" && (
-            <div className="flex-wrap mt-6 max-w-6xl gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
               {posts
                 .filter((post) => post.image_urls.length > 0)
                 .map((post) => (
@@ -124,15 +124,15 @@ const Profile = () => {
                         target="_blank"
                         to={image}
                         key={index}
-                        className="relative group"
+                        className="relative group overflow-hidden rounded-lg"
                       >
                         <img
                           src={image}
                           key={index}
-                          className="w-64 aspect-video object-cover"
+                          className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
                           alt=""
                         />
-                        <p className="absolute bottom-0 right-0 text-xs p-1 px-3 backdrop-blur-xl text-white opacity-0 group-hover:opacity-100 transition duration-300">
+                        <p className="absolute bottom-0 left-0 right-0 text-xs p-2 bg-gradient-to-t from-black/70 to-transparent text-white opacity-0 group-hover:opacity-100 transition duration-300">
                           Posted {moment(post.createdAt).fromNow()}
                         </p>
                       </Link>

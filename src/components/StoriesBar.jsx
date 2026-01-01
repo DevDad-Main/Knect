@@ -43,7 +43,7 @@ const StoriesBar = () => {
         {/* Add story card */}
         <div
           onClick={() => setShowModal(true)}
-          className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-[3/4] cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed border-indigo-300 bg-gradient-to-b from-indigo-50 to-white"
+          className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed border-indigo-300 bg-linear-to-b from-indigo-50 to-white"
         >
           <div className="h-full flex flex-col items-center justify-center p-4">
             <div className="size-10 bg-indigo-500 rounded-full flex items-center justify-center mb-3">
@@ -62,7 +62,8 @@ const StoriesBar = () => {
             ? moment(story.createdAt).fromNow()
             : "";
 
-          const isOwner = story.user?._id === user?._id; // 👈 check owner
+          // Use the isOwner field from backend response
+          const isOwner = story.isOwner;
 
           return (
             <div
@@ -78,15 +79,15 @@ const StoriesBar = () => {
               />
 
               {/* only show delete button if owner */}
-              {isOwner && (
+              {story.isOwner && (
                 <button
                   onClick={(e) => {
                     e.stopPropagation(); // prevent opening story
                     handleDelete(story._id);
                   }}
-                  className="absolute right-1 top-2 text-white hover:text-red-500 transition"
+                  className="absolute right-1 top-2 text-white hover:text-red-500 transition z-20"
                 >
-                  <TrashIcon className="w-6 h-6 text-white" />
+                  <TrashIcon className="w-6 h-6 text-white drop-shadow-lg" />
                 </button>
               )}
 
