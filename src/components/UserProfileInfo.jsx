@@ -9,7 +9,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
   return (
     <div className="relative py-4 px-6 md:px-8 bg-white">
       <div className="flex flex-col md:flex-row items-start gap-6">
-        <div 
+        <div
           className="w-32 h-32 border-4 border-white shadow-lg absolute -top-16 rounded-full cursor-pointer group"
           onClick={onProfilePhotoClick}
         >
@@ -43,7 +43,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
                 <h1 className="text-2xl font-bold text-gray-900">
                   {user.fullName}
                 </h1>
-                <Verified className="CSS" />
+                <Verified className="text-blue-500" />
               </div>
               <p className="text-gray-600">
                 {user.username ? `@${user.username}` : "Add a username"}

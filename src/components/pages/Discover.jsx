@@ -11,21 +11,28 @@ const Discover = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && input.trim()) {
       try {
         setUsers([]);
         setLoading(true);
-        const data = await updateData("v1/auth/discover", { input: input });
+        const data = await fetchData(`v1/auth/search?query=${encodeURIComponent(input.trim())}`);
+        // const data = await updateData(`v1/search/all`, { nothing: "Hello" });
 
+        console.log("Search results:", data);
         if (data) {
           setUsers(data);
-          setLoading(false);
-          setInput("");
+        } else {
+          // Handle empty results
+          setUsers([]);
+          toast.error("No users found matching your search");
         }
+        setInput("");
       } catch (error) {
-        toast.error(error.message);
+        toast.error("Search failed: " + error.message);
+        setUsers([]);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
   };
   return (
@@ -58,9 +65,18 @@ const Discover = () => {
           </div>
         </div>
         <div className="flex flex-wrap gap-6">
-          {users.map((user) => (
-            <UserCard user={user} key={user._id} />
-          ))}
+          {users.length > 0 ? (
+            users.map((user) => (
+              <UserCard user={user} key={user._id} />
+            ))
+          ) : (
+            !loading && input && (
+              <div className="w-full text-center py-12">
+                <p className="text-gray-500 text-lg">No users found matching your search criteria.</p>
+                <p className="text-gray-400 text-sm mt-2">Try searching with different keywords.</p>
+              </div>
+            )
+          )}
         </div>
         {loading && <Loading height="60vh" />}
       </div>
