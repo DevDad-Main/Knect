@@ -2,9 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { updateWithFormData, updateData } from "../utils";
 import toast from "react-hot-toast";
+import OTPVerification from "./OTPVerification";
 
 function Register() {
   const navigate = useNavigate();
+  const [showOTP, setShowOTP] = useState(false);
+  const [registrationToken, setRegistrationToken] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -41,25 +44,24 @@ function Register() {
     // Add files if they exist
     if (formData.profile_photo) {
       formDataToSend.append("profile_photo", formData.profile_photo);
-      formDataToSend.append("profile_photo_type", "profile");
     }
     if (formData.cover_photo) {
       formDataToSend.append("cover_photo", formData.cover_photo);
-      formDataToSend.append("cover_photo_type", "cover");
     }
 
     console.log("FormData being sent to register:", formDataToSend);
 
     try {
-      // Send everything as FormData in a single request
-      const userData = await updateWithFormData(
+      // Send all data to register and trigger OTP sending
+      const response = await updateWithFormData(
         "v1/users/register",
         formDataToSend,
       );
 
-      if (userData) {
-        toast.success("Registration successful!");
-        navigate("/login");
+      if (response && response.registrationToken) {
+        toast.success("OTP sent to your email!");
+        setRegistrationToken(response.registrationToken);
+        setShowOTP(true); // Show OTP verification component
       }
     } catch (err) {
       console.log(err);
@@ -68,12 +70,26 @@ function Register() {
           toast.error(error.msg, { position: "top-center" }),
         );
       } else {
-        toast.error("Something went wrong, please try again", {
+        toast.error(err.message || "Something went wrong, please try again", {
           position: "top-center",
         });
       }
     }
   };
+
+  const handleBackToRegister = () => {
+    setShowOTP(false);
+  };
+
+  // Show OTP verification component if needed
+  if (showOTP) {
+    return (
+      <OTPVerification 
+        registrationToken={registrationToken} 
+        onBack={handleBackToRegister} 
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -85,8 +101,8 @@ function Register() {
         <form
           onSubmit={(e) => {
             toast.promise(onSubmit(e), {
-              loading: "Registering...",
-              error: "Failed to register",
+              loading: "Sending OTP...",
+              error: "Failed to send OTP",
             });
           }}
           className="space-y-4"

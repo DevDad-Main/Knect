@@ -26,7 +26,7 @@ async function updateWithFormData(
       toast.success(`${data.message}`);
       return data.data;
     } else {
-      if (data.errors && Array.isArray(data.errors)) {
+      if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
         // loop through all validation errors
         data.errors.forEach((err) => {
           toast.error(err.msg);
