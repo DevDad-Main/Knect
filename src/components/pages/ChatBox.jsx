@@ -119,7 +119,7 @@ const ChatBox = () => {
   return (
     user && (
       <div className="flex flex-col h-screen">
-        <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-indigo-50 to-purple-50 border-b border-gray-300">
+        <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-secondary to-tertiary border-b border-secondary">
           {user?.profile_photo ? (
             <img
               onClick={() => navigate(`/profile/${user._id}`)}
@@ -134,8 +134,8 @@ const ChatBox = () => {
             />
           )}
           <div>
-            <p className="font-medium">{user.full_name}</p>
-            <p className="text-sm text-gra-500 -mt-1.5">
+            <p className="font-medium text-primary">{user.full_name}</p>
+            <p className="text-sm text-tertiary -mt-1.5">
               @{user.username}
             </p>{" "}
           </div>
@@ -163,7 +163,7 @@ const ChatBox = () => {
                     )}
                     <p>{message.text}</p>
                     <div className="text-sm pt-1 text-slate-600">
-                      <p>{new Date(message.createdAt).toLocaleTimeString()}</p>
+                      <p className="text-tertiary">{new Date(message.createdAt).toLocaleTimeString()}</p>
                     </div>
                   </div>
                 </div>
@@ -175,13 +175,13 @@ const ChatBox = () => {
 
         {/* Input area */}
         <div className="px-4">
-          <div className="flex items-center gap-3 pl-5 p-1.5 bg-white w-full max-w-xl mx-auto border border-gray-200 shadow rounded-full mb-5">
+          <div               className="flex items-center gap-3 pl-5 p-1.5 bg-primary w-full max-w-xl mx-auto border border-secondary shadow rounded-full mb-5">
             <input
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               onChange={(e) => setText(e.target.value)}
               value={text}
               type="text"
-              className="flex-1 outline-none text-slate-700"
+              className="flex-1 outline-none text-primary bg-transparent"
               placeholder="Type a message..."
             />
             <label htmlFor="image">
@@ -192,7 +192,7 @@ const ChatBox = () => {
                   className="h-8 rounded"
                 />
               ) : (
-                <ImageIcon className="mr-1 size-7 text-gray-400 cursor-pointer" />
+                <ImageIcon className="mr-1 size-7 text-tertiary cursor-pointer" />
               )}
               <input
                 type="file"
@@ -209,7 +209,7 @@ const ChatBox = () => {
                 });
               }}
               disabled={isSending}
-              className={`bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-700 hover:to-purple-800 
+              className={`accent-gradient hover:opacity-90 
     active:scale-95 text-white p-2 rounded-full 
     ${isSending ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >

@@ -65,16 +65,16 @@ const Profile = () => {
   if (!user) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-gray-500">No profile data found</p>
+        <p className="text-tertiary">No profile data found</p>
       </div>
     );
   }
 
   return (
-    <div className="relative h-full overflow-y-scroll bg-gray-50 p-6">
+    <div className="relative h-full overflow-y-scroll bg-secondary p-6">
       <div className="max-w-3xl mx-auto">
         {/* Profile Card */}
-        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div className="bg-primary rounded-2xl shadow-lg overflow-hidden">
           {/* Cover Photo */}
           <div 
             className="h-40 md:h-56 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 cursor-pointer relative group"
@@ -108,12 +108,12 @@ const Profile = () => {
         </div>
         {/* Tabs */}
         <div className="mt-6">
-          <div className="bg-white rounded-xl shadow-md p-1 flex max-w-md mx-auto">
+          <div className="bg-primary rounded-xl shadow-md p-1 flex max-w-md mx-auto">
             {["posts", "media", "likes"].map((tab) => (
               <button
                 onClick={() => setActiveTab(tab)}
                 key={tab}
-                className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${activeTab === tab ? "bg-indigo-600 text-white" : "text-gray-600 hover:text-gray-900"}`}
+                className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${activeTab === tab ? "accent-gradient text-white" : "text-secondary hover:text-primary"}`}
               >
                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>

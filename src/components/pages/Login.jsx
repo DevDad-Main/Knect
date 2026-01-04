@@ -5,9 +5,9 @@ import SignIn from "../SignIn";
 
 const Login = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-secondary via-tertiary to-quaternary relative overflow-hidden">
       {/* Full-page background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 opacity-50"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-secondary via-tertiary to-quaternary opacity-50"></div>
 
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -29,14 +29,14 @@ const Login = () => {
             </div>
 
             <div className="space-y-4 mb-6">
-              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
+              <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-primary leading-tight">
                 Where Connections
                 <span className="block bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                   Come to Life
                 </span>
               </h2>
 
-              <p className="text-lg lg:text-xl text-gray-700 max-w-lg">
+              <p className="text-lg lg:text-xl text-secondary max-w-lg">
                 Join thousands of people building meaningful relationships and sharing their stories.
               </p>
             </div>
@@ -49,25 +49,25 @@ const Login = () => {
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
                   <Users className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600" />
                 </div>
-                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">12K+</h3>
-                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">Active Users</p>
-                <p className="text-gray-600 text-xs sm:hidden">Users</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-primary">12K+</h3>
+                <p className="text-tertiary text-xs sm:text-sm hidden sm:block">Active Users</p>
+                <p className="text-tertiary text-xs sm:hidden">Users</p>
               </div>
               <div className="text-center">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
                   <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 text-purple-600" />
                 </div>
-                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">50K+</h3>
-                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">Daily Messages</p>
-                <p className="text-gray-600 text-xs sm:hidden">Messages</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-primary">50K+</h3>
+                <p className="text-tertiary text-xs sm:text-sm hidden sm:block">Daily Messages</p>
+                <p className="text-tertiary text-xs sm:hidden">Messages</p>
               </div>
               <div className="text-center">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
                   <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-pink-600" />
                 </div>
-                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">4.9★</h3>
-                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">User Rating</p>
-                <p className="text-gray-600 text-xs sm:hidden">Rating</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-primary">4.9★</h3>
+                <p className="text-tertiary text-xs sm:text-sm hidden sm:block">User Rating</p>
+                <p className="text-tertiary text-xs sm:hidden">Rating</p>
               </div>
             </div>
 
@@ -80,14 +80,14 @@ const Login = () => {
                   />
                 ))}
               </div>
-              <span className="text-gray-700 text-sm mt-2 block">Loved by thousands worldwide</span>
+              <span className="text-secondary text-sm mt-2 block">Loved by thousands worldwide</span>
             </div>
           </div>
         </div>
 
         {/* Right side - Login Form */}
         <div className="lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12">
-          <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8">
+          <div className="w-full max-w-md bg-primary/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-primary/20 p-8">
             <SignIn />
           </div>
         </div>

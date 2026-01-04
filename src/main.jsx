@@ -22,6 +22,7 @@ import PostDetails from "./components/pages/PostDetails.jsx";
 import NotificationsPage from "./components/pages/NotificationsPage";
 import { Navigate } from "react-router-dom";
 import { AppProvider } from "./components/AppContext";
+import { ThemeProvider } from "./components/ThemeContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +56,8 @@ const router = createBrowserRouter(
 );
 createRoot(document.getElementById("root")).render(
   <AppProvider>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </AppProvider>,
 );

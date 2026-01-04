@@ -92,9 +92,9 @@ function Register() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-lg bg-white shadow-lg rounded-2xl p-8 space-y-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
+      <div className="w-full max-w-lg bg-primary shadow-lg rounded-2xl p-8 space-y-6">
+        <h2 className="text-2xl font-bold text-center text-primary">
           Create Account
         </h2>
 
@@ -112,13 +112,13 @@ function Register() {
           {/* Name fields side by side */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 First Name
               </label>
               <input
                 type="text"
                 name="firstName"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full px-4 py-2 border border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none bg-primary text-primary"
                 placeholder="First name"
                 value={formData.firstName}
                 onChange={handleInput}
@@ -126,13 +126,13 @@ function Register() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 Last Name
               </label>
               <input
                 type="text"
                 name="lastName"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full px-4 py-2 border border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none bg-primary text-primary"
                 placeholder="Last name"
                 value={formData.lastName}
                 onChange={handleInput}
@@ -141,13 +141,13 @@ function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Email
             </label>
             <input
               type="email"
               name="email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 border border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none bg-primary text-primary"
               placeholder="you@example.com"
               value={formData.email}
               onChange={handleInput}
@@ -155,13 +155,13 @@ function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Username
             </label>
             <input
               type="text"
               name="username"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 border border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none bg-primary text-primary"
               placeholder="Choose a username"
               value={formData.username}
               onChange={handleInput}
@@ -169,17 +169,17 @@ function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Password
             </label>
-            <p className="block text-sm font-mono text-gray-400 mb-1">
+            <p className="block text-sm font-mono text-tertiary mb-1">
               Password must be 6–12 characters and include at least 1 uppercase,
               3 numbers, and 1 symbol.
             </p>
             <input
               type="password"
               name="password"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2 border border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none bg-primary text-primary"
               placeholder="Enter password"
               value={formData.password}
               onChange={handleInput}
@@ -187,10 +187,10 @@ function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Profile Picture
             </label>
-            <p className="flex justify-end text-sm font-mono text-gray-400 mb-1">
+            <p className="flex justify-end text-sm font-mono text-tertiary mb-1">
               * optional
             </p>
             <input
@@ -198,15 +198,15 @@ function Register() {
               name="profile_photo"
               accept="image/*"
               onChange={handleFileChange}
-              className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              className="w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent-primary/10 file:text-accent-primary hover:file:bg-accent-primary/20"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Cover Photo
             </label>
-            <p className="flex justify-end text-sm font-mono text-gray-400 mb-1">
+            <p className="flex justify-end text-sm font-mono text-tertiary mb-1">
               * optional
             </p>
             <input
@@ -214,7 +214,7 @@ function Register() {
               name="cover_photo"
               accept="image/*"
               onChange={handleFileChange}
-              className="w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              className="w-full text-sm text-secondary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-accent-primary/10 file:text-accent-primary hover:file:bg-accent-primary/20"
             />
           </div>
 
@@ -226,11 +226,11 @@ function Register() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-secondary">
           Already have an account?{" "}
           <button
             onClick={() => navigate("/login")}
-            className="text-indigo-600 hover:underline font-medium"
+            className="text-accent-primary hover:underline font-medium"
           >
             Login
           </button>

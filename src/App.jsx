@@ -11,7 +11,7 @@ const GOOGLE_CLIENT_ID = "your-google-oauth-client-id-here";
 export const App = () => {
   return (
     <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <div className="min-h-screen flex flex-col justify-between">
+      <div className="min-h-screen flex flex-col justify-between bg-primary text-primary">
         <Toaster />
         <AuthErrorHandler />
         <Outlet />

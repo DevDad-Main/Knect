@@ -58,7 +58,7 @@ const Feed = () => {
   }, [fetchFeeds]);
 
   return (
-    <div className="h-full overflow-y-scroll no-scrollbar py-10 xl:pr-5 flex items-start justify-center xl:gap-8 border-indigo-300 bg-gradient-to-b from-indigo-50 to-white">
+    <div className="h-full overflow-y-scroll no-scrollbar py-10 xl:pr-5 flex items-start justify-center xl:gap-8 border-indigo-300 bg-gradient-to-b from-secondary to-primary">
       {/* Stories and List of Posts */}
       <div>
         <StoriesBar />
@@ -69,28 +69,28 @@ const Feed = () => {
 
           {loading && <Loading />}
           {!hasMore && (
-            <p className="text-center text-gray-400 text-sm">No more posts</p>
+            <p className="text-center text-tertiary text-sm">No more posts</p>
           )}
         </div>
       </div>
 
       {/* Right sidebar */}
       <div className="max-xl:hidden sticky top-0">
-        <div className="max-w-xs bg-white text-xs p-4 rounded-md inline-flex flex-col gap-2 shadow">
-          <h3 className="text-slate-800 font-semibold">Sponsored</h3>
+        <div className="max-w-xs bg-primary text-xs p-4 rounded-md inline-flex flex-col gap-2 shadow">
+          <h3 className="text-primary font-semibold">Sponsored</h3>
           <img
             src={assets.sponsored_img}
             alt=""
             className="w-75 h-50 rounded-md"
           />
-          <p className="text-slate600">Email Marketing.</p>
-          <p className="text-slate-400">
+          <p className="text-secondary">Email Marketing.</p>
+          <p className="text-tertiary">
             Supercharge your marketing with a powerful, easy-to-use platform
             built for results.
           </p>
         </div>
 
-        <h1>Recent Messages</h1>
+        <h1 className="text-primary">Recent Messages</h1>
         <RecentMessages />
       </div>
     </div>

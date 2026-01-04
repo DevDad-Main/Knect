@@ -69,7 +69,7 @@ const PostCard = ({ post, onDelete }) => {
   console.log("POST", post);
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-4 space-y-4 w-full max-w-2xl relative hover:shadow-xl transition-all duration-200 ">
+    <div className="bg-primary rounded-xl shadow-lg p-4 space-y-4 w-full max-w-2xl relative hover:shadow-xl transition-all duration-200 ">
       {/* User Info*/}
       <div
         onClick={() => navigate("/profile/" + post.user._id)}
@@ -88,7 +88,7 @@ const PostCard = ({ post, onDelete }) => {
             <span>{post.user?.fullName}</span>
             <BadgeCheck className="w-4 h-4 text-blue-500" />
           </div>
-          <div className="text-gray-500 text-sm">
+          <div className="text-tertiary text-sm">
             @{post.user?.username} - {moment(post.createdAt).fromNow()}
           </div>
         </div>
@@ -97,12 +97,13 @@ const PostCard = ({ post, onDelete }) => {
       {/* Trash Icon if owner */}
       {isOwner && (
         <>
-          <button
-            onClick={handleDelete}
-            className="absolute top-4 right-11 text-gray-400 hover:text-blue-500 transition"
-          >
-            <PenBox className="w-5 h-5" />
-          </button>
+          { /*TODO: Add Update Post content functionality. */}
+          {/* <button
+             onClick={handleDelete}
+             className="absolute top-4 right-11 text-gray-400 hover:text-blue-500 transition"
+           >
+             <PenBox className="w-5 h-5" />
+           </button> */}
           <button
             onClick={handleDelete}
             className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition"
@@ -110,15 +111,18 @@ const PostCard = ({ post, onDelete }) => {
             <TrashIcon className="w-5 h-5" />
           </button>
         </>
-      )}
+      )
+      }
 
       {/* Content */}
-      {post.content && (
-        <div
-          className="text-gray-800 text-sm whitespace-pre-line"
-          dangerouslySetInnerHTML={{ __html: postWithHashtag }}
-        />
-      )}
+      {
+        post.content && (
+          <div
+            className="text-primary text-sm whitespace-pre-line"
+            dangerouslySetInnerHTML={{ __html: postWithHashtag }}
+          />
+        )
+      }
 
       {/* Images */}
       <div className="grid grid-cols-2 gap-2">
@@ -134,7 +138,7 @@ const PostCard = ({ post, onDelete }) => {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4 text-gray-600 text-sm pt-2 border-t border-gray-300">
+      <div className="flex items-center gap-4 text-secondary text-sm pt-2 border-t border-secondary">
         <div className="flex items-center gap-1">
           <Heart
             className={`w-4 h-4 cursor-pointer ${likes.includes(currentUser?._id) && "text-red-500 fill-red-500"}`}
@@ -152,43 +156,45 @@ const PostCard = ({ post, onDelete }) => {
       </div>
 
       {/* Image Modal */}
-      {selectedImage && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative max-w-7xl max-h-full">
-            {/* Close Button */}
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
-            >
-              <X className="w-8 h-8" />
-            </button>
+      {
+        selectedImage && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div className="relative max-w-7xl max-h-full">
+              {/* Close Button */}
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+              >
+                <X className="w-8 h-8" />
+              </button>
 
-            {/* Image */}
-            <img
-              src={selectedImage}
-              alt="Full size image"
-              className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              onClick={(e) => e.stopPropagation()}
-            />
+              {/* Image */}
+              <img
+                src={selectedImage}
+                alt="Full size image"
+                className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                onClick={(e) => e.stopPropagation()}
+              />
 
-            {/* Download Button */}
-            <a
-              href={selectedImage}
-              download
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="absolute -top-12 left-0 bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 text-sm font-medium"
-            >
-              Save Image
-            </a>
+              {/* Download Button */}
+              <a
+                href={selectedImage}
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="absolute -top-12 left-0 bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 text-sm font-medium"
+              >
+                Save Image
+              </a>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 };
 

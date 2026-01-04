@@ -80,14 +80,14 @@ const Connections = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-secondary">
       <div className="max-w-6xl mx-auto p-6">
         {/* Connections Title */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+          <h1 className="text-3xl font-bold text-primary mb-2">
             Connections
           </h1>
-          <p className="text-slate-600">
+          <p className="text-secondary">
             Manage your network and discover new connections
           </p>
         </div>
@@ -96,20 +96,20 @@ const Connections = () => {
           {dataArray.map((item, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center gap-1 border h-20 w-40 border-gray-200 bg-white shadow rounded-md"
+              className="flex flex-col items-center justify-center gap-1 border h-20 w-40 border-secondary bg-primary shadow rounded-md"
             >
-              <b>{item.value.length}</b>
-              <p className="text-slate-600">{item.label}</p>
+              <b className="text-primary">{item.value.length}</b>
+              <p className="text-secondary">{item.label}</p>
             </div>
           ))}
         </div>
         {/* Tabs */}
-        <div className="inline-flex flex-wrap items-center border border-grapy-200 rounded-md p-1 bg-white shadow-sm">
+        <div className="inline-flex flex-wrap items-center border border-secondary rounded-md p-1 bg-primary shadow-sm">
           {dataArray.map((tab) => (
             <button
               onClick={() => setCurrentTab(tab.label)}
               key={tab.label}
-              className={`cursor-pointer flex items-center px-3 py-1 text-sm rounded-md transition-colors ${currentTab === tab.label ? "bg-white font-medium text-black" : "text-gray-500 hover:text-black"}`}
+              className={`cursor-pointer flex items-center px-3 py-1 text-sm rounded-md transition-colors ${currentTab === tab.label ? "bg-tertiary font-medium text-primary" : "text-tertiary hover:text-primary"}`}
             >
               <tab.icon className="w-4 h-4" />
               <span className="ml-1">{tab.label}</span>
@@ -128,7 +128,7 @@ const Connections = () => {
             .value.map((user) => (
               <div
                 key={user._id}
-                className="w-full max-w-88 flex gap-5 p-6 bg-white shadow rounded-md"
+                className="w-full max-w-88 flex gap-5 p-6 bg-primary shadow rounded-md"
               >
                 {user?.profile_photo ? (
                   <img
@@ -141,14 +141,14 @@ const Connections = () => {
                 )}
 
                 <div className="flex-1">
-                  <p className="font-medium text-slate-700">{user.full_name}</p>
-                  <p className="text-slate-500">@{user.username}</p>
-                  <p className="text-slate-500">{user.bio.slice(0, 30)}...</p>
+                  <p className="font-medium text-primary">{user.full_name}</p>
+                  <p className="text-tertiary">@{user.username}</p>
+                  <p className="text-tertiary">{user.bio.slice(0, 30)}...</p>
                   <div className="flex max-sm:flex-col gap-2 mt-4">
                     {
                       <button
                         onClick={() => navigate(`/profile/${user._id}`)}
-                        className="w-full p-2 text-sm rounded bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 active:scale-95 transition text-white cursor-pointer"
+                        className="w-full p-2 text-sm rounded accent-gradient hover:opacity-90 active:scale-95 transition text-white cursor-pointer"
                       >
                         View Profile
                       </button>
@@ -156,7 +156,7 @@ const Connections = () => {
                     {currentTab === "Following" && (
                       <button
                         onClick={() => handleUnfollow(user._id)}
-                        className="w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer"
+                        className="w-full p-2 text-sm rounded bg-tertiary hover:bg-quaternary text-primary active:scale-95 transition cursor-pointer"
                       >
                         Unfollow
                       </button>
@@ -164,7 +164,7 @@ const Connections = () => {
                     {currentTab === "Pending" && (
                       <button
                         onClick={() => acceptConnection(user._id)}
-                        className="w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer"
+                        className="w-full p-2 text-sm rounded bg-tertiary hover:bg-quaternary text-primary active:scale-95 transition cursor-pointer"
                       >
                         Accept
                       </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Pencil, UserIcon } from "lucide-react";
+import { Pencil, UserIcon, X } from "lucide-react";
 import { fetchData, updateWithFormData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -164,25 +164,42 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
   // const user = useSelector((state) => state.user.value);
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 right-0 z-110 h-screen overflow-y-scroll bg-black/50">
-      <div className="max-w-2xl sm:py-6 mx-auto">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">
-            Edit Profile
-          </h1>
+    <div className="fixed inset-0 z-50 h-screen overflow-y-auto bg-black/50 p-4 sm:p-6">
+      <div className="min-h-full flex items-center justify-center">
+        <div className="w-full max-w-2xl bg-primary rounded-lg shadow-xl relative">
+          {/* Mobile close button */}
+          <button
+            onClick={() => setShowEdit(false)}
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-tertiary hover:bg-quaternary transition-colors sm:hidden"
+          >
+            <X className="w-5 h-5 text-primary" />
+          </button>
+          
+          {/* Desktop close button */}
+          <button
+            onClick={() => setShowEdit(false)}
+            className="absolute top-4 right-4 z-10 p-1 rounded-full hover:bg-tertiary transition-colors hidden sm:block"
+          >
+            <X className="w-5 h-5 text-tertiary hover:text-primary" />
+          </button>
+          
+          <div className="p-4 sm:p-6 pt-8 sm:pt-6">
+            <h1 className="text-2xl font-bold text-primary mb-6">
+              Edit Profile
+            </h1>
 
           <form
-            className="space-y-4"
+            className="space-y-4 sm:space-y-6"
             onSubmit={(e) => {
               e.preventDefault();
               toast.promise(handleSaveProfile(e), { loading: "Saving..." });
             }}
           >
             {/* Profile Picture */}
-            <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-col items-center sm:items-start gap-3">
               <label
                 htmlFor="profile_photo"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-secondary mb-2 text-center sm:text-left"
               >
                 Profile Picture
                 <input
@@ -190,7 +207,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                   type="file"
                   accept="image/*"
                   id="profile_photo"
-                  className="w-full p-3 border border-gray-200 rounded-lg"
+                  className="w-full p-3 border border-secondary rounded-lg"
                   onChange={(e) => {
                     setEditForm({
                       ...editForm,
@@ -198,39 +215,31 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                     });
                   }}
                 />
-                <div className="group/profile relative">
-                  {/* <img */}
-                  {/*   src={ */}
-                  {/*     editForm.profile_photo */}
-                  {/*       ? URL.createObjectURL(editForm.profile_photo) */}
-                  {/*       : user?.profile_photo */}
-                  {/*   } */}
-                  {/*   className="w-24 h-24 rounded-full object-cover" */}
-                  {/* /> */}
-                  {user?.profile_photo ? (
+                <div className="group/profile relative cursor-pointer">
+                  {user?.profile_photo || editForm.profile_photo instanceof File ? (
                     <img
                       src={
                         editForm.profile_photo instanceof File
                           ? URL.createObjectURL(editForm.profile_photo)
-                          : editForm.profile_photo || null
+                          : editForm.profile_photo || user?.profile_photo
                       }
-                      className="w-24 h-24 rounded-full object-cover"
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-secondary"
                     />
                   ) : (
-                    <UserIcon className="w-24 h-24 rounded-full object-cover" />
+                    <UserIcon className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-2 border-secondary text-tertiary" />
                   )}
 
-                  <div className="absolute hidden group-hover/profile:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-full items-center justify-center">
-                    <Pencil className="w-5 h-5 text-white" />
+                  <div className="absolute inset-0 bg-black/0 group-hover/profile:bg-black/30 rounded-full items-center justify-center transition-all duration-200 flex opacity-0 group-hover/profile:opacity-100">
+                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                 </div>
               </label>
             </div>
             {/* Cover Photo */}
-            <div className="flex flex-col items-start gap-3">
+            <div className="flex flex-col items-center sm:items-start gap-3">
               <label
                 htmlFor="cover_photo"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-secondary mb-2 text-center sm:text-left"
               >
                 Cover Photo
                 <input
@@ -238,7 +247,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                   type="file"
                   accept="image/*"
                   id="cover_photo"
-                  className="w-full p-3 border border-gray-200 rounded-lg"
+                  className="w-full p-3 border border-secondary rounded-lg"
                   onChange={(e) => {
                     setEditForm({
                       ...editForm,
@@ -246,101 +255,106 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
                     });
                   }}
                 />
-                <div className="group/cover relative">
+                <div className="group/cover relative cursor-pointer w-full max-w-xs sm:max-w-full">
                   <img
                     src={
                       editForm.cover_photo instanceof File
                         ? URL.createObjectURL(editForm.cover_photo)
-                        : editForm.cover_photo || null
+                        : editForm.cover_photo || user?.cover_photo || "/api/placeholder/400/200"
                     }
-                    className="w-80 h-40 rounded-lg bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200 object-cover mt-2"
+                    className="w-full h-32 sm:h-40 rounded-lg bg-gradient-to-r from-secondary to-tertiary object-cover mt-2"
                   />
-                  <div className="absolute hidden group-hover/cover:flex top-0 left-0 right-0 bottom-0 bg-black/20 rounded-lg items-center justify-center">
-                    <Pencil className="w-5 h-5 text-white" />
+                  <div className="absolute inset-0 bg-black/0 group-hover/cover:bg-black/30 rounded-lg items-center justify-center transition-all duration-200 flex opacity-0 group-hover/cover:opacity-100">
+                    <Pencil className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                 </div>
               </label>
             </div>
-            {/* Edit Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeholder="Please enter your full name.."
-                onChange={(e) =>
-                  setEditForm({ ...editForm, fullName: e.target.value })
-                }
-                value={editForm.fullName}
-              />
+            {/* Form fields container for better mobile layout */}
+            <div className="space-y-4 sm:space-y-5">
+              {/* Edit Name */}
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 pl-2 border border-secondary rounded-lg bg-primary text-primary placeholder-tertiary focus:border-accent-primary focus:outline-none transition-colors"
+                  placeholder="Please enter your full name.."
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, fullName: e.target.value })
+                  }
+                  value={editForm.fullName}
+                />
+              </div>
+
+              {/* Edit Username */}
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 pl-2 border border-secondary rounded-lg bg-primary text-primary placeholder-tertiary focus:border-accent-primary focus:outline-none transition-colors"
+                  placeholder="Please enter a username.."
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, username: e.target.value })
+                  }
+                  value={editForm.username}
+                />
+              </div>
+
+              {/* Edit Bio */}
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">
+                  Bio
+                </label>
+                <textarea
+                  rows={3}
+                  className="w-full p-3 pl-2 border border-secondary rounded-lg bg-primary text-primary placeholder-tertiary focus:border-accent-primary focus:outline-none transition-colors resize-none"
+                  placeholder="Please enter your bio here.."
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, bio: e.target.value })
+                  }
+                  value={editForm.bio}
+                />
+              </div>
+
+              {/* Edit Location */}
+              <div>
+                <label className="block text-sm font-medium text-secondary mb-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  className="w-full p-3 pl-2 border border-secondary rounded-lg bg-primary text-primary placeholder-tertiary focus:border-accent-primary focus:outline-none transition-colors"
+                  placeholder="Please enter your location.."
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, location: e.target.value })
+                  }
+                  value={editForm.location}
+                />
+              </div>
             </div>
 
-            {/* Edit Username */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Username
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeholder="Please enter a username.."
-                onChange={(e) =>
-                  setEditForm({ ...editForm, username: e.target.value })
-                }
-                value={editForm.username}
-              />
-            </div>
-
-            {/* Edit Bio */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bio
-              </label>
-              <textarea
-                rows={3}
-                className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeholder="Please enter your bio here.."
-                onChange={(e) =>
-                  setEditForm({ ...editForm, bio: e.target.value })
-                }
-                value={editForm.bio}
-              />
-            </div>
-
-            {/* Edit Location */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 pl-2 border border-gray-200 rounded-lg"
-                placeholder="Please enter your location.."
-                onChange={(e) =>
-                  setEditForm({ ...editForm, location: e.target.value })
-                }
-                value={editForm.location}
-              />
-            </div>
-
-            <div className="flex justify-end space-x-3 pt-6">
+            {/* Buttons - Mobile first approach */}
+            <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t border-secondary mt-6">
               <button
                 type="button"
                 onClick={() => setShowEdit(false)}
-                className="px-4 py-2 borer border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                className="px-6 py-3 border border-secondary rounded-lg text-secondary hover:bg-tertiary transition-colors cursor-pointer font-medium"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition cursor-pointer"
+                className="px-6 py-3 accent-gradient text-white rounded-lg hover:opacity-90 transition cursor-pointer font-medium sm:order-first"
               >
                 Save Changes
               </button>
             </div>
           </form>
+          </div>
         </div>
       </div>
     </div>

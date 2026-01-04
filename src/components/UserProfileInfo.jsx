@@ -7,10 +7,10 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
   const currentUser = useCurrentUser();
 
   return (
-    <div className="relative py-4 px-6 md:px-8 bg-white">
+    <div className="relative py-4 px-6 md:px-8 bg-primary">
       <div className="flex flex-col md:flex-row items-start gap-6">
         <div
-          className="w-32 h-32 border-4 border-white shadow-lg absolute -top-16 rounded-full cursor-pointer group"
+          className="w-32 h-32 border-4 border-primary shadow-lg absolute -top-16 rounded-full cursor-pointer group"
           onClick={onProfilePhotoClick}
         >
           {user?.profile_photo ? (
@@ -37,32 +37,36 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
         </div>
 
         <div className="w-full pt-16 md:pt-0 md:pl-36">
-          <div className="flex flex-col md:flex-row items-start justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  {user.fullName}
-                </h1>
-                <Verified className="text-blue-500" />
+          <>
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+              {/* Mobile: Edit button first, User details second */}
+              {/* Desktop: User details first, Edit button second */}
+              <div className="order-2 sm:order-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-primary">
+                    {user.fullName}
+                  </h1>
+                  <Verified className="text-blue-500" />
+                </div>
+                <p className="text-tertiary">
+                  {user.username ? `@${user.username}` : "Add a username"}
+                </p>
               </div>
-              <p className="text-gray-600">
-                {user.username ? `@${user.username}` : "Add a username"}
-              </p>
+              {/* If user is not on other profile that means he is opening his profile so we give it edit button */}
+              {profileId === currentUser?._id && (
+                <button
+                  onClick={() => setShowEdit(true)}
+                  className="flex items-center justify-center gap-2 border border-secondary hover:bg-tertiary px-4 py-2 rounded-lg font-medium transition-colors order-1 sm:order-2 cursor-pointer"
+                >
+                  <PenBox className="w-4 h-4" />
+                  Edit
+                </button>
+              )}
             </div>
-            {/* If user is not on other profile that means he is opening jis profile so we give the edit butto */}
-            {profileId === currentUser?._id && (
-              <button
-                onClick={() => setShowEdit(true)}
-                className="flex items-center justify-center gap-2 border border-gray-300 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors mt-4 md:mt-0 cursor-pointer"
-              >
-                <PenBox className="w-4 h-4" />
-                Edit
-              </button>
-            )}
-          </div>
-          <p className="text-gray-700 text-sm max-w-md mt-4">{user.bio}</p>
+          </>
+          <p className="text-secondary text-sm max-w-md mt-4">{user.bio}</p>
           {/* Location and Created At */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500 mt-4">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-tertiary mt-4">
             <span className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
               {user.location ? user.location : "Add Location"}
@@ -77,32 +81,32 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
             </span>
           </div>
 
-          <div className="flex items-center gap-6 mt-6 border-t border-gray-200 pt-4">
+          <div className="flex items-center gap-6 mt-6 border-t border-secondary pt-4">
             {/* Posts */}
             <div>
-              <span className="sm:text-xl font-bold text-gray-900">
+              <span className="sm:text-xl font-bold text-primary">
                 {posts.length}
               </span>
-              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
                 Posts
               </span>
             </div>
 
             {/* Followers */}
             <div>
-              <span className="sm:text-xl font-bold text-gray-900">
+              <span className="sm:text-xl font-bold text-primary">
                 {user.followers.length}
               </span>
-              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
                 Followers
               </span>
             </div>
             {/* Following */}
             <div>
-              <span className="sm:text-xl font-bold text-gray-900">
+              <span className="sm:text-xl font-bold text-primary">
                 {user.following.length}
               </span>
-              <span className="text-xs sm:text-sm text-gray-500 ml-1.5">
+              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
                 Following
               </span>
             </div>

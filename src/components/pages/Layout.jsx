@@ -22,7 +22,7 @@ const Layout = () => {
       </div>
 
       {/* Main content → shifted only on md+ */}
-      <div className="flex-1 bg-slate-50 md:ml-60 xl:ml-72">
+      <div className="flex-1 bg-secondary md:ml-60 xl:ml-72">
         <Outlet />
       </div>
 
@@ -38,12 +38,12 @@ const Layout = () => {
       {/* Mobile toggle button */}
       {sideBarOpen ? (
         <X
-          className="absolute top-3 right-3 p-2 z-50 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden"
+          className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary sm:hidden"
           onClick={() => setSideBarOpen(false)}
         />
       ) : (
         <Menu
-          className="absolute top-3 right-3 p-2 z-50 bg-white rounded-md shadow w-10 h-10 text-gray-600 sm:hidden"
+          className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary sm:hidden"
           onClick={() => setSideBarOpen(true)}
         />
       )}
