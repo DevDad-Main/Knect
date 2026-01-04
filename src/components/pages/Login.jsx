@@ -8,14 +8,14 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
       {/* Full-page background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 opacity-50"></div>
-      
+
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full blur-3xl opacity-20"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full blur-3xl opacity-20"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-purple-300 to-pink-300 rounded-full blur-3xl opacity-10"></div>
       </div>
-      
+
       <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
         {/* Left side - Branding */}
         <div className="lg:w-1/2 xl:w-3/5 p-8 lg:p-12 xl:p-20 flex flex-col justify-between">
@@ -27,7 +27,7 @@ const Login = () => {
               </div>
               <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Knect</h1>
             </div>
-            
+
             <div className="space-y-4 mb-6">
               <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight">
                 Where Connections
@@ -35,41 +35,44 @@ const Login = () => {
                   Come to Life
                 </span>
               </h2>
-              
+
               <p className="text-lg lg:text-xl text-gray-700 max-w-lg">
                 Join thousands of people building meaningful relationships and sharing their stories.
               </p>
             </div>
           </div>
-          
+
           {/* Features and stats */}
           <div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+            <div className="flex flex-row sm:gap-6 gap-6 mb-8 justify-center">
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <Users className="w-8 h-8 text-indigo-600" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                  <Users className="w-7 h-7 sm:w-8 sm:h-8 text-indigo-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">12K+</h3>
-                <p className="text-gray-600 text-sm">Active Users</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">12K+</h3>
+                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">Active Users</p>
+                <p className="text-gray-600 text-xs sm:hidden">Users</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <MessageCircle className="w-8 h-8 text-purple-600" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                  <MessageCircle className="w-7 h-7 sm:w-8 sm:h-8 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">50K+</h3>
-                <p className="text-gray-600 text-sm">Daily Messages</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">50K+</h3>
+                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">Daily Messages</p>
+                <p className="text-gray-600 text-xs sm:hidden">Messages</p>
               </div>
               <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                  <Sparkles className="w-8 h-8 text-pink-600" />
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-100 to-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                  <Sparkles className="w-7 h-7 sm:w-8 sm:h-8 text-pink-600" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">4.9★</h3>
-                <p className="text-gray-600 text-sm">User Rating</p>
+                <h3 className="text-lg sm:text-2xl font-bold text-gray-900">4.9★</h3>
+                <p className="text-gray-600 text-xs sm:text-sm hidden sm:block">User Rating</p>
+                <p className="text-gray-600 text-xs sm:hidden">Rating</p>
               </div>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <div className="flex">
+
+            <div className="text-center">
+              <div className="flex justify-center gap-1">
                 {Array(5).fill(0).map((_, i) => (
                   <Star
                     key={i}
@@ -77,11 +80,11 @@ const Login = () => {
                   />
                 ))}
               </div>
-              <span className="text-gray-700 text-sm">Loved by thousands worldwide</span>
+              <span className="text-gray-700 text-sm mt-2 block">Loved by thousands worldwide</span>
             </div>
           </div>
         </div>
-        
+
         {/* Right side - Login Form */}
         <div className="lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12">
           <div className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 p-8">
