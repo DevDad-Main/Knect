@@ -42,7 +42,18 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     }
 
     try {
-      const mediaData = await updateWithFormData("v1/media/upload-user-media", mediaFormData, {}, "PUT");
+      // Check if user has existing media to determine HTTP method
+      const hasExistingProfilePhoto = user?.profile_photo;
+      const hasExistingCoverPhoto = user?.cover_photo;
+      
+      // If either photo exists, use PUT (update), otherwise use POST (create)
+      const method = (hasExistingProfilePhoto && profilePhoto) || (hasExistingCoverPhoto && coverPhoto) ? "PUT" : "POST";
+      const endpoint = "v1/media/upload-user-media";
+      
+      console.log(`Using ${method} method for media upload`);
+      console.log(`Existing profile photo: ${!!hasExistingProfilePhoto}, Existing cover photo: ${!!hasExistingCoverPhoto}`);
+      
+      const mediaData = await updateWithFormData(endpoint, mediaFormData, {}, method);
       return mediaData;
     } catch (error) {
       console.error("Media upload failed:", error);
