@@ -2,6 +2,7 @@ import React from "react";
 import { assets } from "../../assets/assets";
 import { Star, Users, MessageCircle, Sparkles } from "lucide-react";
 import SignIn from "../SignIn";
+import ThemeToggle from "../ThemeToggle";
 
 const Login = () => {
   return (
@@ -21,11 +22,14 @@ const Login = () => {
         <div className="lg:w-1/2 xl:w-3/5 p-8 lg:p-12 xl:p-20 flex flex-col justify-between">
           {/* Logo and header */}
           <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <MessageCircle className="w-7 h-7 text-white" />
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <MessageCircle className="w-7 h-7 text-white" />
+                </div>
+                <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Knect</h1>
               </div>
-              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Knect</h1>
+              <ThemeToggle />
             </div>
 
             <div className="space-y-4 mb-6">

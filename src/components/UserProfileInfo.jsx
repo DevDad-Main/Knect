@@ -36,7 +36,7 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
           )}
         </div>
 
-        <div className="w-full pt-16 md:pt-0 md:pl-36">
+        <div className="w-full pt-16 md:pt-0 md:pl-36 relative">
           <>
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
               {/* Mobile: Edit button first, User details second */}
@@ -56,10 +56,9 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
               {profileId === currentUser?._id && (
                 <button
                   onClick={() => setShowEdit(true)}
-                  className="flex items-center justify-center gap-2 border border-secondary hover:bg-tertiary px-4 py-2 rounded-lg font-medium transition-colors order-1 sm:order-2 cursor-pointer"
+                  className="absolute -top-2 -right-2 p-2 rounded-full bg-primary border border-secondary hover:bg-tertiary shadow-md transition-all duration-200 group order-1 sm:order-2 cursor-pointer"
                 >
-                  <PenBox className="w-4 h-4" />
-                  Edit
+                  <PenBox className="w-3.5 h-3.5 text-tertiary group-hover:text-primary" />
                 </button>
               )}
             </div>

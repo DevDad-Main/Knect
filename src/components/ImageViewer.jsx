@@ -63,53 +63,58 @@ const ImageViewer = ({ imageUrl, onClose }) => {
       onMouseLeave={handleMouseUp}
     >
       {/* Controls */}
-      <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
-        <div className="flex gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2">
-          <button
-            onClick={handleZoomOut}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-            title="Zoom Out (-)"
-          >
-            <ZoomOut className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleZoomIn}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-            title="Zoom In (+)"
-          >
-            <ZoomIn className="w-5 h-5" />
-          </button>
-          <button
-            onClick={handleRotate}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-            title="Rotate (R)"
-          >
-            <RotateCw className="w-5 h-5" />
-          </button>
-          <button
-            onClick={resetView}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors text-sm"
-            title="Reset View"
-          >
-            Reset
-          </button>
-        </div>
-
-        <div className="flex gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2">
-          <button
-            onClick={handleDownload}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-            title="Download"
-          >
-            <Download className="w-5 h-5" />
-          </button>
-          <button
-            onClick={onClose}
-            className="p-2 text-white hover:bg-white/20 rounded transition-colors"
-            title="Close (Escape)"
-          >
-            <X className="w-5 h-5" />
-          </button>
+      <div className="absolute top-4 left-4 right-4 sm:top-4 sm:left-4 sm:right-4 flex flex-col sm:flex-row sm:justify-between gap-3 z-10">
+        {/* Mobile: Stacked vertical on left */}
+        {/* Desktop: Split horizontally */}
+        
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2">
+            <button
+              onClick={handleZoomOut}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+              title="Zoom Out (-)"
+            >
+              <ZoomOut className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleZoomIn}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+              title="Zoom In (+)"
+            >
+              <ZoomIn className="w-5 h-5" />
+            </button>
+            <button
+              onClick={handleRotate}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+              title="Rotate (R)"
+            >
+              <RotateCw className="w-5 h-5" />
+            </button>
+            <button
+              onClick={resetView}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors text-sm"
+              title="Reset View"
+            >
+              Reset
+            </button>
+          </div>
+          
+          <div className="flex gap-2 bg-black/50 backdrop-blur-sm rounded-lg p-2">
+            <button
+              onClick={handleDownload}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+              title="Download"
+            >
+              <Download className="w-5 h-5" />
+            </button>
+            <button
+              onClick={onClose}
+              className="p-2 text-white hover:bg-white/20 rounded transition-colors"
+              title="Close (Escape)"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
 
