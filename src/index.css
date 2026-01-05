@@ -259,3 +259,76 @@ body {
 :root.dark .str-chat__message:hover {
   background-color: transparent !important;
 }
+
+/* Fix input field text color in dark mode only */
+:root.dark .str-chat__input {
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__input textarea {
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__input input {
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__flat-input-wrapper textarea {
+  color: #f9fafb !important;
+}
+
+/* More specific input text fixes for dark mode */
+:root.dark .str-chat__input textarea,
+:root.dark .str-chat__input input,
+:root.dark .str-chat__flat-input-wrapper textarea,
+:root.dark .str-chat__flat-input-wrapper input,
+:root.dark .str-chat__composer textarea,
+:root.dark .str-chat__composer input,
+:root.dark textarea[data-testid="message-text-input"],
+:root.dark input[data-testid="message-text-input"] {
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__input-wrapper {
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__message-input textarea {
+  color: #f9fafb !important;
+}
+
+/* Ultra-specific text input fixes for dark mode */
+:root.dark [class*="str-chat"] textarea,
+:root.dark [class*="str-chat"] input[type="text"],
+:root.dark [class*="str-chat"] [class*="input"] {
+  color: #f9fafb !important;
+}
+
+/* Force text color on any input-like element inside Stream Chat */
+:root.dark .str-chat * input,
+:root.dark .str-chat * textarea {
+  color: #f9fafb !important;
+}
+
+/* Ultra-high specificity overrides for dark mode input text */
+:root.dark .str-chat-container .str-chat__input textarea,
+:root.dark .str-chat-container .str-chat__input input,
+:root.dark body .str-chat__input textarea,
+:root.dark body .str-chat__input input {
+  color: #f9fafb !important;
+}
+
+/* Force all input elements with any possible selector */
+:root.dark [class*="input"][class*="str-chat"],
+:root.dark [id*="input"][class*="str-chat"],
+:root.dark textarea[class*="str-chat"],
+:root.dark input[class*="str-chat"] {
+  color: #f9fafb !important;
+}
+
+/* Last resort - use attribute selectors */
+:root.dark textarea,
+:root.dark input[type="text"],
+:root.dark input:not([type]) {
+  color: #f9fafb !important;
+}
