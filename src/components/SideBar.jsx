@@ -82,21 +82,22 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
     try {
       console.log("Clicked Logout button");
 
-      const { data } = await updateUser("v1/users/logout", {}, "POST");
+      const response = await updateUser("v1/users/logout", {}, "POST");
 
-      if (data) {
+      if (response) {
+        console.log("Logout response", response);
         if (user?.authProvider === "google") {
           // Clears the Google OAuth session and above because if we have a success we clear the cookies as well
           googleLogout();
         }
 
         navigate("/login");
-        toast.success(data);
+        toast.success("Logged out successfully");
       } else {
-        toast.error(data.message);
+        toast.error("Logout failed");
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error.message || "Logout failed");
       console.log(error);
     }
   };
