@@ -13,6 +13,8 @@ import Messages from "./components/pages/Messages";
 import ChatBox from "./components/pages/ChatBox";
 import StreamMessages from "./components/pages/StreamMessages";
 import StreamChatBox from "./components/pages/StreamChatBox";
+import StreamVideoProvider from "./components/StreamVideoContext";
+import StreamCallScreen from "./components/pages/StreamCallScreen";
 
 import Connections from "./components/pages/Connections";
 import Discover from "./components/pages/Discover";
@@ -48,6 +50,7 @@ const router = createBrowserRouter(
         <Route path="feed" element={<Feed />} />
         <Route path="messages" element={<StreamMessages />} />
         <Route path="messages/:userId" element={<StreamChatBox />} />
+        <Route path="call/:userId" element={<StreamCallScreen />} />
         
         <Route path="post/:postId" element={<PostDetails />} />
         <Route path="connections" element={<Connections />} />
@@ -63,7 +66,9 @@ createRoot(document.getElementById("root")).render(
   <AppProvider>
     <ThemeProvider>
       <StreamChatProvider>
-        <RouterProvider router={router} />
+        <StreamVideoProvider>
+          <RouterProvider router={router} />
+        </StreamVideoProvider>
       </StreamChatProvider>
     </ThemeProvider>
   </AppProvider>,
