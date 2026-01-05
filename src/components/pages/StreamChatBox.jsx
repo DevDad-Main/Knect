@@ -23,14 +23,8 @@ const StreamChatBox = () => {
 
   const [channel, setChannel] = useState(null);
 
-  /* --------------------------------------------
-   * Dark mode state (single source of truth)
-   * -------------------------------------------- */
   const isDark = document.documentElement.classList.contains("dark");
 
-  /* --------------------------------------------
-   * Stream theme variables (MUST be on .str-chat)
-   * -------------------------------------------- */
   const streamTheme = useMemo(() => {
     if (isDark) {
       return {
@@ -46,7 +40,6 @@ const StreamChatBox = () => {
         "--str-chat__avatar-background-color": "#374151",
       };
     }
-
     return {
       "--str-chat__primary-color": "#4f46e5",
       "--str-chat__secondary-color": "#7c3aed",
@@ -61,9 +54,6 @@ const StreamChatBox = () => {
     };
   }, [isDark]);
 
-  /* --------------------------------------------
-   * Channel bootstrap (SDK-first)
-   * -------------------------------------------- */
   useEffect(() => {
     if (!chatClient || !userId) return;
 
@@ -73,7 +63,6 @@ const StreamChatBox = () => {
       try {
         const dmChannel = await createDirectMessageChannel(userId);
         if (!isMounted) return;
-
         await dmChannel.watch();
         setChannel(dmChannel);
       } catch (err) {
@@ -88,9 +77,6 @@ const StreamChatBox = () => {
     };
   }, [chatClient, userId]);
 
-  /* --------------------------------------------
-   * Guards
-   * -------------------------------------------- */
   if (isConnecting || !channel) {
     return (
       <div className="h-screen flex items-center justify-center bg-primary">
@@ -115,13 +101,10 @@ const StreamChatBox = () => {
     );
   }
 
-  /* --------------------------------------------
-   * UI
-   * -------------------------------------------- */
   return (
     <div className="h-screen flex flex-col bg-primary">
-      {/* Mobile back bar */}
-      <div className="lg:hidden flex items-center gap-2 px-3 py-2 border-b border-primary">
+      {/* Sticky Mobile Top Bar */}
+      <div className="lg:hidden flex items-center gap-2 px-3 py-2 border-b border-primary flex-shrink-0 sticky top-0 z-20 bg-primary">
         <button
           onClick={() => navigate("/messages")}
           className="p-2 hover:bg-secondary/50 rounded-lg"
@@ -131,24 +114,35 @@ const StreamChatBox = () => {
         <span className="text-sm text-tertiary">Back</span>
       </div>
 
-      {/* 🔑 Stream MUST be wrapped in .str-chat */}
-      <div className="str-chat flex-1" style={streamTheme}>
+      {/* Chat Window */}
+      <div className="str-chat flex-1 flex flex-col" style={streamTheme}>
         <Chat client={chatClient} theme={isDark ? "messaging dark" : "messaging light"}>
           <Channel channel={channel}>
-            <Window>
-              <ChannelHeader />
-              <MessageList />
-              <MessageInput
-                grow
-                enableMentions
-                commands={["giphy", "shrug", "me"]}
-                AttachmentButton={() => null}
-                InputButtons={() => (
-                  <div className="flex items-center gap-1">
-                    <ChatPlusMenu />
-                  </div>
-                )}
-              />
+            <Window className="flex-1 flex flex-col">
+              {/* Sticky Header */}
+              <div className="sticky top-0 z-10 bg-primary">
+                <ChannelHeader />
+              </div>
+
+              {/* Message List */}
+              <div className="flex-1 overflow-y-auto">
+                <MessageList />
+              </div>
+
+              {/* Sticky Input */}
+              <div className="sticky bottom-0 z-10 bg-primary px-2 py-1 border-t border-primary flex items-center gap-1">
+                <MessageInput
+                  grow={false}
+                  enableMentions
+                  commands={["giphy", "shrug", "me"]}
+                  AttachmentButton={() => null}
+                  InputButtons={() => (
+                    <div className="flex items-center gap-1">
+                      <ChatPlusMenu />
+                    </div>
+                  )}
+                />
+              </div>
             </Window>
             <Thread />
           </Channel>

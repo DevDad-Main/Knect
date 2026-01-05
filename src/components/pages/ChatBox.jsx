@@ -121,7 +121,8 @@ const ChatBox = () => {
   return (
     user && (
       <div className="flex flex-col h-screen">
-        <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-secondary to-tertiary border-b border-secondary">
+        {/* Fixed header */}
+        <div className="flex items-center gap-2 p-2 md:px-10 xl:pl-42 bg-gradient-to-r from-secondary to-tertiary border-b border-secondary flex-shrink-0 sticky top-0 z-10">
           {user?.profile_photo ? (
             <img
               onClick={() => navigate(`/profile/${user._id}`)}
@@ -143,7 +144,8 @@ const ChatBox = () => {
           </div>
         </div>
 
-        <div className="p-5 md:px-10 h-full overflow-y-scroll bg-primary">
+        {/* Scrollable messages area */}
+        <div className="flex-1 p-5 md:px-10 overflow-y-auto bg-primary" style={{ height: 'calc(100vh - 140px)' }}>
           <div className="space-y-4 max-w-4xl mx-auto">
             {messages
               .toSorted((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -175,9 +177,9 @@ const ChatBox = () => {
           </div>
         </div>
 
-        {/* Input area */}
-        <div className="px-4 bg-secondary">
-          <div               className="flex items-center gap-3 pl-5 p-1.5 bg-tertiary w-full max-w-xl mx-auto border border-secondary shadow rounded-full mb-5">
+        {/* Fixed input area */}
+        <div className="px-4 bg-secondary flex-shrink-0 sticky bottom-0 z-10">
+          <div className="flex items-center gap-3 pl-5 p-1.5 bg-tertiary w-full max-w-xl mx-auto border border-secondary shadow rounded-full mb-5">
             <input
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               onChange={(e) => setText(e.target.value)}
