@@ -8,16 +8,16 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-
-/* Optional custom scrollbar for smoother look */
 .scrollbar-thin {
   scrollbar-width: thin;
 }
 .scrollbar-thumb-gray-300 {
-  scrollbar-color: #d1d5db #f3f4f6; /* thumb color, track color */
+  scrollbar-color: #d1d5db #f3f4f6;
 }
 
-/* Light theme CSS variables */
+/* -----------------------------
+   Theme Variables
+   ----------------------------- */
 :root.light {
   --bg-primary: #ffffff;
   --bg-secondary: #f9fafb;
@@ -33,7 +33,6 @@
   --accent-gradient: linear-gradient(to right, #4f46e5, #7c3aed);
 }
 
-/* Dark theme CSS variables */
 :root.dark {
   --bg-primary: #111827;
   --bg-secondary: #1f2937;
@@ -49,73 +48,214 @@
   --accent-gradient: linear-gradient(to right, #6366f1, #8b5cf6);
 }
 
-/* Apply theme colors to common elements */
+/* -----------------------------
+   Global Elements
+   ----------------------------- */
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
+.bg-primary {
+  background-color: var(--bg-primary);
+}
+.bg-secondary {
+  background-color: var(--bg-secondary);
+}
+.bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+.text-primary {
+  color: var(--text-primary);
+}
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-tertiary {
+  color: var(--text-tertiary);
+}
+.text-quaternary {
+  color: var(--text-quaternary);
+}
+.placeholder-text-tertiary::placeholder {
+  color: var(--text-tertiary);
+}
+.border-primary {
+  border-color: var(--border-primary);
+}
+.border-secondary {
+  border-color: var(--border-secondary);
+}
+.accent-gradient {
+  background: var(--accent-gradient);
+}
 
-/* Custom utility classes for theme-aware styling */
-.bg-primary { background-color: var(--bg-primary); }
-.bg-secondary { background-color: var(--bg-secondary); }
-.bg-tertiary { background-color: var(--bg-tertiary); }
+/* -----------------------------
+   Stream Chat Overrides
+   ----------------------------- */
+.str-chat,
+.str-chat__container,
+.str-chat__message-list,
+.str-chat__list,
+.str-chat__window,
+.str-chat__main-panel,
+.str-chat__thread,
+.str-chat__thread-list,
+.str-chat__message-list-wrapper,
+.str-chat__virtual-list {
+  background-color: var(--bg-primary) !important;
+}
 
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.text-tertiary { color: var(--text-tertiary); }
-.text-quaternary { color: var(--text-quaternary); }
-.placeholder-text-tertiary::placeholder { color: var(--text-tertiary); }
+/* Message Bubbles */
+.str-chat__message,
+.str-chat__message-inner,
+.str-chat__message-content,
+.str-chat__message-simple,
+.str-chat__message-simple__inner,
+.str-chat__message-simple__wrapper,
+.str-chat__message-simple__content {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text-primary) !important;
+  border-radius: 16px !important;
+}
 
-.border-primary { border-color: var(--border-primary); }
-.border-secondary { border-color: var(--border-secondary); }
+.str-chat__message--sent .str-chat__message-simple__content {
+  background-color: var(--accent-primary) !important;
+  color: white !important;
+}
 
-.accent-gradient { background: var(--accent-gradient); }
+.str-chat__message--received .str-chat__message-simple__content {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
 
-/* Stream Chat Mobile Optimizations */
+/* Force dark mode bubble colors */
+:root.dark .str-chat__message--sent .str-chat__message-simple__content,
+:root.dark .str-chat__message--sent .str-chat__message-simple__inner,
+:root.dark .str-chat__message--sent .str-chat__message-simple__wrapper {
+  background-color: #6366f1 !important;
+  color: white !important;
+}
+
+:root.dark .str-chat__message--received .str-chat__message-simple__content,
+:root.dark .str-chat__message--received .str-chat__message-simple__inner,
+:root.dark .str-chat__message--received .str-chat__message-simple__wrapper {
+  background-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+:root.dark .str-chat__message-text,
+:root.dark .str-chat__message-simple__text {
+  color: inherit !important;
+}
+
+/* Channel Header */
+.str-chat__channel-header {
+  background-color: var(--bg-primary) !important;
+  border-bottom-color: var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+.str-chat__channel-header-title {
+  color: var(--text-primary) !important;
+}
+
+/* Message Input */
+.str-chat__input,
+.str-chat__input-wrapper,
+.str-chat__flat-input-wrapper,
+.str-chat__message-input,
+.str-chat__composer {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-primary) !important;
+  color: var(--text-primary) !important;
+}
+.str-chat__input--focus {
+  border-color: var(--accent-primary) !important;
+}
+.str-chat__input textarea::placeholder {
+  color: var(--text-tertiary) !important;
+}
+
+/* Force input colors in dark mode */
+:root.dark .str-chat__input,
+:root.dark .str-chat__input-wrapper,
+:root.dark .str-chat__flat-input-wrapper,
+:root.dark .str-chat__message-input,
+:root.dark .str-chat__composer {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #f9fafb !important;
+}
+
+/* Avatars */
+.str-chat__avatar {
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+}
+.str-chat__avatar-image {
+  border-radius: 9999px !important;
+  object-fit: cover;
+}
+.str-chat__avatar-fallback {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-radius: 9999px !important;
+  font-weight: 600;
+}
+
+/* Other Stream Elements */
+.str-chat__date-separator,
+.str-chat__typing-indicator {
+  color: var(--text-tertiary) !important;
+}
+.str-chat__message-actions {
+  background-color: var(--bg-tertiary) !important;
+}
+.str-chat__attachment {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-primary) !important;
+}
+
+/* Mobile Optimizations */
 .mobile-textarea {
-  font-size: 16px !important; /* Prevents zoom on iOS */
+  font-size: 16px !important;
   line-height: 1.4 !important;
   padding: 12px 16px !important;
-  min-height: 44px !important; /* Touch-friendly minimum height */
+  min-height: 44px !important;
 }
-
 .mobile-optimized-input {
-  min-height: 44px !important; /* Touch target size */
+  min-height: 44px !important;
 }
 
-/* Responsive chat optimizations */
 @media (max-width: 640px) {
-  /* Adjust Stream Chat components for mobile */
   .str-chat__message-list {
-    padding-bottom: 60px !important; /* Space for input */
+    padding-bottom: 60px !important;
   }
-  
   .str-chat__input {
     padding: 8px 12px !important;
   }
-  
   .str-chat__message {
-    max-width: 85% !important; /* Better mobile width */
+    max-width: 85% !important;
   }
-  
   .str-chat__message--sent {
     max-width: 75% !important;
   }
-  
-  /* Ensure buttons are touch-friendly */
   .str-chat__message-actions button {
     min-height: 44px !important;
     min-width: 44px !important;
   }
-  
-  /* Mobile avatar sizing */
   .str-chat__avatar {
     width: 32px !important;
     height: 32px !important;
   }
-  
-  /* Better spacing on mobile */
   .str-chat__message-simple {
     margin-bottom: 8px !important;
   }
+}
+
+/* Ensure dark mode hover and text consistency */
+:root.dark .str-chat__message:hover {
+  background-color: transparent !important;
 }

@@ -12,10 +12,12 @@ import { updateData } from "./utils";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useTheme } from "./ThemeContext";
 
 const UserCard = ({ user }) => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
+  const { theme } = useTheme();
   const [isFollowing, setIsFollowing] = useState(
     currentUser?.following.includes(user._id),
   );
@@ -64,7 +66,7 @@ const UserCard = ({ user }) => {
   return (
     <div
       key={user._id}
-      className="p-4 pt-6 flex flex-col justify-between w-72 shadow-lg border border-gray-200 rounded-lg"
+      className="p-4 pt-6 flex flex-col justify-between w-72 shadow-lg border border-secondary rounded-lg bg-primary"
     >
       <div className="CSS text-center">
         {user?.profile_photo ? (
@@ -86,25 +88,25 @@ const UserCard = ({ user }) => {
         </div>
 
         {user.username && (
-          <p className="text-gray-500 font-light">@{user.username}</p>
+          <p className="text-tertiary font-light">@{user.username}</p>
         )}
 
         {user.bio && (
-          <p className="text-gray-600 mt-2 text-center text-sm px-4">
+          <p className="text-secondary mt-2 text-center text-sm px-4">
             {user.bio}
           </p>
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-600">
+      <div className="flex items-center justify-center gap-2 mt-4 text-xs text-tertiary">
         {user.location && (
-          <div className="flex items-center gap-1 border border-gray-300 rounded-full px-3 py-1">
+          <div className="flex items-center gap-1 border border-secondary rounded-full px-3 py-1">
             <MapPin className="w-4 h-4" />
             {user.location}
           </div>
         )}
 
-        <div className="flex items-center gap-1 border border-gray-300 rounded-full px-3 py-1">
+        <div className="flex items-center gap-1 border border-secondary rounded-full px-3 py-1">
           <span>{user.followers?.length || 0}</span> Followers
         </div>
       </div>
@@ -122,7 +124,7 @@ const UserCard = ({ user }) => {
         {/* Connection Request Button / Message Button */}
         <button
           onClick={handleConnectionRequest}
-          className="flex items-center justify-center w-16 border text-slate-500 group rounded-md cursor-pointer active:scale-95 transition"
+          className="flex items-center justify-center w-16 border border-secondary text-tertiary group rounded-md cursor-pointer active:scale-95 transition bg-primary"
         >
           {currentUser?.connections?.includes(user._id) ? (
             <MessageCircle className="w-5 h-5 group-hover:scale-105 transition" />

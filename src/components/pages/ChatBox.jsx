@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { io } from "socket.io-client";
 import { useApp } from "../../components/AppContext";
+import { useTheme } from "../ThemeContext";
 
 const ChatBox = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const ChatBox = () => {
   const [image, setImage] = useState(null);
   const [user, setUser] = useState({});
   const { user: currentUser } = useApp();
+  const { theme } = useTheme();
   const messagesEndRef = useRef(null);
   const socket = useRef(null);
 
@@ -141,7 +143,7 @@ const ChatBox = () => {
           </div>
         </div>
 
-        <div className="p-5 md:px-10 h-full overflow-y-scroll">
+        <div className="p-5 md:px-10 h-full overflow-y-scroll bg-primary">
           <div className="space-y-4 max-w-4xl mx-auto">
             {messages
               .toSorted((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -151,7 +153,7 @@ const ChatBox = () => {
                   className={`flex flex-col ${message.to_user_id !== user._id ? "items-start" : "items-end"}`}
                 >
                   <div
-                    className={`p-2 text-sm max-w-sm bg-white text-slate-700 rounded-lg shadow ${message.to_user_id !== user._id ? "rounded-bl-none" : "rounded-br-none"}`}
+                    className={`p-2 text-sm max-w-sm bg-tertiary text-primary rounded-lg shadow ${message.to_user_id !== user._id ? "rounded-bl-none" : "rounded-br-none"}`}
                   >
                     {/* Check to see if the message has an image, if it does then we show it otherwise just the message */}
                     {message.message_type === "image" && (
@@ -162,8 +164,8 @@ const ChatBox = () => {
                       />
                     )}
                     <p>{message.text}</p>
-                    <div className="text-sm pt-1 text-slate-600">
-                      <p className="text-tertiary">{new Date(message.createdAt).toLocaleTimeString()}</p>
+                    <div className="text-sm pt-1 text-quaternary">
+                      <p className="text-quaternary">{new Date(message.createdAt).toLocaleTimeString()}</p>
                     </div>
                   </div>
                 </div>
@@ -174,14 +176,14 @@ const ChatBox = () => {
         </div>
 
         {/* Input area */}
-        <div className="px-4">
-          <div               className="flex items-center gap-3 pl-5 p-1.5 bg-primary w-full max-w-xl mx-auto border border-secondary shadow rounded-full mb-5">
+        <div className="px-4 bg-secondary">
+          <div               className="flex items-center gap-3 pl-5 p-1.5 bg-tertiary w-full max-w-xl mx-auto border border-secondary shadow rounded-full mb-5">
             <input
               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               onChange={(e) => setText(e.target.value)}
               value={text}
               type="text"
-              className="flex-1 outline-none text-primary bg-transparent"
+              className="flex-1 outline-none text-primary bg-transparent placeholder-text-tertiary"
               placeholder="Type a message..."
             />
             <label htmlFor="image">

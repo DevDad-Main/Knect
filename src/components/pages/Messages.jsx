@@ -4,11 +4,13 @@ import { Eye, MessageSquare, User, UserIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
+import { useTheme } from "../ThemeContext";
 
 const Messages = () => {
   const navigate = useNavigate();
   const [connections, setConnections] = useState([]);
   const { getConnections } = useApp();
+  const { theme } = useTheme();
 
   const fetchMessages = async () => {
     try {
@@ -41,7 +43,7 @@ const Messages = () => {
           {connections.map((user) => (
             <div
               key={user._id}
-              className="max-w-xl flex flex-warp gap-5 p-6 bg-primary shadow rounded-md"
+              className="max-w-xl flex flex-warp gap-5 p-6 bg-primary shadow rounded-md border border-secondary"
             >
               {user?.profile_photo ? (
                 <img
@@ -68,7 +70,7 @@ const Messages = () => {
 
                 <button
                   onClick={() => navigate(`/profile/${user._id}`)}
-                  className="size-10 flex items-center justify-center text-sm rounded bg-slate-100 hover:bg-slate-200 text-slate-800 active:scale-95 transition cursor-pointer"
+                  className="size-10 flex items-center justify-center text-sm rounded bg-secondary hover:bg-tertiary text-primary active:scale-95 transition cursor-pointer"
                 >
                   <User className="w-4 h-4" />
                 </button>

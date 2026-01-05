@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Chat,
@@ -24,21 +24,42 @@ const StreamChatBox = () => {
   const [channel, setChannel] = useState(null);
 
   /* --------------------------------------------
-   * Dynamic theme (kept from your version)
+   * Dark mode state (single source of truth)
    * -------------------------------------------- */
-  const getDynamicTheme = () => {
-    const isDark = document.documentElement.classList.contains("dark");
+  const isDark = document.documentElement.classList.contains("dark");
+
+  /* --------------------------------------------
+   * Stream theme variables (MUST be on .str-chat)
+   * -------------------------------------------- */
+  const streamTheme = useMemo(() => {
+    if (isDark) {
+      return {
+        "--str-chat__primary-color": "#6366f1",
+        "--str-chat__secondary-color": "#8b5cf6",
+        "--str-chat__background-color": "#111827",
+        "--str-chat__surface-color": "#1f2937",
+        "--str-chat__text-color": "#f9fafb",
+        "--str-chat__text-low-emphasis-color": "#d1d5db",
+        "--str-chat__border-color": "#374151",
+        "--str-chat__message-border-radius": "16px",
+        "--str-chat__input-border-radius": "12px",
+        "--str-chat__avatar-background-color": "#374151",
+      };
+    }
+
     return {
-      "--str-chat__primary-color": isDark ? "#4f46e5" : "#0064ff",
-      "--str-chat__secondary-color": isDark ? "#7c3aed" : "#0d47a1",
-      "--str-chat__background-color": isDark ? "var(--bg-primary)" : "#ffffff",
-      "--str-chat__surface-color": isDark ? "var(--bg-secondary)" : "#f8fafc",
-      "--str-chat__text-color": isDark ? "var(--text-primary)" : "#1a202c",
-      "--str-chat__border-color": isDark ? "var(--border-primary)" : "#e2e8f0",
+      "--str-chat__primary-color": "#4f46e5",
+      "--str-chat__secondary-color": "#7c3aed",
+      "--str-chat__background-color": "#ffffff",
+      "--str-chat__surface-color": "#f9fafb",
+      "--str-chat__text-color": "#111827",
+      "--str-chat__text-low-emphasis-color": "#6b7280",
+      "--str-chat__border-color": "#e5e7eb",
       "--str-chat__message-border-radius": "16px",
       "--str-chat__input-border-radius": "12px",
+      "--str-chat__avatar-background-color": "#f3f4f6",
     };
-  };
+  }, [isDark]);
 
   /* --------------------------------------------
    * Channel bootstrap (SDK-first)
@@ -51,10 +72,9 @@ const StreamChatBox = () => {
     const init = async () => {
       try {
         const dmChannel = await createDirectMessageChannel(userId);
-
         if (!isMounted) return;
 
-        await dmChannel.watch(); // ensures presence, typing, read states
+        await dmChannel.watch();
         setChannel(dmChannel);
       } catch (err) {
         console.error("Failed to init DM:", err);
@@ -63,7 +83,6 @@ const StreamChatBox = () => {
     };
 
     init();
-
     return () => {
       isMounted = false;
     };
@@ -100,7 +119,7 @@ const StreamChatBox = () => {
    * UI
    * -------------------------------------------- */
   return (
-    <div className="h-screen flex flex-col bg-primary" style={getDynamicTheme()}>
+    <div className="h-screen flex flex-col bg-primary">
       {/* Mobile back bar */}
       <div className="lg:hidden flex items-center gap-2 px-3 py-2 border-b border-primary">
         <button
@@ -112,41 +131,29 @@ const StreamChatBox = () => {
         <span className="text-sm text-tertiary">Back</span>
       </div>
 
-      <Chat
-        client={chatClient}
-        theme={
-          document.documentElement.classList.contains("dark")
-            ? "messaging dark"
-            : "messaging light"
-        }
-      >
-        <Channel channel={channel}>
-          <Window>
-            {/* Stream SDK Header (presence, typing, avatars) */}
-            <ChannelHeader />
-
-            {/* Messages */}
-            <MessageList />
-
-            {/* Input with GIFs, commands, uploads, mentions */}
-            <MessageInput
-              grow
-              enableMentions
-              commands={["giphy", "shrug", "me"]}
-              noFiles={false}
-              AttachmentButton={() => null} // ✅ MUST be a function
-              InputButtons={() => (
-                <div className="flex items-center gap-1">
-                  <ChatPlusMenu />
-                </div>
-              )}
-            />
-          </Window>
-
-          {/* Threads (replies) */}
-          <Thread />
-        </Channel>
-      </Chat>
+      {/* 🔑 Stream MUST be wrapped in .str-chat */}
+      <div className="str-chat flex-1" style={streamTheme}>
+        <Chat client={chatClient} theme={isDark ? "messaging dark" : "messaging light"}>
+          <Channel channel={channel}>
+            <Window>
+              <ChannelHeader />
+              <MessageList />
+              <MessageInput
+                grow
+                enableMentions
+                commands={["giphy", "shrug", "me"]}
+                AttachmentButton={() => null}
+                InputButtons={() => (
+                  <div className="flex items-center gap-1">
+                    <ChatPlusMenu />
+                  </div>
+                )}
+              />
+            </Window>
+            <Thread />
+          </Channel>
+        </Chat>
+      </div>
     </div>
   );
 };
