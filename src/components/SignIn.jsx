@@ -14,7 +14,7 @@ function SignIn() {
     username: "",
     password: "",
   });
-  
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,8 +34,8 @@ function SignIn() {
       const data = await updateData("v1/users/login", { ...formData }, "POST");
 
       if (data) {
-        await checkUser();
         navigate("/feed");
+        await checkUser();
       }
     } catch (err) {
       if (err.errors) {
@@ -59,35 +59,35 @@ function SignIn() {
   };
 
   const responseMessage = async (response) => {
-  try {
-    // response.credential is a JWT from Google
-    const data = await updateData("v1/users/google-login", {
-      credential: response.credential,
-    }, "POST");
+    try {
+      // response.credential is a JWT from Google
+      const data = await updateData("v1/users/google-login", {
+        credential: response.credential,
+      }, "POST");
 
-    if (data) {
-      await checkUser();
-      toast.success("Logged in with Google");
-      navigate("/feed");
+      if (data) {
+        await checkUser();
+        toast.success("Logged in with Google");
+        navigate("/feed");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Google login failed", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
     }
-  } catch (err) {
-    console.error(err);
+  };
+
+  const errorMessage = (error) => {
+    console.log(error);
     toast.error("Google login failed", {
       position: "top-center",
       autoClose: 3000,
       theme: "dark",
     });
-  }
-};
-
-const errorMessage = (error) => {
-  console.log(error);
-  toast.error("Google login failed", {
-    position: "top-center",
-    autoClose: 3000,
-    theme: "dark",
-  });
-};
+  };
 
   return (
     <div className="w-full max-w-md">
@@ -96,8 +96,8 @@ const errorMessage = (error) => {
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl mb-4">
           <LogIn className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
-        <p className="text-gray-600">Sign in to continue to Knect</p>
+        <h2 className="text-3xl font-bold text-primary mb-2">Welcome Back</h2>
+        <p className="text-secondary">Sign in to continue to Knect</p>
       </div>
 
       {/* Form */}
@@ -106,11 +106,11 @@ const errorMessage = (error) => {
           {/* Username Field */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <User className="h-5 w-5 text-gray-400" />
+              <User className="h-5 w-5 text-tertiary" />
             </div>
             <input
               type="text"
-              className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+              className="w-full pl-10 pr-3 py-3 border border-primary rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-tertiary focus:bg-secondary text-primary placeholder-text-tertiary"
               placeholder="Username"
               name="username"
               onChange={handleInput}
@@ -122,11 +122,11 @@ const errorMessage = (error) => {
           {/* Password Field */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Lock className="h-5 w-5 text-gray-400" />
+              <Lock className="h-5 w-5 text-tertiary" />
             </div>
             <input
               type={showPassword ? "text" : "password"}
-              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
+              className="w-full pl-10 pr-10 py-3 border border-primary rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-tertiary focus:bg-secondary text-primary placeholder-text-tertiary"
               placeholder="Password"
               name="password"
               onChange={handleInput}
@@ -139,9 +139,9 @@ const errorMessage = (error) => {
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? (
-                <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                <EyeOff className="h-5 w-5 text-tertiary hover:text-secondary transition-colors" />
               ) : (
-                <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                <Eye className="h-5 w-5 text-tertiary hover:text-secondary transition-colors" />
               )}
             </button>
           </div>
@@ -180,17 +180,17 @@ const errorMessage = (error) => {
       {/* Divider */}
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-200"></div>
+          <div className="w-full border-t border-primary"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-2 bg-white text-gray-500">Or continue with</span>
+          <span className="px-2 bg-primary text-tertiary">Or continue with</span>
         </div>
       </div>
 
       {/* Google Login */}
       <div className="flex justify-center">
-        <GoogleLogin 
-          onSuccess={responseMessage} 
+        <GoogleLogin
+          onSuccess={responseMessage}
           onError={errorMessage}
           text="signin_with"
           shape="rectangular"
@@ -203,7 +203,7 @@ const errorMessage = (error) => {
 
       {/* Sign Up Link */}
       <div className="text-center mt-6">
-        <span className="text-gray-600 text-sm">Don't have an account? </span>
+        <span className="text-secondary text-sm">Don't have an account? </span>
         <button
           onClick={() => navigate("/register")}
           className="text-indigo-600 hover:text-indigo-700 text-sm font-semibold transition-colors"

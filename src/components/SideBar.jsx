@@ -8,7 +8,7 @@ import RecentMessages from "./RecentMessages";
 import NotificationBell from "./NotificationBell";
 import ThemeToggle from "./ThemeToggle";
 import { io } from "socket.io-client";
-import { useGoogleLogout } from "@react-oauth/google";
+import { googleLogout } from "@react-oauth/google";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
@@ -81,17 +81,17 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const signoutUser = async () => {
     try {
       console.log("Clicked Logout button");
-      
+
       const { data } = await updateUser("v1/users/logout", {}, "POST");
-      
+
       if (data) {
         if (user?.authProvider === "google") {
           // Clears the Google OAuth session and above because if we have a success we clear the cookies as well
           googleLogout();
         }
-        
+
         navigate("/login");
-        toast.success(data.message);
+        toast.success(data);
       } else {
         toast.error(data.message);
       }

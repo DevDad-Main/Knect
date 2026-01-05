@@ -22,14 +22,13 @@ const Login = () => {
         <div className="lg:w-1/2 xl:w-3/5 p-8 lg:p-12 xl:p-20 flex flex-col justify-between">
           {/* Logo and header */}
           <div className="relative">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                   <MessageCircle className="w-7 h-7 text-white" />
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Knect</h1>
               </div>
-              <ThemeToggle />
             </div>
 
             <div className="space-y-4 mb-6">
@@ -91,7 +90,10 @@ const Login = () => {
 
         {/* Right side - Login Form */}
         <div className="lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 lg:p-12">
-          <div className="w-full max-w-md bg-primary/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-primary/20 p-8">
+          <div className="w-full max-w-md bg-primary/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-primary/20 p-8 relative">
+            <div className="absolute top-4 right-4">
+              <ThemeToggle />
+            </div>
             <SignIn />
           </div>
         </div>
