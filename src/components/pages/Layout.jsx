@@ -11,11 +11,13 @@ const Layout = () => {
   const location = useLocation();
   const setSideBarOpen = () => {}; // No-op since sidebar is always open on desktop
 
-  // Check if we're in chat/call routes - prevent page scrolling
-  const isChatRoute = location.pathname.startsWith('/messages') || location.pathname.startsWith('/call/');
+  // Check if we're in actual chat or call routes - prevent page scrolling only in specific chats
+  const isChatRoute = (location.pathname.startsWith('/messages/') && location.pathname !== '/messages') || location.pathname.startsWith('/call/');
+  // Use primary background for messages route to match component styling
+  const isMessagesRoute = location.pathname === '/messages';
 
   return !loading && user ? (
-    <div className={`min-h-screen bg-secondary ${isChatRoute ? 'overflow-hidden' : ''}`}>
+    <div className={`min-h-screen ${isMessagesRoute ? 'bg-primary' : 'bg-secondary'} ${isChatRoute ? 'overflow-hidden' : ''}`}>
       {/* Top Bar with Theme Toggle */}
       <TopBar />
       

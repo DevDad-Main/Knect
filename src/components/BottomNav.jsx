@@ -23,8 +23,8 @@ const BottomNav = () => {
       : item
   );
 
-  // Hide bottom navigation on message-related routes
-  if (location.startsWith('/messages') || location.startsWith('/call/')) {
+  // Hide bottom navigation only in actual chat and call routes
+  if ((location.startsWith('/messages/') && location !== '/messages') || location.startsWith('/call/')) {
     return null;
   }
 
