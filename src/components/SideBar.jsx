@@ -4,77 +4,19 @@ import MenuItems from "./MenuItems";
 import { CirclePlus, LogOut, User, UserIcon, Bell } from "lucide-react";
 import { useApp } from "../components/AppContext";
 import toast from "react-hot-toast";
-import RecentMessages from "./RecentMessages";
+
 import NotificationBell from "./NotificationBell";
 import ThemeToggle from "./ThemeToggle";
-import { io } from "socket.io-client";
+
 import { googleLogout } from "@react-oauth/google";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
   const { user, getNotifications, updateUser } = useApp();
-  const socket = useRef(null);
-  const location = useLocation();
-
-  // Ref to always have the latest pathname
-  const locationRef = useRef(location.pathname);
-  useEffect(() => {
-    locationRef.current = location.pathname;
-  }, [location.pathname]);
-
-  const isInChatWith = (userId) => {
-    return locationRef.current === `/messages/${userId}`;
-  };
-
+const location = useLocation();
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  useEffect(() => {
-    socket.current = io(import.meta.env.VITE_BASEURL, {
-      // No manual token needed - cookies will be sent automatically
-      transports: ["websocket"],
-      withCredentials: true,
-    });
-
-    socket.current.on("notification", async (notification) => {
-      if (
-        notification.type === "message" &&
-        isInChatWith(notification.from._id)
-      ) {
-        // delete it from DB
-        const id = notification._id;
-        await updateUser(`v1/notifications/delete/${id}`, {}, "DELETE");
-
-        // also remove it locally (just in case it sneaks in)
-        setNotifications((prev) => prev.filter((n) => n._id !== id));
-
-        return; // 🚀 stop here so we don’t add it
-      }
-
-      // otherwise add to notifications
-      setNotifications((prev) => [notification, ...prev]);
-    });
-
-    return () => {
-      socket.current.disconnect();
-    };
-  }, []);
-
-  const navigate = useNavigate();
-
-  const fetchNotifications = async () => {
-    try {
-      const data = await getNotifications();
-      if (data) {
-        setNotifications(data); // preload from DB
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    // fetchNotifications();
-  }, []);
+const navigate = useNavigate();
 
   console.log("USER ", user)
 

@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import Loading from "../Loading";
 import StoriesBar from "../StoriesBar";
 import PostCard from "../PostCard";
-import RecentMessages from "../RecentMessages";
+
 import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
 
@@ -90,8 +90,7 @@ const Feed = () => {
           </p>
         </div>
 
-        <h1 className="text-primary">Recent Messages</h1>
-        <RecentMessages />
+        
       </div>
     </div>
   );
