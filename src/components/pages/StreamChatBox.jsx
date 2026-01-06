@@ -23,11 +23,17 @@ const StreamChatBox = () => {
 
   const [channel, setChannel] = useState(null);
 
+  /* --------------------------------------------
+   * Dark mode
+   * -------------------------------------------- */
   const isDark = document.documentElement.classList.contains("dark");
 
+  /* --------------------------------------------
+   * Stream theme vars (must live on .str-chat)
+   * -------------------------------------------- */
   const streamTheme = useMemo(() => {
-    if (isDark) {
-      return {
+    return isDark
+      ? {
         "--str-chat__primary-color": "#6366f1",
         "--str-chat__secondary-color": "#8b5cf6",
         "--str-chat__background-color": "#111827",
@@ -38,45 +44,50 @@ const StreamChatBox = () => {
         "--str-chat__message-border-radius": "16px",
         "--str-chat__input-border-radius": "12px",
         "--str-chat__avatar-background-color": "#374151",
+      }
+      : {
+        "--str-chat__primary-color": "#4f46e5",
+        "--str-chat__secondary-color": "#7c3aed",
+        "--str-chat__background-color": "#ffffff",
+        "--str-chat__surface-color": "#f9fafb",
+        "--str-chat__text-color": "#111827",
+        "--str-chat__text-low-emphasis-color": "#6b7280",
+        "--str-chat__border-color": "#e5e7eb",
+        "--str-chat__message-border-radius": "16px",
+        "--str-chat__input-border-radius": "12px",
+        "--str-chat__avatar-background-color": "#f3f4f6",
       };
-    }
-    return {
-      "--str-chat__primary-color": "#4f46e5",
-      "--str-chat__secondary-color": "#7c3aed",
-      "--str-chat__background-color": "#ffffff",
-      "--str-chat__surface-color": "#f9fafb",
-      "--str-chat__text-color": "#111827",
-      "--str-chat__text-low-emphasis-color": "#6b7280",
-      "--str-chat__border-color": "#e5e7eb",
-      "--str-chat__message-border-radius": "16px",
-      "--str-chat__input-border-radius": "12px",
-      "--str-chat__avatar-background-color": "#f3f4f6",
-    };
   }, [isDark]);
 
+  /* --------------------------------------------
+   * Channel init
+   * -------------------------------------------- */
   useEffect(() => {
     if (!chatClient || !userId) return;
 
-    let isMounted = true;
+    let mounted = true;
 
     const init = async () => {
       try {
         const dmChannel = await createDirectMessageChannel(userId);
-        if (!isMounted) return;
+        if (!mounted) return;
         await dmChannel.watch();
         setChannel(dmChannel);
       } catch (err) {
-        console.error("Failed to init DM:", err);
+        console.error(err);
         toast.error("Failed to open chat");
       }
     };
 
     init();
     return () => {
-      isMounted = false;
+      mounted = false;
     };
   }, [chatClient, userId]);
 
+  /* --------------------------------------------
+   * Guards
+   * -------------------------------------------- */
   if (isConnecting || !channel) {
     return (
       <div className="h-screen flex items-center justify-center bg-primary">
@@ -101,10 +112,13 @@ const StreamChatBox = () => {
     );
   }
 
+  /* --------------------------------------------
+   * UI
+   * -------------------------------------------- */
   return (
     <div className="h-screen flex flex-col bg-primary">
-      {/* Sticky Mobile Top Bar */}
-      <div className="lg:hidden flex items-center gap-2 px-3 py-2 border-b border-primary flex-shrink-0 sticky top-0 z-20 bg-primary">
+      {/* Mobile back bar */}
+      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-2 px-3 py-2 border-b border-primary bg-primary">
         <button
           onClick={() => navigate("/messages")}
           className="p-2 hover:bg-secondary/50 rounded-lg"
@@ -114,23 +128,24 @@ const StreamChatBox = () => {
         <span className="text-sm text-tertiary">Back</span>
       </div>
 
-      {/* Chat Window */}
-      <div className="str-chat flex-1 flex flex-col" style={streamTheme}>
-        <Chat client={chatClient} theme={isDark ? "messaging dark" : "messaging light"}>
+      {/* Stream Chat */}
+      <div className="str-chat flex-1 flex flex-col overflow-hidden" style={streamTheme}>
+        <Chat
+          client={chatClient}
+          theme={isDark ? "messaging dark" : "messaging light"}
+        >
           <Channel channel={channel}>
-            <Window className="flex-1 flex flex-col">
-              {/* Sticky Header */}
-              <div className="sticky top-0 z-10 bg-primary">
+            <Window className="flex-1 flex flex-col overflow-hidden">
+              {/* Sticky channel header */}
+              <div className="sticky top-0 z-20 bg-primary">
                 <ChannelHeader />
               </div>
 
-              {/* Message List */}
-              <div className="flex-1 overflow-y-auto">
-                <MessageList />
-              </div>
+              {/* Message list (Stream controls scrolling) */}
+              <MessageList />
 
-              {/* Sticky Input */}
-              <div className="sticky bottom-0 z-10 bg-primary px-2 py-1 border-t border-primary flex items-center gap-1">
+              {/* Sticky input */}
+              <div className="sticky bottom-0 z-20 bg-primary border-t border-primary px-2 py-1">
                 <MessageInput
                   grow={false}
                   enableMentions
@@ -144,6 +159,7 @@ const StreamChatBox = () => {
                 />
               </div>
             </Window>
+
             <Thread />
           </Channel>
         </Chat>

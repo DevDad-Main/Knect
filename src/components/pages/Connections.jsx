@@ -33,6 +33,15 @@ const Connections = () => {
       const data = await updateData("v1/auth/unfollow", { id: userId });
 
       if (data) {
+        // Immediately update local state for better UX
+        setUser(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            following: prev.following?.filter(u => u._id !== userId) || []
+          };
+        });
+        // Also fetch fresh data from server
         fetchConnections();
       }
     } catch (error) {
@@ -45,7 +54,19 @@ const Connections = () => {
       const data = await updateData("v1/auth/accept", { id: userId });
 
       if (data) {
+        // Immediately update local state for better UX
+        setUser(prev => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            pendingConnections: prev.pendingConnections?.filter(u => u._id !== userId) || [],
+            connections: [...(prev.connections || []), prev.pendingConnections?.find(u => u._id === userId)].filter(Boolean)
+          };
+        });
+        // Also fetch fresh data from server
         fetchConnections();
+      } else {
+        toast.error("Failed to accept connection");
       }
     } catch (error) {
       toast.error(error.message);
