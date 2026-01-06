@@ -118,7 +118,7 @@ const StreamChatBox = () => {
   return (
     <div className="h-screen flex flex-col bg-primary">
       {/* Mobile back bar */}
-      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-2 px-3 py-2 border-b border-primary bg-primary">
+      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-2 pl-16 py-2 border-b border-primary bg-primary">
         <button
           onClick={() => navigate("/messages")}
           className="p-2 hover:bg-secondary/50 rounded-lg"

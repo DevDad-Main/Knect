@@ -84,6 +84,7 @@ const StreamMessages = () => {
         className="flex items-center gap-3 p-4 hover:bg-secondary/30 cursor-pointer border-b border-primary transition"
       >
         <div className="relative w-12 h-12">
+          {console.log(channel.state)}
           {otherUser?.user?.image ? (
             <img
               src={otherUser.user.image}
@@ -125,7 +126,7 @@ const StreamMessages = () => {
 
           <div className="flex justify-between items-center">
             <p className="text-sm text-tertiary truncate">
-              {channel.state.last_message?.text || "No messages yet"}
+              {channel.state.messageSets?.[0]?.messages?.[channel.state.messageSets[0].messages.length - 1]?.text || "No messages yet"}
             </p>
 
             {channel.state.unreadCount > 0 && (
