@@ -116,18 +116,7 @@ const StreamChatBox = () => {
    * UI
    * -------------------------------------------- */
   return (
-    <div className="h-screen flex flex-col bg-primary">
-      {/* Mobile back bar */}
-      <div className="lg:hidden sticky top-0 z-30 flex items-center gap-2 pl-16 py-2 border-b border-primary bg-primary">
-        <button
-          onClick={() => navigate("/messages")}
-          className="p-2 hover:bg-secondary/50 rounded-lg"
-        >
-          <ArrowLeft className="w-5 h-5 text-primary" />
-        </button>
-        <span className="text-sm text-tertiary">Back</span>
-      </div>
-
+    <div className="h-full flex flex-col bg-primary">
       {/* Stream Chat */}
       <div className="str-chat flex-1 flex flex-col overflow-hidden" style={streamTheme}>
         <Chat
@@ -136,9 +125,18 @@ const StreamChatBox = () => {
         >
           <Channel channel={channel}>
             <Window className="flex-1 flex flex-col overflow-hidden">
-              {/* Sticky channel header */}
-              <div className="sticky top-0 z-20 bg-primary">
-                <ChannelHeader />
+              {/* Channel header with back button */}
+              <div className="sticky top-0 z-20 bg-primary border-b border-primary">
+                <div className="flex items-center">
+                  {/* Mobile back button */}
+                  <button
+                    onClick={() => navigate("/messages")}
+                    className="lg:hidden p-2 hover:bg-secondary/50 rounded-lg"
+                  >
+                    <ArrowLeft className="w-5 h-5 text-primary" />
+                  </button>
+                  <ChannelHeader />
+                </div>
               </div>
 
               {/* Message list (Stream controls scrolling) */}

@@ -154,7 +154,7 @@ const StreamMessages = () => {
     );
 
   return (
-    <div className="h-screen flex flex-col bg-primary">
+    <div className="h-full flex flex-col bg-primary">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-primary">
         <h1 className="text-xl font-bold text-primary">Messages</h1>

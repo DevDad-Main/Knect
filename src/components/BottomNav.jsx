@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { Home, MessageCircle, Search, UserIcon, Users, Bell, PlusSquare } from "lucide-react";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
@@ -14,7 +14,7 @@ const navItems = [
 
 const BottomNav = () => {
   const currentUser = useCurrentUser();
-  const location = window.location.pathname;
+  const location = useLocation().pathname;
 
   // Update profile path with current user ID
   const updatedNavItems = navItems.map(item => 
@@ -22,6 +22,11 @@ const BottomNav = () => {
       ? { ...item, path: `/profile/${currentUser?._id || ""}` }
       : item
   );
+
+  // Hide bottom navigation on message-related routes
+  if (location.startsWith('/messages') || location.startsWith('/call/')) {
+    return null;
+  }
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-primary border-t border-secondary z-50 lg:hidden">
