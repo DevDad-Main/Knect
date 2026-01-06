@@ -12,40 +12,42 @@ const Layout = () => {
 
   return !loading && user ? (
     <div className="w-full h-screen flex">
-      {/* Sidebar */}
-      <div className="hidden md:block fixed top-0 left-0 h-full w-60 xl:w-72">
+      {/* Desktop Sidebar - Fixed on large screens */}
+      <div className="hidden lg:block">
         <SideBar
-          sideBarOpen={sideBarOpen}
+          sideBarOpen={true} // Always open on desktop
           setSideBarOpen={setSideBarOpen}
           user={user}
         />
       </div>
 
-      {/* Main content → shifted only on md+ */}
-      <div className="flex-1 bg-secondary md:ml-60 xl:ml-72">
+      {/* Main content */}
+      <div className="flex-1 bg-secondary lg:ml-60 xl:ml-72 relative">
         <Outlet />
+        
+        {/* Mobile/Tablet toggle button */}
+        {!sideBarOpen ? (
+          <Menu
+            className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
+            onClick={() => setSideBarOpen(true)}
+          />
+        ) : null}
       </div>
 
-      {/* Mobile Sidebar (slides over content) */}
-      <div className="md:hidden">
-        <SideBar
-          sideBarOpen={sideBarOpen}
-          setSideBarOpen={setSideBarOpen}
-          user={user}
-        />
-      </div>
-
-      {/* Mobile toggle button */}
-      {sideBarOpen ? (
-        <X
-          className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary sm:hidden"
-          onClick={() => setSideBarOpen(false)}
-        />
-      ) : (
-        <Menu
-          className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary sm:hidden"
-          onClick={() => setSideBarOpen(true)}
-        />
+      {/* Mobile/Tablet Sidebar - Overlays content */}
+      {sideBarOpen && (
+        <div className="lg:hidden">
+          <SideBar
+            sideBarOpen={sideBarOpen}
+            setSideBarOpen={setSideBarOpen}
+            user={user}
+          />
+          {/* Close button overlay */}
+          <X
+            className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
+            onClick={() => setSideBarOpen(false)}
+          />
+        </div>
       )}
     </div>
   ) : (

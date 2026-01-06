@@ -113,7 +113,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
     <div
       className={`w-60 xl:w-72 bg-primary border-r border-primary flex flex-col justify-between items-center
     fixed top-0 left-0 bottom-0 z-20
-    ${sideBarOpen ? "translate-x-0" : "max-sm:-translate-x-full"}
+    ${sideBarOpen ? "translate-x-0" : "-translate-x-full"}
     transition-all duration-300 ease-in-out`}
     >
       <div className="w-full">

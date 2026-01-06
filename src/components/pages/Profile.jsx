@@ -73,7 +73,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="relative h-full overflow-y-scroll bg-secondary p-6">
+    <div className="relative h-full overflow-y-scroll bg-secondary p-4 lg:p-6">
       <div className="max-w-3xl mx-auto">
         {/* Back Button - Only show when viewing someone else's profile */}
         {profileId && (
