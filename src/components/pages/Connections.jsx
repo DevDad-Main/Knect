@@ -104,7 +104,7 @@ const Connections = () => {
     <div className="min-h-screen bg-secondary">
       <div className="max-w-6xl mx-auto p-6">
         {/* Connections Title */}
-        <div className="mb-8">
+        <div className="mb-8 lg:ml-0 ml-16">
           <h1 className="text-3xl font-bold text-primary mb-2">
             Connections
           </h1>

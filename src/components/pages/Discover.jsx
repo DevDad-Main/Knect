@@ -39,7 +39,7 @@ const Discover = () => {
     <div className="min-h-screen bg-gradient-to-b from-secondary to-primary">
       <div className="max-w-6xl mx-auto px-4 lg:px-6 py-4 lg:py-6">
         {/* Discover Title */}
-        <div className="mb-6 lg:mb-8">
+        <div className="mb-6 lg:mb-8 lg:ml-0 ml-16">
           <h1 className="text-2xl lg:text-3xl font-bold text-primary mb-2">
             Discover People!
           </h1>

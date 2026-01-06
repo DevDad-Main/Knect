@@ -84,7 +84,6 @@ const StreamMessages = () => {
         className="flex items-center gap-3 p-4 hover:bg-secondary/30 cursor-pointer border-b border-primary transition"
       >
         <div className="relative w-12 h-12">
-          {console.log(channel.state)}
           {otherUser?.user?.image ? (
             <img
               src={otherUser.user.image}
