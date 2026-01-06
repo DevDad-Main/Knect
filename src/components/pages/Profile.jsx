@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { dummyUserData, dummyPostsData } from "../../assets/assets";
+import { ArrowLeft } from "lucide-react";
 import Loading from "../Loading";
 import UserProfileInfo from "../UserProfileInfo";
 import moment from "moment";
@@ -12,6 +13,7 @@ import toast from "react-hot-toast";
 
 const Profile = () => {
   const { profileId } = useParams();
+  const navigate = useNavigate();
   const { user: currentUser, getProfile, loading } = useApp();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -73,6 +75,16 @@ const Profile = () => {
   return (
     <div className="relative h-full overflow-y-scroll bg-secondary p-6">
       <div className="max-w-3xl mx-auto">
+        {/* Back Button - Only show when viewing someone else's profile */}
+        {profileId && (
+          <button
+            onClick={() => navigate(-1)}
+            className="mb-4 flex items-center gap-2 px-4 py-2 bg-primary rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 text-primary group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
+            <span className="font-medium">Back</span>
+          </button>
+        )}
         {/* Profile Card */}
         <div className="bg-primary rounded-2xl shadow-lg overflow-hidden">
           {/* Cover Photo */}
