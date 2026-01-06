@@ -125,7 +125,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
         <div className="flex mt-2 relative">
           <h1
             onClick={() => navigate("/feed")}
-            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex-1 dark:text-purple-400"
+            className="w-26 ml-7 my-2 text-purple-700 text-2xl font-bold cursor-pointer flex-1 dark:text-purple-400 lg:ml-7 lg:flex-1 ml-16"
           >
             Knect
           </h1>

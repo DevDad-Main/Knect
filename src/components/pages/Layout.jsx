@@ -28,7 +28,7 @@ const Layout = () => {
         {/* Mobile/Tablet toggle button */}
         {!sideBarOpen ? (
           <Menu
-            className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
+            className="absolute top-3 left-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
             onClick={() => setSideBarOpen(true)}
           />
         ) : null}
@@ -44,7 +44,7 @@ const Layout = () => {
           />
           {/* Close button overlay */}
           <X
-            className="absolute top-3 right-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
+            className="absolute top-3 left-3 p-2 z-50 bg-primary rounded-md shadow w-10 h-10 text-tertiary lg:hidden"
             onClick={() => setSideBarOpen(false)}
           />
         </div>
