@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Chat, ChannelList } from "stream-chat-react";
 import { useStreamChat } from "../../components/StreamChatContext";
 import { useApp } from "../../components/AppContext";
-import { MessageCircle, User, ArrowLeft } from "lucide-react";
+import { MessageCircle, User } from "lucide-react";
 import "stream-chat-react/dist/css/v2/index.css";
 
 const StreamMessages = () => {
@@ -68,7 +68,7 @@ const StreamMessages = () => {
     navigate(`/messages/${userId}`);
   };
 
-  const handleBack = () => navigate("/feed");
+  
 
   const CustomChannelPreview = ({ channel, setActiveChannel }) => {
     const members = Object.values(channel.state.members);
@@ -157,12 +157,6 @@ const StreamMessages = () => {
     <div className="h-screen flex flex-col bg-primary">
       {/* Header */}
       <div className="flex items-center gap-3 p-4 border-b border-primary">
-        <button
-          onClick={handleBack}
-          className="p-2 hover:bg-secondary rounded-lg lg:hidden"
-        >
-          <ArrowLeft className="w-5 h-5 text-primary" />
-        </button>
         <h1 className="text-xl font-bold text-primary">Messages</h1>
       </div>
 

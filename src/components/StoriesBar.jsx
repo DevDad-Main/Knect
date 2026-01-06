@@ -4,6 +4,7 @@ import moment from "moment";
 import StoryModal from "./StoryModal";
 import StoryViewer from "./StoryViewer";
 import { useApp } from "../components/AppContext";
+import { useTheme } from "./ThemeContext";
 import toast from "react-hot-toast";
 
 const StoriesBar = () => {
@@ -11,6 +12,7 @@ const StoriesBar = () => {
   const [showModal, setShowModal] = useState(false);
   const [viewStory, setViewStory] = useState(false);
   const { user, getStories, updateUser } = useApp();
+  const { theme } = useTheme();
 
   const fetchStories = async () => {
     try {
@@ -43,13 +45,19 @@ const StoriesBar = () => {
         {/* Add story card */}
         <div
           onClick={() => setShowModal(true)}
-          className="rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed border-indigo-300 bg-linear-to-b from-indigo-50 to-white"
+          className={`rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed ${
+            theme === "dark" 
+              ? "border-indigo-400 bg-gradient-to-b from-indigo-900 to-gray-800" 
+              : "border-indigo-300 bg-gradient-to-b from-indigo-50 to-white"
+          }`}
         >
           <div className="h-full flex flex-col items-center justify-center p-4">
             <div className="size-10 bg-indigo-500 rounded-full flex items-center justify-center mb-3">
               <Plus className="w-5 h-5 text-white" />
             </div>
-            <p className="text-sm font-medium text-slate-700">Create Story</p>
+            <p className={`text-sm font-medium ${
+              theme === "dark" ? "text-gray-200" : "text-slate-700"
+            }`}>Create Story</p>
           </div>
         </div>
 
