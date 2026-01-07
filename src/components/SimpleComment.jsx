@@ -79,7 +79,7 @@ function Comment({
         {/* Header */}
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium truncate">
-            {comment.owner?.full_name}
+            {comment.owner?.username}
           </span>
           <span className="text-tertiary text-xs">
             {moment(comment.createdAt).fromNow()}
