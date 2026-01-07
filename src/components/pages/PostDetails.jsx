@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Comment from "../Comment";
 import SimpleComment from "../SimpleComment";
-import { ArrowLeft, ChevronDown, ChevronUp, UserIcon, X, MessageCircle } from "lucide-react";
+import { ArrowLeft, UserIcon, MessageCircle } from "lucide-react";
 import { fetchData, updateData } from "../utils";
 import PostCard from "../PostCard";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
@@ -21,6 +21,10 @@ export default function PostDetails() {
   const [showMobileComments, setShowMobileComments] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+
   // Common emojis for quick access
   const commonEmojis = ['❤️', '😂', '🔥', '😍', '👏', '😢', '😮', '🎉', '🙏', '💯', '👍', '👎', '😢', '😡', '🤔', '💭'];
 
@@ -28,6 +32,26 @@ export default function PostDetails() {
     setNewComment(prev => prev + emoji);
     setShowEmojiPicker(false);
   };
+
+  // Handle responsive design
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 1024);
+      }
+    };
+
+    // Set initial value
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   // Prevent body scroll when mobile comments are open
   useEffect(() => {
@@ -58,6 +82,8 @@ export default function PostDetails() {
       document.body.style.left = '';
     };
   }, [showMobileComments]);
+
+
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -129,8 +155,6 @@ export default function PostDetails() {
 
   if (!post) return <Loading />;
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
-
   return (
     <div className="min-h-screen bg-secondary">
       {/* Header */}
@@ -162,7 +186,7 @@ export default function PostDetails() {
           <PostCard post={post} />
         </div>
 
-        {/* Desktop comments */}
+        {/* Desktop comments - Show inline on desktop */}
         {!isMobile && (
           <>
             {/* Comment input */}
@@ -231,22 +255,20 @@ export default function PostDetails() {
               </div>
             </div>
 
-            {/* Comments section */}
+            {/* Comments section - Always show regardless of comment count */}
             <div className="space-y-4 pb-8">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold text-primary">
+                  {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                </h2>
+                <div className="text-sm text-tertiary">
+                  {new Date().toLocaleDateString()}
+                </div>
+              </div>
               {comments.length > 0 ? (
-                <>
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold text-primary">
-                      {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
-                    </h2>
-                    <div className="text-sm text-tertiary">
-                      {new Date().toLocaleDateString()}
-                    </div>
-                  </div>
-                  {comments.map((c) => (
-                    <SimpleComment key={c._id} comment={c} onReply={handleAddReply} />
-                  ))}
-                </>
+                comments.map((c) => (
+                  <SimpleComment key={c._id} comment={c} onReply={handleAddReply} />
+                ))
               ) : (
                 <div className="text-center py-12">
                   <div className="w-16 h-16 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
@@ -260,7 +282,7 @@ export default function PostDetails() {
           </>
         )}
 
-        {/* Mobile placeholder (optional) */}
+        {/* Mobile placeholder button */}
         {isMobile && (
           <div className="text-center py-8">
             <button
@@ -269,10 +291,10 @@ export default function PostDetails() {
             >
               {/* Animated ring effect */}
               <div className="absolute inset-0 rounded-full border-2 border-indigo-500/20 animate-pulse"></div>
-              
+
               {/* Icon with animation */}
               <MessageCircle className="w-8 h-8 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300 relative z-10" />
-              
+
               {/* Comment count badge */}
               {comments.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg z-20">
@@ -280,21 +302,21 @@ export default function PostDetails() {
                 </span>
               )}
             </button>
-            
+
             <p className="mt-4 font-medium text-primary text-lg">
-              {comments.length === 0 ? 'Start the conversation' : 
-               comments.length === 1 ? 'Join the discussion' : 
-               'Join the discussion'}
+              {comments.length === 0 ? 'Start a conversation' :
+                comments.length === 1 ? 'Join the discussion' :
+                  'Join the discussion'}
             </p>
             <p className="text-tertiary text-sm">
-              {comments.length === 0 ? 'Be the first to comment' : 
-               `${comments.length} ${comments.length === 1 ? 'person has' : 'people have'} commented`}
+              {comments.length === 0 ? 'Be the first to comment' :
+                `${comments.length} ${comments.length === 1 ? 'person has' : 'people have'} commented`}
             </p>
           </div>
         )}
       </div>
 
-      {/* Mobile Comment Modal - TikTok Style */}
+      {/* Mobile Comment Modal */}
       {isMobile && (
         <div className={`fixed inset-0 z-50 ${showMobileComments ? 'visible' : 'invisible'}`}>
           {/* Backdrop */}
@@ -305,8 +327,8 @@ export default function PostDetails() {
 
           {/* Bottom Sheet */}
           <div className={`absolute bottom-0 left-0 right-0 bg-primary rounded-t-3xl transition-transform duration-300 ease-out flex flex-col ${showMobileComments ? 'translate-y-0' : 'translate-y-full'}`}
-            style={{ 
-              height: '75vh', 
+            style={{
+              height: '75vh',
               maxHeight: '75vh',
               overflow: 'hidden'
             }}>
@@ -325,18 +347,12 @@ export default function PostDetails() {
                 onClick={() => setShowMobileComments(false)}
                 className="p-2 rounded-lg hover:bg-secondary transition-colors"
               >
-                <X className="w-5 h-5 text-tertiary" />
+                <ArrowLeft className="w-5 h-5 text-tertiary" />
               </button>
             </div>
 
             {/* Comments List */}
-            <div 
-              className="flex-1 overflow-y-auto px-4 py-3 overscroll-contain touch-pan-y"
-              style={{
-                WebkitOverflowScrolling: 'touch',
-                touchAction: 'pan-y'
-              }}
-            >
+            <div className="flex-1 overflow-y-auto px-4 py-3 overscroll-contain">
               {comments.length > 0 ? (
                 <div className="space-y-3">
                   {comments.map((c) => (
@@ -354,7 +370,7 @@ export default function PostDetails() {
               )}
             </div>
 
-            {/* Comment Input - Fixed at bottom */}
+            {/* Comment Input */}
             <div className="border-t border-secondary px-4 py-3 bg-primary flex-shrink-0">
               <div className="flex gap-3 items-end">
                 <div className="flex-shrink-0">
