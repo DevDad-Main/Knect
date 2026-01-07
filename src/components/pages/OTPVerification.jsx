@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { updateData } from "../utils";
 import toast from "react-hot-toast";
+import { useTheme } from "../ThemeContext";
+import ThemeToggle from "../ThemeToggle";
 
 function OTPVerification({ registrationToken, onBack }) {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [isExpired, setIsExpired] = useState(false);
@@ -114,21 +117,26 @@ function OTPVerification({ registrationToken, onBack }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8 space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
+      <div className="w-full max-w-md bg-primary shadow-lg rounded-2xl p-8 space-y-6 border border-secondary relative">
+        {/* Theme Toggle Button */}
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl font-bold text-primary mb-2">
             Verify Your Email
           </h2>
-          <p className="text-gray-600">
+          <p className="text-secondary">
             We've sent a 4-digit code to your email
           </p>
         </div>
 
         {!isExpired ? (
           <div className="text-center">
-            <p className="text-sm text-gray-500 mb-4">
-              Code expires in: <span className="font-mono font-bold text-indigo-600">{formatTime(timeLeft)}</span>
+            <p className="text-sm text-tertiary mb-4">
+              Code expires in: <span className="font-mono font-bold text-accent-primary">{formatTime(timeLeft)}</span>
             </p>
           </div>
         ) : (
@@ -151,7 +159,7 @@ function OTPVerification({ registrationToken, onBack }) {
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
                 onPaste={handlePaste}
-                className="w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:border-indigo-500"
+                className="w-12 h-12 text-center text-xl font-bold border-2 border-secondary rounded-lg focus:ring-2 focus:ring-accent-primary focus:outline-none focus:border-accent-primary bg-primary text-primary placeholder-text-tertiary"
                 disabled={isExpired || isVerifying}
               />
             ))}
@@ -160,7 +168,7 @@ function OTPVerification({ registrationToken, onBack }) {
           <button
             type="submit"
             disabled={isExpired || isVerifying || otp.join("").length !== 4}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full bg-accent-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed accent-gradient"
           >
             {isVerifying ? "Verifying..." : "Verify Email"}
           </button>
@@ -170,7 +178,7 @@ function OTPVerification({ registrationToken, onBack }) {
           {isExpired && (
             <button
               onClick={handleResend}
-              className="text-indigo-600 hover:underline font-medium text-sm"
+              className="text-accent-primary hover:underline font-medium text-sm"
             >
               Request New Code
             </button>
@@ -179,7 +187,7 @@ function OTPVerification({ registrationToken, onBack }) {
           {!isExpired && timeLeft < 240 && ( // Show resend after 1 minute
             <button
               onClick={handleResend}
-              className="text-indigo-600 hover:underline font-medium text-sm"
+              className="text-accent-primary hover:underline font-medium text-sm"
             >
               Resend Code
             </button>
@@ -187,7 +195,7 @@ function OTPVerification({ registrationToken, onBack }) {
 
           <button
             onClick={onBack}
-            className="text-gray-600 hover:underline font-medium text-sm block w-full"
+            className="text-secondary hover:underline font-medium text-sm block w-full"
           >
             Back to Registration
           </button>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { updateWithFormData, updateData } from "../utils";
 import toast from "react-hot-toast";
 import OTPVerification from "./OTPVerification";
+import ThemeToggle from "../ThemeToggle";
 
 function Register() {
   const navigate = useNavigate();
@@ -84,16 +85,21 @@ function Register() {
   // Show OTP verification component if needed
   if (showOTP) {
     return (
-      <OTPVerification 
-        registrationToken={registrationToken} 
-        onBack={handleBackToRegister} 
+      <OTPVerification
+        registrationToken={registrationToken}
+        onBack={handleBackToRegister}
       />
     );
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary px-4">
-      <div className="w-full max-w-lg bg-primary shadow-lg rounded-2xl p-8 space-y-6">
+      <div className="w-full max-w-lg bg-primary shadow-lg rounded-2xl p-8 space-y-6 border border-secondary relative">
+        {/* Theme Toggle Button */}
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        
         <h2 className="text-2xl font-bold text-center text-primary">
           Create Account
         </h2>
@@ -220,7 +226,7 @@ function Register() {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+            className="w-full bg-accent-primary text-white py-2 rounded-lg hover:bg-opacity-90 transition-colors accent-gradient"
           >
             Register
           </button>
