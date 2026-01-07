@@ -20,6 +20,7 @@ export default function PostDetails() {
   const [newComment, setNewComment] = useState("");
   const [showMobileComments, setShowMobileComments] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [totalCommentCount, setCommentCount] = useState(0);
 
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 1024 : false
@@ -27,6 +28,8 @@ export default function PostDetails() {
 
   // Common emojis for quick access
   const commonEmojis = ['❤️', '😂', '🔥', '😍', '👏', '😢', '😮', '🎉', '🙏', '💯', '👍', '👎', '😢', '😡', '🤔', '💭'];
+
+
 
   const addEmoji = (emoji) => {
     setNewComment(prev => prev + emoji);
@@ -100,11 +103,60 @@ export default function PostDetails() {
         if (data) {
           setPost(data.post);
 
-          // Only top-level comments
-          const topLevelComments = data.post.comments
-            .filter((c) => c.parent === null)
-            .map((c) => ({ ...c, replies: c.replies || [] }));
-          setComments(topLevelComments);
+          // Build nested comment structure from flat array
+          const buildNestedComments = (flatComments) => {
+            const commentMap = {};
+            const topLevelComments = [];
+
+            console.log("Building nested from flat comments:", flatComments);
+
+            // Create a map of all comments by ID
+            flatComments.forEach(comment => {
+              commentMap[comment._id] = { ...comment, replies: [] };
+            });
+
+            console.log("Comment map created:", commentMap);
+
+            // Build the nested structure
+            flatComments.forEach(comment => {
+              if (comment.parent === null) {
+                // Top-level comment
+                topLevelComments.push(commentMap[comment._id]);
+                console.log("Added top-level comment:", commentMap[comment._id]);
+              } else {
+                // Reply - find parent and add to replies
+                const parentComment = commentMap[comment.parent];
+                if (parentComment) {
+                  parentComment.replies.push(commentMap[comment._id]);
+                  console.log(`Added reply ${comment._id} to parent ${comment.parent}`);
+                } else {
+                  console.log(`Warning: Could not find parent ${comment.parent} for comment ${comment._id}`);
+                }
+              }
+            });
+
+            // Sort replies chronologically for each comment
+            const sortReplies = (comments) => {
+              return comments.map(comment => {
+                if (comment.replies && comment.replies.length > 0) {
+                  comment.replies.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                  return { ...comment, replies: sortReplies(comment.replies) };
+                }
+                return comment;
+              });
+            };
+
+            const sortedComments = sortReplies(topLevelComments);
+
+            console.log("Final nested structure:", sortedComments);
+            return sortedComments;
+          };
+
+          const nestedComments = buildNestedComments(data.post.comments);
+          setComments(nestedComments);
+
+          // Total comment count is just the length of the original comments array from backend
+          setCommentCount(data.post.comments.length);
         }
       } catch (error) {
         console.log(error);
@@ -139,17 +191,32 @@ export default function PostDetails() {
       console.log("Reply data received:", data);
 
       if (data) {
-        const insertReply = (commentsArray) =>
-          commentsArray.map((c) => {
-            if (c._id === parentId) {
-              return { ...c, replies: [data.comment, ...(c.replies || [])] };
-            } else if (c.replies?.length) {
-              return { ...c, replies: insertReply(c.replies) };
+        // Add reply to nested structure
+        const insertReplyIntoNested = (commentsList) => {
+          return commentsList.map((comment) => {
+            if (comment._id === parentId) {
+              // Found parent - add new reply to beginning of replies array
+              return {
+                ...comment,
+                replies: [data.comment, ...comment.replies]
+              };
             }
-            return c;
-          });
 
-        setComments(insertReply(comments));
+            // Recursively search in replies if this comment has them
+            if (comment.replies && comment.replies.length > 0) {
+              return {
+                ...comment,
+                replies: insertReplyIntoNested(comment.replies)
+              };
+            }
+
+            return comment;
+          });
+        };
+
+        const updatedComments = insertReplyIntoNested(comments);
+        console.log("Updated comments after adding reply:", updatedComments);
+        setComments(updatedComments);
         window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
@@ -263,7 +330,7 @@ export default function PostDetails() {
             <div className="space-y-4 pb-8">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-lg font-semibold text-primary">
-                  {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                  {totalCommentCount} {totalCommentCount === 1 ? 'Comment' : 'Comments'}
                 </h2>
                 <div className="text-sm text-tertiary">
                   {new Date().toLocaleDateString()}
@@ -302,7 +369,7 @@ export default function PostDetails() {
               {/* Comment count badge */}
               {comments.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg z-20">
-                  {comments.length > 99 ? '99+' : comments.length}
+                  {comments.length > 99 ? '99+' : totalCommentCount}
                 </span>
               )}
             </button>
@@ -314,7 +381,7 @@ export default function PostDetails() {
             </p>
             <p className="text-tertiary text-sm">
               {comments.length === 0 ? 'Be the first to comment' :
-                `${comments.length} ${comments.length === 1 ? 'person has' : 'people have'} commented`}
+                `${totalCommentCount} ${comments.length === 1 ? 'person has' : 'people have'} commented`}
             </p>
           </div>
         )}
@@ -345,7 +412,7 @@ export default function PostDetails() {
             {/* Header */}
             <div className="flex items-center justify-between px-4 pb-3 border-b border-secondary flex-shrink-0">
               <h3 className="text-lg font-semibold text-primary">
-                {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                {totalCommentCount} {totalCommentCount === 1 ? 'Comment' : 'Comments'}
               </h3>
               <button
                 onClick={() => setShowMobileComments(false)}
