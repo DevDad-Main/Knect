@@ -50,7 +50,7 @@ export default function PostDetails() {
         content: newComment,
       });
       if (data) {
-        setComments([data.comment, ...comments]);
+        setComments([data, ...comments]);
         setNewComment("");
         window.dispatchEvent(new Event("refreshNotifications"));
       }
@@ -65,6 +65,7 @@ export default function PostDetails() {
         parentId,
         content: replyText,
       });
+      console.log("Reply data received:", data);
 
       if (data) {
         const insertReply = (commentsArray) =>

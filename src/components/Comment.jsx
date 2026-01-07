@@ -66,7 +66,7 @@ function Comment({ comment, onReply, level = 0 }) {
   return (
     <div className={`flex ${level > 0 ? "ml-4" : ""} gap-2`}>
       {/* Content */}
-      <div className="flex-1 bg-white border border-gray-200 rounded-2xl px-3 py-2 shadow-lg">
+      <div className="flex-1 bg-primary border border-secondary rounded-2xl px-3 py-2 shadow-lg">
         {/* Header: Avatar + Username + Timestamp */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -79,20 +79,20 @@ function Comment({ comment, onReply, level = 0 }) {
             ) : (
               <UserIcon className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0" />
             )}
-            <p className="text-sm font-semibold text-gray-800">
+            <p className="text-sm font-semibold text-primary">
               {comment.owner?.full_name}
             </p>
           </div>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-tertiary">
             {moment(comment.createdAt).fromNow()}
           </p>
         </div>
 
         {/* Comment text */}
-        <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
+        <p className="text-sm text-primary mt-1">{comment.content}</p>
 
         {/* Actions */}
-        <div className="flex items-center gap-4 mt-1 text-gray-500 text-xs">
+        <div className="flex items-center gap-4 mt-1 text-tertiary text-xs">
           <button
             onClick={() => handleLikeComment(comment._id)}
             className={`flex items-center gap-1 hover:text-indigo-600 ${isLiked && "text-blue-700 fill-blue-700"}`}
@@ -101,14 +101,14 @@ function Comment({ comment, onReply, level = 0 }) {
               className={[
                 "w-4 h-4 transition-transform duration-150 will-change-transform",
                 pop ? "scale-125" : "scale-100",
-                isLiked ? "text-blue-700" : "text-gray-500",
+                isLiked ? "text-blue-700" : "text-tertiary",
               ].join("")}
             />
             <span
               className={[
                 "w-4 h-4 transition-transform duration-150 will-change-transform",
                 pop ? "scale-125" : "scale-100",
-                isLiked ? "text-blue-700" : "text-gray-500",
+                isLiked ? "text-blue-700" : "text-tertiary",
               ].join("")}
             >
               {likes || 0}
@@ -122,7 +122,7 @@ function Comment({ comment, onReply, level = 0 }) {
               className={[
                 "w-4 h-4 transition-transform duration-150 will-change-transform",
                 pop ? "scale-125" : "scale-100",
-                isDisliked ? "text-rose-600" : "text-gray-500",
+                isDisliked ? "text-rose-600" : "text-tertiary",
               ].join("")}
             />
             <span>{dislikes || 0}</span>
@@ -144,7 +144,7 @@ function Comment({ comment, onReply, level = 0 }) {
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
               placeholder="Write a reply..."
-              className="flex-1 border rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 border border-secondary rounded-lg px-2 py-1 text-sm bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <button
               onClick={handleReply}
@@ -160,7 +160,7 @@ function Comment({ comment, onReply, level = 0 }) {
           <div className="mt-2">
             <button
               onClick={() => setShowReplies(!showReplies)}
-              className="flex items-center text-xs text-gray-500 hover:text-gray-700"
+              className="flex items-center text-xs text-tertiary hover:text-primary"
             >
               {showReplies ? (
                 <>
