@@ -63,131 +63,176 @@ function Comment({ comment, onReply, level = 0 }) {
     }
   };
 
+  const maxNestingLevel = 3;
+  const isTooNested = level >= maxNestingLevel;
+  const indentSize = level > 0 ? "ml-12 sm:ml-16" : "";
+
   return (
-    <div className={`flex ${level > 0 ? "ml-4" : ""} gap-2`}>
-      {/* Content */}
-      <div className="flex-1 bg-primary border border-secondary rounded-2xl px-3 py-2 shadow-lg">
-        {/* Header: Avatar + Username + Timestamp */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {comment.owner?.profile_photo ? (
-              <img
-                src={comment.owner?.profile_photo}
-                // alt={comment.owner?.full_name}
-                className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0"
-              />
-            ) : (
-              <UserIcon className="w-8 h-8 rounded-full object-cover ring-1 ring-indigo-100 flex-shrink-0" />
-            )}
-            <p className="text-sm font-semibold text-primary">
-              {comment.owner?.full_name}
-            </p>
-          </div>
-          <p className="text-xs text-tertiary">
-            {moment(comment.createdAt).fromNow()}
-          </p>
+    <div className={`w-full ${indentSize}`}>
+      {/* Thread line for visual connection */}
+      {level > 0 && (
+        <div className="relative">
+          <div className="absolute left-0 top-0 bottom-0 w-px bg-secondary -ml-8 sm:-ml-12"></div>
+          {/* Thread dot */}
+          <div className="absolute left-0 top-2 w-2 h-2 bg-secondary rounded-full -ml-9 sm:-ml-13"></div>
+        </div>
+      )}
+
+      <div className="flex gap-3 w-full">
+        {/* Avatar - consistent size regardless of nesting */}
+        <div className="flex-shrink-0">
+          {comment.owner?.profile_photo ? (
+            <img
+              src={comment.owner?.profile_photo}
+              alt={comment.owner?.full_name}
+              className="w-10 h-10 rounded-full object-cover border-2 border-primary shadow-sm"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+              <UserIcon className="w-6 h-6 text-tertiary" />
+            </div>
+          )}
         </div>
 
-        {/* Comment text */}
-        <p className="text-sm text-primary mt-1">{comment.content}</p>
-
-        {/* Actions */}
-        <div className="flex items-center gap-4 mt-1 text-tertiary text-xs">
-          <button
-            onClick={() => handleLikeComment(comment._id)}
-            className={`flex items-center gap-1 hover:text-indigo-600 ${isLiked && "text-blue-700 fill-blue-700"}`}
-          >
-            <ThumbsUp
-              className={[
-                "w-4 h-4 transition-transform duration-150 will-change-transform",
-                pop ? "scale-125" : "scale-100",
-                isLiked ? "text-blue-700" : "text-tertiary",
-              ].join("")}
-            />
-            <span
-              className={[
-                "w-4 h-4 transition-transform duration-150 will-change-transform",
-                pop ? "scale-125" : "scale-100",
-                isLiked ? "text-blue-700" : "text-tertiary",
-              ].join("")}
-            >
-              {likes || 0}
-            </span>
-          </button>
-          <button
-            onClick={() => handleDislikeComment(comment._id)}
-            className="flex items-center gap-1 hover:text-rose-600"
-          >
-            <ThumbsDown
-              className={[
-                "w-4 h-4 transition-transform duration-150 will-change-transform",
-                pop ? "scale-125" : "scale-100",
-                isDisliked ? "text-rose-600" : "text-tertiary",
-              ].join("")}
-            />
-            <span>{dislikes || 0}</span>
-          </button>
-          <button
-            onClick={() => setShowReplyInput(!showReplyInput)}
-            className="flex items-center gap-1 hover:text-green-600"
-          >
-            <Reply className="w-4 h-4" />
-            <span>Reply</span>
-          </button>
-        </div>
-
-        {/* Reply input */}
-        {showReplyInput && (
-          <div className="flex items-center gap-2 mt-2">
-            <input
-              type="text"
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              placeholder="Write a reply..."
-              className="flex-1 border border-secondary rounded-lg px-2 py-1 text-sm bg-primary text-primary focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button
-              onClick={handleReply}
-              className="text-white bg-indigo-600 px-3 py-1 rounded-lg text-sm hover:bg-indigo-700"
-            >
-              Post
-            </button>
-          </div>
-        )}
-
-        {/* Replies */}
-        {comment.replies && comment.replies.length > 0 && (
-          <div className="mt-2">
-            <button
-              onClick={() => setShowReplies(!showReplies)}
-              className="flex items-center text-xs text-tertiary hover:text-primary"
-            >
-              {showReplies ? (
-                <>
-                  <ChevronUp className="w-3 h-3 mr-1" /> Hide replies
-                </>
-              ) : (
-                <>
-                  <ChevronDown className="w-3 h-3 mr-1" /> Show{" "}
-                  {comment.replies.length} replies
-                </>
-              )}
-            </button>
-
-            {showReplies && (
-              <div className="mt-2 space-y-2">
-                {comment.replies.map((reply) => (
-                  <Comment
-                    key={reply._id}
-                    comment={reply}
-                    onReply={onReply}
-                    level={level + 1}
-                  />
-                ))}
+        {/* Comment content - fixed width */}
+        <div className="flex-1 min-w-0">
+          {/* Comment card */}
+          <div className="bg-primary rounded-xl border border-secondary p-4 hover:shadow-md transition-all duration-200">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <span className="font-semibold text-primary text-base truncate">
+                  {comment.owner?.full_name}
+                </span>
+                <span className="text-tertiary text-sm">•</span>
+                <span className="text-tertiary text-sm whitespace-nowrap">
+                  {moment(comment.createdAt).fromNow()}
+                </span>
               </div>
-            )}
+            </div>
+
+            {/* Comment text */}
+            <p className="text-primary text-base leading-relaxed break-words mb-4">
+              {comment.content}
+            </p>
+
+            {/* Actions */}
+            <div className="flex items-center gap-4 text-sm">
+              <button
+                onClick={() => handleLikeComment(comment._id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                  isLiked 
+                    ? "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30" 
+                    : "text-tertiary hover:text-primary hover:bg-secondary/50"
+                }`}
+              >
+                <ThumbsUp className="w-4 h-4" />
+                <span className="font-medium">{likes || 0}</span>
+              </button>
+
+              <button
+                onClick={() => handleDislikeComment(comment._id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all ${
+                  isDisliked 
+                    ? "bg-rose-100 text-rose-700 dark:bg-rose-900/30" 
+                    : "text-tertiary hover:text-primary hover:bg-secondary/50"
+                }`}
+              >
+                <ThumbsDown className="w-4 h-4" />
+                <span className="font-medium">{dislikes || 0}</span>
+              </button>
+
+              <button
+                onClick={() => setShowReplyInput(!showReplyInput)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-tertiary hover:text-primary hover:bg-secondary/50 transition-all"
+              >
+                <Reply className="w-4 h-4" />
+                <span>Reply</span>
+              </button>
+            </div>
           </div>
-        )}
+
+          {/* Reply input */}
+          {showReplyInput && (
+            <div className="mt-4 bg-primary/50 rounded-xl border border-secondary/50 p-4">
+              <div className="flex gap-3 mb-3">
+                <div className="flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                    <UserIcon className="w-5 h-5 text-tertiary" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <input
+                    type="text"
+                    value={replyText}
+                    onChange={(e) => setReplyText(e.target.value)}
+                    placeholder={`Replying to ${comment.owner?.full_name}...`}
+                    className="w-full bg-primary border border-secondary rounded-lg px-3 py-2.5 text-base text-primary placeholder-tertiary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    autoFocus
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end gap-2 ml-11">
+                <button
+                  onClick={() => setShowReplyInput(false)}
+                  className="px-4 py-2 text-sm text-tertiary hover:text-primary transition-colors rounded-lg hover:bg-secondary"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleReply}
+                  disabled={!replyText.trim()}
+                  className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Reply
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Replies section */}
+          {comment.replies && comment.replies.length > 0 && (
+            <div className="mt-4">
+              {!isTooNested && (
+                <button
+                  onClick={() => setShowReplies(!showReplies)}
+                  className="flex items-center gap-2 text-sm text-tertiary hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-secondary/50"
+                >
+                  {showReplies ? (
+                    <>
+                      <ChevronUp className="w-4 h-4" />
+                      Hide {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="w-4 h-4" />
+                      View {comment.replies.length} {comment.replies.length === 1 ? 'reply' : 'replies'}
+                    </>
+                  )}
+                </button>
+              )}
+
+              {/* Render replies */}
+              {(showReplies || isTooNested) && (
+                <div className={`mt-4 space-y-4 ${isTooNested ? 'opacity-75' : ''}`}>
+                  {comment.replies.slice(0, isTooNested ? 2 : undefined).map((reply) => (
+                    <Comment
+                      key={reply._id}
+                      comment={reply}
+                      onReply={onReply}
+                      level={level + 1}
+                    />
+                  ))}
+                  {isTooNested && comment.replies.length > 2 && (
+                    <div className="text-center py-3 text-tertiary text-sm bg-primary/50 rounded-lg border border-secondary/30">
+                      Reply thread continues...
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

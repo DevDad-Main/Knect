@@ -1,7 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Comment from "../Comment";
-import { ArrowLeft, ChevronDown, ChevronUp, UserIcon } from "lucide-react";
+import SimpleComment from "../SimpleComment";
+import { ArrowLeft, ChevronDown, ChevronUp, UserIcon, X, MessageCircle } from "lucide-react";
 import { fetchData, updateData } from "../utils";
 import PostCard from "../PostCard";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
@@ -17,6 +18,46 @@ export default function PostDetails() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [showMobileComments, setShowMobileComments] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  // Common emojis for quick access
+  const commonEmojis = ['❤️', '😂', '🔥', '😍', '👏', '😢', '😮', '🎉', '🙏', '💯', '👍', '👎', '😢', '😡', '🤔', '💭'];
+
+  const addEmoji = (emoji) => {
+    setNewComment(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  // Prevent body scroll when mobile comments are open
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (showMobileComments) {
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = '0';
+        document.body.style.left = '0';
+      } else {
+        // Restore body scroll
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+    };
+  }, [showMobileComments]);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -88,61 +129,280 @@ export default function PostDetails() {
 
   if (!post) return <Loading />;
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 1024;
+
   return (
-    <div className="max-w-3xl mx-auto px-4 h-[100vh] flex flex-col">
-      {/* Back */}
-      <button
-        onClick={() => navigate(-1)}
-        className="flex items-center text-gray-600 hover:text-gray-900 mt-2"
-      >
-        <ArrowLeft className="h-5 w-5 mr-1" />
-        Back
-      </button>
-      <div className="flex-1 overflow-y-auto px-4 py-6">
-        {/* Post at the top */}
-        <PostCard post={post} />
-
-        {/* Comment input */}
-        <div className="flex items-center gap-3 border-t pt-4 mt-4">
-          {currentUser?.profile_photo ? (
-            <img
-              onClick={() => navigate(`/profile/${currentUser._id}`)}
-              src={currentUser?.profile_photo}
-              alt="me"
-              className="w-9 h-9 rounded-full object-cover cursor-pointer"
-            />
-          ) : (
-            <UserIcon
-              className="w-9 h-9 rounded-full object-cover cursor-pointer"
-              onClick={() => navigate(`/profile/${currentUser._id}`)}
-            />
-          )}
-
-          <input
-            type="text"
-            placeholder="Write a comment..."
-            className="flex-1 border rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-          />
+    <div className="min-h-screen bg-secondary">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-secondary/95 backdrop-blur-sm border-b border-secondary">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
-            onClick={handleAddComment}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700"
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-tertiary hover:text-primary transition-colors"
           >
-            Post
+            <ArrowLeft className="h-5 w-5" />
+            <span className="font-medium">Back</span>
           </button>
-        </div>
-        {/* Comments scrollable area */}
-        <div className="space-y-4 mt-4">
-          {comments.length === 0 ? (
-            <p className="text-gray-500 text-sm">No comments yet.</p>
-          ) : (
-            comments.map((c) => (
-              <Comment key={c._id} comment={c} onReply={handleAddReply} />
-            ))
+          {isMobile && (
+            <button
+              onClick={() => setShowMobileComments(true)}
+              className="flex items-center gap-2 text-primary hover:text-indigo-600 transition-colors"
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span className="font-medium">{comments.length}</span>
+            </button>
           )}
         </div>
-      </div>{" "}
+      </div>
+
+      {/* Main content */}
+      <div className="max-w-3xl mx-auto px-4 py-6">
+        {/* Post */}
+        <div className="mb-6">
+          <PostCard post={post} />
+        </div>
+
+        {/* Desktop comments */}
+        {!isMobile && (
+          <>
+            {/* Comment input */}
+            <div className="bg-primary rounded-xl border border-secondary p-4 mb-8 shadow-sm">
+              <div className="flex gap-3">
+                <div className="flex-shrink-0">
+                  {currentUser?.profile_photo ? (
+                    <img
+                      onClick={() => navigate(`/profile/${currentUser._id}`)}
+                      src={currentUser?.profile_photo}
+                      alt="Your avatar"
+                      className="w-10 h-10 rounded-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                    />
+                  ) : (
+                    <div
+                      onClick={() => navigate(`/profile/${currentUser._id}`)}
+                      className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center cursor-pointer hover:bg-tertiary/10 transition-colors"
+                    >
+                      <UserIcon className="w-6 h-6 text-tertiary" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0 relative">
+                  <textarea
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAddComment();
+                      }
+                    }}
+                    rows={1}
+                    className="w-full bg-primary text-primary border border-secondary rounded-lg px-4 py-3 pr-12 placeholder-tertiary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                  />
+                  <button
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="absolute right-2 top-2 p-2 rounded-lg hover:bg-tertiary/10 transition-colors"
+                  >
+                    <span className="text-xl">😊</span>
+                  </button>
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-primary border border-secondary rounded-xl shadow-lg p-3 z-50">
+                      <div className="grid grid-cols-6 gap-2">
+                        {commonEmojis.map((emoji, index) => (
+                          <button
+                            key={index}
+                            onClick={() => addEmoji(emoji)}
+                            className="p-2 text-xl hover:bg-tertiary/10 rounded-lg transition-colors"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={handleAddComment}
+                  disabled={!newComment.trim()}
+                  className="flex-shrink-0 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-105 active:scale-95"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+
+            {/* Comments section */}
+            <div className="space-y-4 pb-8">
+              {comments.length > 0 ? (
+                <>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-semibold text-primary">
+                      {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+                    </h2>
+                    <div className="text-sm text-tertiary">
+                      {new Date().toLocaleDateString()}
+                    </div>
+                  </div>
+                  {comments.map((c) => (
+                    <SimpleComment key={c._id} comment={c} onReply={handleAddReply} />
+                  ))}
+                </>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
+                    <UserIcon className="w-8 h-8 text-tertiary" />
+                  </div>
+                  <h3 className="text-lg font-medium text-primary mb-2">No comments yet</h3>
+                  <p className="text-tertiary">Be the first to share your thoughts!</p>
+                </div>
+              )}
+            </div>
+          </>
+        )}
+
+        {/* Mobile placeholder (optional) */}
+        {isMobile && (
+          <div className="text-center py-8">
+            <button
+              onClick={() => setShowMobileComments(true)}
+              className="bg-primary rounded-xl border border-secondary px-6 py-4 text-primary hover:shadow-md transition-shadow"
+            >
+              <MessageCircle className="w-6 h-6 mx-auto mb-2 text-indigo-600" />
+              <p className="font-medium">View Comments</p>
+              <p className="text-tertiary text-sm">{comments.length} {comments.length === 1 ? 'comment' : 'comments'}</p>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Comment Modal - TikTok Style */}
+      {isMobile && (
+        <div className={`fixed inset-0 z-50 ${showMobileComments ? 'visible' : 'invisible'}`}>
+          {/* Backdrop */}
+          <div
+            className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${showMobileComments ? 'opacity-100' : 'opacity-0'}`}
+            onClick={() => setShowMobileComments(false)}
+          />
+
+          {/* Bottom Sheet */}
+          <div className={`absolute bottom-0 left-0 right-0 bg-primary rounded-t-3xl transition-transform duration-300 ease-out flex flex-col ${showMobileComments ? 'translate-y-0' : 'translate-y-full'}`}
+            style={{ 
+              height: '75vh', 
+              maxHeight: '75vh',
+              overflow: 'hidden'
+            }}>
+
+            {/* Handle bar */}
+            <div className="flex justify-center py-3 flex-shrink-0">
+              <div className="w-12 h-1 bg-tertiary/30 rounded-full"></div>
+            </div>
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 pb-3 border-b border-secondary flex-shrink-0">
+              <h3 className="text-lg font-semibold text-primary">
+                {comments.length} {comments.length === 1 ? 'Comment' : 'Comments'}
+              </h3>
+              <button
+                onClick={() => setShowMobileComments(false)}
+                className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              >
+                <X className="w-5 h-5 text-tertiary" />
+              </button>
+            </div>
+
+            {/* Comments List */}
+            <div 
+              className="flex-1 overflow-y-auto px-4 py-3 overscroll-contain touch-pan-y"
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                touchAction: 'pan-y'
+              }}
+            >
+              {comments.length > 0 ? (
+                <div className="space-y-3">
+                  {comments.map((c) => (
+                    <SimpleComment key={c._id} comment={c} onReply={handleAddReply} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
+                    <UserIcon className="w-8 h-8 text-tertiary" />
+                  </div>
+                  <h3 className="text-lg font-medium text-primary mb-2">No comments yet</h3>
+                  <p className="text-tertiary">Be the first to share your thoughts!</p>
+                </div>
+              )}
+            </div>
+
+            {/* Comment Input - Fixed at bottom */}
+            <div className="border-t border-secondary px-4 py-3 bg-primary flex-shrink-0">
+              <div className="flex gap-3 items-end">
+                <div className="flex-shrink-0">
+                  {currentUser?.profile_photo ? (
+                    <img
+                      src={currentUser?.profile_photo}
+                      alt="Your avatar"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
+                      <UserIcon className="w-6 h-6 text-tertiary" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="relative">
+                    <textarea
+                      placeholder="Write a comment..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          handleAddComment();
+                        }
+                      }}
+                      rows={1}
+                      className="w-full bg-secondary border border-secondary rounded-lg px-4 py-3 pr-12 text-primary placeholder-tertiary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                    />
+                    <button
+                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                      className="absolute right-2 top-2 p-2 rounded-lg hover:bg-tertiary/10 transition-colors"
+                    >
+                      <span className="text-xl">😊</span>
+                    </button>
+                  </div>
+
+                  {/* Emoji Picker */}
+                  {showEmojiPicker && (
+                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-primary border border-secondary rounded-xl shadow-lg p-3 z-50">
+                      <div className="grid grid-cols-6 gap-2">
+                        {commonEmojis.map((emoji, index) => (
+                          <button
+                            key={index}
+                            onClick={() => addEmoji(emoji)}
+                            className="p-2 text-xl hover:bg-tertiary/10 rounded-lg transition-colors"
+                          >
+                            {emoji}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={handleAddComment}
+                  disabled={!newComment.trim()}
+                  className="flex-shrink-0 bg-indigo-600 text-white px-4 py-3 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
