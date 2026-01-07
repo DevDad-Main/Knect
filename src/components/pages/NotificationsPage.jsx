@@ -23,7 +23,7 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
-      if (data) setNotifications(data);
+      if (data) setNotifications(data.notifications || []);
     } catch (err) {
       console.error(err);
     }
@@ -31,15 +31,15 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     fetchNotifications();
-  }, [unreadCount]);
+  }, []);
 
   const handleNotificationClick = async (n) => {
     try {
       if (n.type === "message") {
-        navigate(`/messages/${n.from._id}`);
+        navigate(`/messages/${n.fromUser.username}`);
         handleReadNotifcation(n);
       } else if (n.type === "connection") {
-        navigate(`/profile/${n.from._id}`);
+        navigate(`/profile/${n.fromUser.username}`);
         handleReadNotifcation(n);
       } else if (n.type === "like" || n.type === "comment") {
         navigate(`/post/${n.entityId}`);
@@ -111,27 +111,30 @@ const NotificationsPage = () => {
   const sectionOrder = ["Today", "Yesterday", "Last 7 Days", "Older"];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
+    <div className="min-h-screen bg-secondary p-6">
+      <div className="max-w-4xl mx-auto bg-primary shadow-md rounded-xl p-6">
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center text-gray-600 hover:text-gray-900 mt-2"
+            className="flex items-center text-tertiary hover:text-primary mt-2"
           >
             <ArrowLeft className="h-5 w-5 mr-1" />
             Back
           </button>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <div className="flex-1"></div>
+          <h1 className="text-2xl font-bold flex items-center gap-2 text-primary">
             <Bell /> Notifications
           </h1>
-          {notifications.length > 0 && (
-            <button
-              onClick={handleClearAll}
-              className="text-sm text-red-500 hover:underline"
-            >
-              Clear All
-            </button>
-          )}
+          <div className="flex-1 flex justify-end">
+            {notifications.length > 0 && (
+              <button
+                onClick={handleClearAll}
+                className="text-sm text-red-500 hover:underline"
+              >
+                Clear All
+              </button>
+            )}
+          </div>
         </div>
 
         {sectionOrder.map((section) => {
@@ -140,14 +143,13 @@ const NotificationsPage = () => {
 
           return (
             <div key={section} className="mb-6">
-              <h2 className="text-lg font-semibold mb-2">{section}</h2>
+              <h2 className="text-lg font-semibold mb-2 text-primary">{section}</h2>
               <div className="space-y-2">
                 {items.map((n) => (
                   <div
                     key={n._id}
-                    className={`flex items-start gap-3 p-3 rounded-lg transition hover:bg-gray-100 ${
-                      !n.read ? "bg-indigo-50" : ""
-                    }`}
+                    className={`flex items-start gap-3 p-3 rounded-lg transition hover:bg-secondary ${!n.read ? "bg-indigo-50 dark:bg-indigo-900/20" : ""
+                      }`}
                   >
                     <div
                       className="flex-shrink-0"
@@ -159,16 +161,21 @@ const NotificationsPage = () => {
                       className="flex-1 cursor-pointer"
                       onClick={() => handleNotificationClick(n)}
                     >
-                      <p className="text-sm font-medium">{n.from.full_name}</p>
-                      <p className="text-xs text-gray-600 truncate">{n.text}</p>
-                      <p className="text-[10px] text-gray-400 mt-0.5">
+                      <p className="text-sm font-medium text-primary">{n.fromUser.fullName}</p>
+                      <p className="text-xs text-tertiary truncate">
+                        {n.type === "like" && "liked your post"}
+                        {n.type === "comment" && "commented on your post"}
+                        {n.type === "message" && "sent you a message"}
+                        {n.type === "connection" && "wants to connect with you"}
+                      </p>
+                      <p className="text-[10px] text-tertiary mt-0.5">
                         {moment(n.createdAt).fromNow()}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleReadNotifcation(n)}
-                        className="text-gray-400 hover:text-green-500 p-1 rounded-full"
+                        className="text-tertiary hover:text-green-500 p-1 rounded-full"
                         title="Read Notification"
                       >
                         <Eye size={20} />
@@ -176,7 +183,7 @@ const NotificationsPage = () => {
 
                       <button
                         onClick={() => handleDeleteNotification(n._id)}
-                        className="text-gray-400 hover:text-red-500 p-1 rounded-full"
+                        className="text-tertiary hover:text-red-500 p-1 rounded-full"
                         title="Delete Notification"
                       >
                         <Trash2 size={18} />
@@ -190,7 +197,7 @@ const NotificationsPage = () => {
         })}
 
         {notifications.length === 0 && (
-          <p className="text-gray-500 text-center mt-8">No notifications yet</p>
+          <p className="text-tertiary text-center mt-8">No notifications yet</p>
         )}
       </div>
     </div>

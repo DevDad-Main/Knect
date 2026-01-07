@@ -52,6 +52,7 @@ export default function PostDetails() {
       if (data) {
         setComments([data.comment, ...comments]);
         setNewComment("");
+        window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
       console.log(error);
@@ -77,6 +78,7 @@ export default function PostDetails() {
           });
 
         setComments(insertReply(comments));
+        window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
       console.log(error);

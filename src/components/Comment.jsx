@@ -41,6 +41,7 @@ function Comment({ comment, onReply, level = 0 }) {
       if (data) {
         setIsLiked(data.isLiked);
         setLikes(data.likes);
+        window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
       console.log(error);

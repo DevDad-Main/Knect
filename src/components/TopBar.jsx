@@ -10,14 +10,16 @@ const TopBar = () => {
   const navigate = useNavigate();
   const { user, updateUser, getNotifications } = useApp();
   const [notifications, setNotifications] = useState([]);
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications?.length > 0 && notifications?.filter((n) => !n?.read).length;
+  // const unreadCount = " "
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const data = await getNotifications();
+        console.log("Notifications", data);
         if (data) {
-          setNotifications(data);
+          setNotifications(data.notifications || []);
         }
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
@@ -58,14 +60,14 @@ const TopBar = () => {
     <header className="fixed top-0 left-0 right-0 z-30 bg-primary border-b border-secondary px-4 py-3 lg:px-6 lg:hidden">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <h1 
+          <h1
             onClick={() => window.location.href = '/feed'}
             className="text-xl font-bold text-purple-700 dark:text-purple-400 lg:hidden cursor-pointer transition-colors duration-200 hover:text-purple-800 dark:hover:text-purple-300"
           >
             Knect
           </h1>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {/* Mobile only: Notification bell */}
           <div className="relative lg:hidden">
@@ -82,12 +84,12 @@ const TopBar = () => {
               )}
             </button>
           </div>
-          
+
           {/* Mobile only: Theme toggle */}
           <div className="lg:hidden">
             <ThemeToggle />
           </div>
-          
+
           {/* Mobile only: Logout button */}
           <button
             onClick={signoutUser}
