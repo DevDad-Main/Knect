@@ -50,7 +50,7 @@ const router = createBrowserRouter(
         <Route path="messages" element={<StreamMessages />} />
         <Route path="messages/:userId" element={<StreamChatBox />} />
         <Route path="call/:userId" element={<StreamCallScreen />} />
-        
+
         <Route path="post/:postId" element={<PostDetails />} />
         <Route path="connections" element={<Connections />} />
         <Route path="discover" element={<Discover />} />

@@ -46,8 +46,8 @@ const StoriesBar = () => {
         <div
           onClick={() => setShowModal(true)}
           className={`rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-3/4 cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed ${theme === "dark"
-              ? "border-indigo-400 bg-gradient-to-b from-indigo-900 to-gray-800"
-              : "border-indigo-300 bg-gradient-to-b from-indigo-50 to-white"
+            ? "border-indigo-400 bg-gradient-to-b from-indigo-900 to-gray-800"
+            : "border-indigo-300 bg-gradient-to-b from-indigo-50 to-white"
             }`}
         >
           <div className="h-full flex flex-col items-center justify-center p-4">

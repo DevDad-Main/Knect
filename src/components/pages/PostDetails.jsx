@@ -63,6 +63,8 @@ export default function PostDetails() {
         document.body.style.width = '100%';
         document.body.style.top = '0';
         document.body.style.left = '0';
+        // Dispatch custom event to notify BottomNav
+        window.dispatchEvent(new CustomEvent('mobileCommentsOpen', { detail: { isOpen: true } }));
       } else {
         // Restore body scroll
         document.body.style.overflow = '';
@@ -70,6 +72,8 @@ export default function PostDetails() {
         document.body.style.width = '';
         document.body.style.top = '';
         document.body.style.left = '';
+        // Dispatch custom event to notify BottomNav
+        window.dispatchEvent(new CustomEvent('mobileCommentsOpen', { detail: { isOpen: false } }));
       }
     }
 
@@ -230,7 +234,7 @@ export default function PostDetails() {
                     <span className="text-xl">😊</span>
                   </button>
                   {showEmojiPicker && (
-                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-primary border border-secondary rounded-xl shadow-lg p-3 z-50">
+                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-primary border border-secondary rounded-xl shadow-lg p-3 z-[60]">
                       <div className="grid grid-cols-6 gap-2">
                         {commonEmojis.map((emoji, index) => (
                           <button
@@ -318,7 +322,7 @@ export default function PostDetails() {
 
       {/* Mobile Comment Modal */}
       {isMobile && (
-        <div className={`fixed inset-0 z-50 ${showMobileComments ? 'visible' : 'invisible'}`}>
+        <div className={`fixed inset-0 z-50 ${showMobileComments ? 'visible' : 'invisible'}`} data-mobile-comments-open={showMobileComments}>
           {/* Backdrop */}
           <div
             className={`absolute inset-0 bg-black/60 transition-opacity duration-300 ${showMobileComments ? 'opacity-100' : 'opacity-0'}`}
@@ -387,44 +391,19 @@ export default function PostDetails() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="relative">
-                    <textarea
-                      placeholder="Write a comment..."
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault();
-                          handleAddComment();
-                        }
-                      }}
-                      rows={1}
-                      className="w-full bg-secondary border border-secondary rounded-lg px-4 py-3 pr-12 text-primary placeholder-tertiary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
-                    />
-                    <button
-                      onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                      className="absolute right-2 top-2 p-2 rounded-lg hover:bg-tertiary/10 transition-colors"
-                    >
-                      <span className="text-xl">😊</span>
-                    </button>
-                  </div>
-
-                  {/* Emoji Picker */}
-                  {showEmojiPicker && (
-                    <div className="absolute bottom-full left-0 right-0 mb-2 bg-primary border border-secondary rounded-xl shadow-lg p-3 z-50">
-                      <div className="grid grid-cols-6 gap-2">
-                        {commonEmojis.map((emoji, index) => (
-                          <button
-                            key={index}
-                            onClick={() => addEmoji(emoji)}
-                            className="p-2 text-xl hover:bg-tertiary/10 rounded-lg transition-colors"
-                          >
-                            {emoji}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <textarea
+                    placeholder="Write a comment..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAddComment();
+                      }
+                    }}
+                    rows={1}
+                    className="w-full bg-secondary border border-secondary rounded-lg px-4 py-3 text-primary placeholder-tertiary focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none transition-all"
+                  />
                 </div>
                 <button
                   onClick={handleAddComment}

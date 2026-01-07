@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { Home, MessageCircle, Search, UserIcon, Users, Bell, PlusSquare } from "lucide-react";
 import { useCurrentUser } from "../hooks/useCurrentUser";
@@ -15,6 +15,36 @@ const navItems = [
 const BottomNav = () => {
   const currentUser = useCurrentUser();
   const location = useLocation().pathname;
+  const [isMobileModalOpen, setIsMobileModalOpen] = useState(false);
+
+  // Listen for mobile comment modal state changes
+  useEffect(() => {
+    const handleMobileCommentsToggle = (event) => {
+      setIsMobileModalOpen(event.detail.isOpen);
+    };
+
+    // Listen for custom event
+    window.addEventListener('mobileCommentsOpen', handleMobileCommentsToggle);
+
+    // Also do periodic checks as fallback
+    const checkModalState = () => {
+      if (location.startsWith('/posts/')) {
+        const mobileCommentModal = document.querySelector('[data-mobile-comments-open="true"]');
+        setIsMobileModalOpen(!!mobileCommentModal);
+      }
+    };
+
+    // Initial check
+    checkModalState();
+
+    // Periodic check as fallback
+    const interval = setInterval(checkModalState, 200);
+
+    return () => {
+      window.removeEventListener('mobileCommentsOpen', handleMobileCommentsToggle);
+      clearInterval(interval);
+    };
+  }, [location]);
 
   // Update profile path with current user ID
   const updatedNavItems = navItems.map(item => 
@@ -25,6 +55,11 @@ const BottomNav = () => {
 
   // Hide bottom navigation only in actual chat and call routes
   if ((location.startsWith('/messages/') && location !== '/messages') || location.startsWith('/call/')) {
+    return null;
+  }
+
+  // Hide bottom navigation when mobile comment modal is open
+  if (isMobileModalOpen) {
     return null;
   }
 
