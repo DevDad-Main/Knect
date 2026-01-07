@@ -265,12 +265,31 @@ export default function PostDetails() {
           <div className="text-center py-8">
             <button
               onClick={() => setShowMobileComments(true)}
-              className="bg-primary rounded-xl border border-secondary px-6 py-4 text-primary hover:shadow-md transition-shadow"
+              className="relative group mx-auto w-20 h-20 bg-gradient-to-br from-indigo-500/10 to-purple-600/10 dark:from-indigo-500/20 dark:to-purple-600/20 rounded-full border-2 border-indigo-500/30 hover:border-indigo-500/60 transition-all duration-300 hover:scale-110 flex items-center justify-center backdrop-blur-sm"
             >
-              <MessageCircle className="w-6 h-6 mx-auto mb-2 text-indigo-600" />
-              <p className="font-medium">View Comments</p>
-              <p className="text-tertiary text-sm">{comments.length} {comments.length === 1 ? 'comment' : 'comments'}</p>
+              {/* Animated ring effect */}
+              <div className="absolute inset-0 rounded-full border-2 border-indigo-500/20 animate-pulse"></div>
+              
+              {/* Icon with animation */}
+              <MessageCircle className="w-8 h-8 text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-transform duration-300 relative z-10" />
+              
+              {/* Comment count badge */}
+              {comments.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-lg z-20">
+                  {comments.length > 99 ? '99+' : comments.length}
+                </span>
+              )}
             </button>
+            
+            <p className="mt-4 font-medium text-primary text-lg">
+              {comments.length === 0 ? 'Start the conversation' : 
+               comments.length === 1 ? 'Join the discussion' : 
+               'Join the discussion'}
+            </p>
+            <p className="text-tertiary text-sm">
+              {comments.length === 0 ? 'Be the first to comment' : 
+               `${comments.length} ${comments.length === 1 ? 'person has' : 'people have'} commented`}
+            </p>
           </div>
         )}
       </div>
