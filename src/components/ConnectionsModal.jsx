@@ -16,23 +16,35 @@ const ConnectionsModal = ({
   isOpen,
   onClose,
   userId,
-  initialTab = "followers",
-  isOwnProfile = false
+  initialTab = "Followers",
+  isOwnProfile = false,
 }) => {
   const [user, setUser] = useState(null);
   const [currentTab, setCurrentTab] = useState(initialTab);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  /*
+
+Add search with debounce
+
+Add infinite scroll
+
+Add virtualized list
+
+Add keyboard navigation
+
+Convert to route-based drawer (/connections)
+  */
+
   const fetchConnections = async () => {
     try {
       setLoading(true);
-      const endpoint = isOwnProfile ? "v1/auth/connections" : `v1/auth/user-connections/${userId}`;
+      const endpoint = isOwnProfile
+        ? "v1/auth/connections"
+        : `v1/auth/user-connections/${userId}`;
       const data = await fetchData(endpoint);
-
-      if (data) {
-        setUser(data);
-      }
+      if (data) setUser(data);
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -40,68 +52,35 @@ const ConnectionsModal = ({
     }
   };
 
-  const handleUnfollow = async (targetUserId) => {
+  const handleUnfollow = async (id) => {
     try {
-      const data = await updateData("v1/auth/unfollow", { id: targetUserId });
-
-      if (data) {
-        setUser(prev => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            following: prev.following?.filter(u => u._id !== targetUserId) || []
-          };
-        });
-        fetchConnections();
-      }
-    } catch (error) {
-      toast.error(error.message);
+      await updateData("v1/auth/unfollow", { id });
+      fetchConnections();
+    } catch (e) {
+      toast.error(e.message);
     }
   };
 
-  const acceptConnection = async (targetUserId) => {
+  const acceptConnection = async (id) => {
     try {
-      const data = await updateData("v1/auth/accept", { id: targetUserId });
-
-      if (data) {
-        setUser(prev => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            pendingConnections: prev.pendingConnections?.filter(u => u._id !== targetUserId) || [],
-            connections: [...(prev.connections || []), prev.pendingConnections?.find(u => u._id === targetUserId)].filter(Boolean)
-          };
-        });
-        fetchConnections();
-      } else {
-        toast.error("Failed to accept connection");
-      }
-    } catch (error) {
-      toast.error(error.message);
+      await updateData("v1/auth/accept", { id });
+      fetchConnections();
+    } catch (e) {
+      toast.error(e.message);
     }
   };
 
   useEffect(() => {
-    if (isOpen && userId) {
-      fetchConnections();
-    }
+    if (isOpen && userId) fetchConnections();
   }, [isOpen, userId]);
 
-  const dataArray = [
-    {
-      label: "Followers",
-      value: user?.followers || [],
-      icon: Users,
-    },
-    {
-      label: "Following",
-      value: user?.following || [],
-      icon: UserCheck,
-    },
+  const tabs = [
+    { label: "Followers", value: user?.followers || [], icon: Users },
+    { label: "Following", value: user?.following || [], icon: UserCheck },
   ];
 
   if (isOwnProfile) {
-    dataArray.push(
+    tabs.push(
       {
         label: "Pending",
         value: user?.pendingConnections || [],
@@ -117,117 +96,148 @@ const ConnectionsModal = ({
 
   if (!isOpen) return null;
 
+  const activeTab = tabs.find((t) => t.label === currentTab);
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-primary rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-50">
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <div
+        className={`absolute right-0 top-0 h-full w-full max-w-md bg-primary shadow-2xl flex flex-col transition-transform duration-300
+          ${isOpen ? "translate-x-0" : "translate-x-full"}
+        `}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-secondary">
-          <h2 className="text-2xl font-bold text-primary">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-secondary">
+          <h2 className="text-lg font-semibold">
             {isOwnProfile ? "Your Connections" : "User Connections"}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-tertiary transition-colors"
+            className="p-2 rounded-lg hover:bg-secondary transition"
           >
             <X className="w-5 h-5 text-tertiary" />
           </button>
         </div>
 
-        {loading ? (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
-        ) : (
-          <>
-            {/* Tabs */}
-            <div className="inline-flex flex-wrap items-center border border-secondary rounded-md p-1 m-6 bg-primary shadow-sm">
-              {dataArray.map((tab) => (
-                <button
-                  onClick={() => setCurrentTab(tab.label)}
-                  key={tab.label}
-                  className={`cursor-pointer flex items-center px-3 py-1 text-sm rounded-md transition-colors ${currentTab === tab.label ? "bg-tertiary font-medium text-primary" : "text-tertiary hover:text-primary"}`}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="ml-1">{tab.label}</span>
-                  <span className="ml-2 text-xs bg-gray100 text-gray-700 px-2 py-0.5 rounded-full">
-                    {tab.value.length}
-                  </span>
-                </button>
-              ))}
-            </div>
-
-            {/* Users List */}
-            <div className="px-6 pb-6 max-h-96 overflow-y-auto">
-              <div className="flex flex-wrap gap-6">
-                {(() => {
-                  const currentTabData = dataArray.find((item) => item.label === currentTab);
-                  if (!currentTabData || !currentTabData.value || currentTabData.value.length === 0) {
-                    return (
-                      <div className="flex items-center justify-center w-full py-8">
-                        <p className="text-tertiary">No {currentTab.toLowerCase()} found</p>
-                      </div>
-                    );
+        {/* Tabs */}
+        <div className="px-4 py-3 border-b border-secondary">
+          <div className="bg-secondary rounded-xl p-1 flex w-full">
+            {tabs.map((tab) => (
+              <button
+                key={tab.label}
+                onClick={() => setCurrentTab(tab.label)}
+                className={`flex-1 flex items-center justify-center gap-1 px-2 py-2 text-xs font-medium rounded-lg transition
+                  ${currentTab === tab.label
+                    ? "bg-indigo-600 text-white"
+                    : "text-tertiary hover:text-primary"
                   }
-                  return currentTabData.value.map((userItem) => (
-                    <div
-                      key={userItem._id}
-                      className="w-full max-w-88 flex gap-5 p-6 bg-primary shadow rounded-md border border-secondary"
-                    >
-                      {userItem?.profile_photo ? (
-                        <img
-                          src={userItem.profile_photo}
-                          alt=""
-                          className="mt-6 rounded-full w-16 h-16 shadow-md mx-auto object-cover"
-                        />
-                      ) : (
-                        <UserIcon className=" mt-6 rounded-full w-16 h-16 shadow-md mx-auto" />
-                      )}
+                `}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+                <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">
+                  {tab.value.length}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-                      <div className="flex-1">
-                        <p className="font-medium text-primary">{userItem.full_name}</p>
-                        <p className="text-tertiary">@{userItem.username}</p>
-                        <p className="text-tertiary">{userItem.bio?.slice(0, 30) || ''}...</p>
-                        <div className="flex max-sm:flex-col gap-2 mt-4">
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4">
+          {loading ? (
+            <div className="flex justify-center items-center h-40">
+              <div className="animate-spin h-8 w-8 rounded-full border-b-2 border-primary" />
+            </div>
+          ) : !activeTab || activeTab.value.length === 0 ? (
+            <div className="text-center py-16">
+              <UserIcon className="w-12 h-12 mx-auto text-tertiary mb-3" />
+              <p className="text-tertiary">
+                No {currentTab.toLowerCase()} found
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {activeTab.value.map((userItem) => (
+                <div
+                  key={userItem._id}
+                  className="border border-secondary rounded-xl p-4 hover:bg-secondary/40 transition"
+                >
+                  <div className="flex gap-3">
+                    {userItem.profile_photo ? (
+                      <img
+                        src={userItem.profile_photo}
+                        alt=""
+                        className="w-11 h-11 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center">
+                        <UserIcon className="w-5 h-5 text-tertiary" />
+                      </div>
+                    )}
+
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold truncate">
+                        {userItem.full_name}
+                      </p>
+                      <p className="text-sm text-tertiary">
+                        @{userItem.username}
+                      </p>
+
+                      {/* Actions */}
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        <button
+                          onClick={() =>
+                            navigate(`/profile/${userItem._id}`)
+                          }
+                          className="px-3 py-1.5 text-xs rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                        >
+                          View
+                        </button>
+
+                        {isOwnProfile && currentTab === "Following" && (
                           <button
-                            onClick={() => navigate(`/profile/${userItem._id}`)}
-                            className="w-full p-2 text-sm rounded accent-gradient hover:opacity-90 active:scale-95 transition text-white cursor-pointer"
+                            onClick={() => handleUnfollow(userItem._id)}
+                            className="px-3 py-1.5 text-xs rounded-lg bg-secondary hover:bg-tertiary transition"
                           >
-                            View Profile
+                            Unfollow
                           </button>
-                          {isOwnProfile && currentTab === "Following" && (
-                            <button
-                              onClick={() => handleUnfollow(userItem._id)}
-                              className="w-full p-2 text-sm rounded bg-tertiary hover:bg-quaternary text-primary active:scale-95 transition cursor-pointer"
-                            >
-                              Unfollow
-                            </button>
-                          )}
-                          {isOwnProfile && currentTab === "Pending" && (
-                            <button
-                              onClick={() => acceptConnection(userItem._id)}
-                              className="w-full p-2 text-sm rounded bg-tertiary hover:bg-quaternary text-primary active:scale-95 transition cursor-pointer"
-                            >
-                              Accept
-                            </button>
-                          )}
-                          {isOwnProfile && currentTab === "Connections" && (
-                            <button
-                              onClick={() => navigate(`/messages/${userItem._id}`)}
-                              className="w-full p-2 text-sm rounded bg-slate-100 hover:bg-slate-200 text-black active:scale-95 transition cursor-pointer flex items-center justify-center gap-1"
-                            >
-                              <MessageSquare className="w-4 h-4" />
-                              Message
-                            </button>
-                          )}
-                        </div>
+                        )}
+
+                        {isOwnProfile && currentTab === "Pending" && (
+                          <button
+                            onClick={() => acceptConnection(userItem._id)}
+                            className="px-3 py-1.5 text-xs rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+                          >
+                            Accept
+                          </button>
+                        )}
+
+                        {isOwnProfile && currentTab === "Connections" && (
+                          <button
+                            onClick={() =>
+                              navigate(`/messages/${userItem._id}`)
+                            }
+                            className="px-3 py-1.5 text-xs rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center gap-1 transition"
+                          >
+                            <MessageSquare className="w-4 h-4" />
+                            Message
+                          </button>
+                        )}
                       </div>
                     </div>
-                  ));
-                })()}
-              </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
