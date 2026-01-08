@@ -35,7 +35,9 @@ const Profile = () => {
     if (stat === 'posts') {
       setActiveTab('posts');
     } else {
-      setConnectionsTab(stat);
+      // Convert to proper tab label format
+      const tabLabel = stat.charAt(0).toUpperCase() + stat.slice(1);
+      setConnectionsTab(tabLabel);
       setShowConnections(true);
     }
   };

@@ -1,9 +1,9 @@
 import { Calendar, MapPin, PenBox, UserIcon, Verified } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import moment from "moment";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
-const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoClick, onStatClick, activeTab }) => {
+const UserProfileInfo = ({ user, profileId, setShowEdit, onProfilePhotoClick, onStatClick }) => {
   const currentUser = useCurrentUser();
 
   return (
@@ -36,12 +36,12 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
           )}
         </div>
 
-        <div className="w-full pt-16 md:pt-0 md:pl-36 relative">
+        <div className="w-full pt-16 md:pt-0 md:pl-36 relative md:text-left text-center">
           <>
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
               {/* Mobile: Edit button first, User details second */}
               {/* Desktop: User details first, Edit button second */}
-              <div className="order-2 sm:order-1">
+              <div className="order-2 sm:order-1 md:mx-0 mx-auto">
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl font-bold text-primary">
                     {user.fullName}
@@ -63,9 +63,9 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
               )}
             </div>
           </>
-          <p className="text-secondary text-sm max-w-md mt-4">{user.bio}</p>
+          <p className="text-secondary text-sm max-w-md mt-4 md:text-left text-center">{user.bio}</p>
           {/* Location and Created At */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-tertiary mt-4">
+          <div className="flex flex-col items-center md:items-start gap-y-2 text-sm text-tertiary mt-4">
             <span className="flex items-center gap-1.5">
               <MapPin className="w-4 h-4" />
               {user.location ? user.location : "Add Location"}
@@ -80,7 +80,8 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
             </span>
           </div>
 
-          <div className="mt-6 border-t border-secondary pt-4">
+          {/* Mobile buttons section - outside the offset container for proper centering */}
+          <div className="md:hidden mt-6 border-t border-secondary pt-4">
             <div className="bg-primary rounded-xl shadow-md p-1 flex w-fit mx-auto">
 
               {/* Followers */}
@@ -120,6 +121,46 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
             </div>
           </div>
 
+          {/* Desktop buttons section - outside the offset container for proper centering */}
+          <div className="hidden md:block mt-6 border-t border-secondary pt-4 md:mt-8">
+            <div className="bg-primary rounded-xl shadow-md p-1 flex w-fit mx-auto">
+
+              {/* Followers */}
+              <button
+                onClick={() => onStatClick && onStatClick('followers')}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+              >
+                <div className="text-center">
+                  <span className="sm:text-xl font-bold block">{user.followers?.length || 0}</span>
+                  <span className="text-xs sm:text-sm">Followers</span>
+                </div>
+              </button>
+
+              {/* Following */}
+              <button
+                onClick={() => onStatClick && onStatClick('following')}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+              >
+                <div className="text-center">
+                  <span className="sm:text-xl font-bold block">{user.following?.length || 0}</span>
+                  <span className="text-xs sm:text-sm">Following</span>
+                </div>
+              </button>
+
+              {/* Connections - only show for own profile */}
+              {profileId === currentUser?._id && (
+                <button
+                  onClick={() => onStatClick && onStatClick('connections')}
+                  className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+                >
+                  <div className="text-center">
+                    <span className="sm:text-xl font-bold block">{user.connections?.length || 0}</span>
+                    <span className="text-xs sm:text-sm">Connections</span>
+                  </div>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
