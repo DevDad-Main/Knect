@@ -4,6 +4,8 @@ import { dummyUserData, dummyPostsData } from "../../assets/assets";
 
 import Loading from "../Loading";
 import UserProfileInfo from "../UserProfileInfo";
+import ConnectionsModal from "../ConnectionsModal";
+import MobileConnectionsModal from "../MobileConnectionsModal";
 import moment from "moment";
 import PostCard from "../PostCard";
 import ProfileModal from "../ProfileModal";
@@ -22,6 +24,21 @@ const Profile = () => {
   const [showEdit, setShowEdit] = useState(false);
   const [profileLoading, setProfileLoading] = useState(false);
   const [viewerImage, setViewerImage] = useState(null);
+  const [showConnections, setShowConnections] = useState(false);
+  const [connectionsTab, setConnectionsTab] = useState("followers");
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false
+  );
+
+  // Handle stat clicks
+  const handleStatClick = (stat) => {
+    if (stat === 'posts') {
+      setActiveTab('posts');
+    } else {
+      setConnectionsTab(stat);
+      setShowConnections(true);
+    }
+  };
 
   // Fetch profile by ID
   const fetchUser = useCallback(
@@ -60,6 +77,22 @@ const Profile = () => {
     }
   }, [profileId, loading, currentUser?._id, fetchUser]);
 
+  // Handle responsive design
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window !== 'undefined') {
+        setIsMobile(window.innerWidth < 1024);
+      }
+    };
+
+    // Set initial value
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   if (profileLoading) {
     return <Loading />;
   }
@@ -76,7 +109,7 @@ const Profile = () => {
     <div className="relative h-full overflow-y-scroll bg-secondary p-4 lg:p-6">
       <div className="max-w-3xl mx-auto">
         
-        {/* Profile Card */}
+{/* Profile Card */}
         <div className="bg-primary rounded-2xl shadow-lg overflow-hidden">
           {/* Cover Photo */}
           <div 
@@ -107,8 +140,11 @@ const Profile = () => {
             profileId={profileId}
             setShowEdit={setShowEdit}
             onProfilePhotoClick={() => user.profile_photo && setViewerImage(user.profile_photo)}
+            onStatClick={handleStatClick}
+            activeTab={activeTab}
           />
         </div>
+        
         {/* Tabs */}
         <div className="mt-6">
           <div className="bg-primary rounded-xl shadow-md p-1 flex max-w-md mx-auto">
@@ -182,6 +218,28 @@ const Profile = () => {
         <ImageViewer 
           imageUrl={viewerImage} 
           onClose={() => setViewerImage(null)} 
+        />
+      )}
+      
+      {/* Connections Modal - Desktop */}
+      {!isMobile && showConnections && (
+        <ConnectionsModal
+          isOpen={showConnections}
+          onClose={() => setShowConnections(false)}
+          userId={user._id}
+          initialTab={connectionsTab}
+          isOwnProfile={!profileId || profileId === currentUser?._id}
+        />
+      )}
+      
+      {/* Connections Modal - Mobile */}
+      {isMobile && (
+        <MobileConnectionsModal
+          isOpen={showConnections}
+          onClose={() => setShowConnections(false)}
+          userId={user._id}
+          initialTab={connectionsTab}
+          isOwnProfile={!profileId || profileId === currentUser?._id}
         />
       )}
     </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
-const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoClick }) => {
+const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoClick, onStatClick, activeTab }) => {
   const currentUser = useCurrentUser();
 
   return (
@@ -80,36 +80,46 @@ const UserProfileInfo = ({ user, posts, profileId, setShowEdit, onProfilePhotoCl
             </span>
           </div>
 
-          <div className="flex items-center gap-6 mt-6 border-t border-secondary pt-4">
-            {/* Posts */}
-            <div>
-              <span className="sm:text-xl font-bold text-primary">
-                {posts.length}
-              </span>
-              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
-                Posts
-              </span>
-            </div>
+          <div className="mt-6 border-t border-secondary pt-4">
+            <div className="bg-primary rounded-xl shadow-md p-1 flex w-fit mx-auto">
 
-            {/* Followers */}
-            <div>
-              <span className="sm:text-xl font-bold text-primary">
-                {user.followers.length}
-              </span>
-              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
-                Followers
-              </span>
-            </div>
-            {/* Following */}
-            <div>
-              <span className="sm:text-xl font-bold text-primary">
-                {user.following.length}
-              </span>
-              <span className="text-xs sm:text-sm text-tertiary ml-1.5">
-                Following
-              </span>
+              {/* Followers */}
+              <button
+                onClick={() => onStatClick && onStatClick('followers')}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+              >
+                <div className="text-center">
+                  <span className="sm:text-xl font-bold block">{user.followers?.length || 0}</span>
+                  <span className="text-xs sm:text-sm">Followers</span>
+                </div>
+              </button>
+
+              {/* Following */}
+              <button
+                onClick={() => onStatClick && onStatClick('following')}
+                className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+              >
+                <div className="text-center">
+                  <span className="sm:text-xl font-bold block">{user.following?.length || 0}</span>
+                  <span className="text-xs sm:text-sm">Following</span>
+                </div>
+              </button>
+
+              {/* Connections - only show for own profile */}
+              {profileId === currentUser?._id && (
+                <button
+                  onClick={() => onStatClick && onStatClick('connections')}
+                  className="flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer text-secondary hover:text-primary"
+                >
+                  <div className="text-center">
+                    <span className="sm:text-xl font-bold block">{user.connections?.length || 0}</span>
+                    <span className="text-xs sm:text-sm">Connections</span>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
+
         </div>
       </div>
     </div>
