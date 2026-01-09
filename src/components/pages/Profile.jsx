@@ -48,7 +48,7 @@ const Profile = () => {
       try {
         if (!id) return; // safeguard
         setProfileLoading(true);
-        console.log("Fetching profile for ID:", id);
+        
         const data = await getProfile(id);
 
         if (data) {
@@ -57,7 +57,7 @@ const Profile = () => {
           setLikes(data.likes || []);
         } else {
           // Handle case where data is null/undefined
-          console.log("No profile data received");
+          
         }
       } catch (error) {
         console.error("Failed to fetch profile:", error);

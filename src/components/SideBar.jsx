@@ -19,7 +19,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
     const fetchNotifications = async () => {
       try {
         const data = await getNotifications();
-        console.log("Sidebar Notifications", data);
+        
         if (data) {
           // Filter out self-generated notifications
           const filteredNotifications = (data.notifications || []).filter(

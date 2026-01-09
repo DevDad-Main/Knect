@@ -17,7 +17,7 @@ const StoriesBar = () => {
   const fetchStories = async () => {
     try {
       const data = await getStories();
-      console.log("STORY DATA", data)
+      
       if (data) setStories(data);
     } catch (error) {
       toast.error(error.message);
@@ -31,7 +31,7 @@ const StoriesBar = () => {
         fetchStories(); // refresh list
       }
     } catch (err) {
-      console.log(err);
+      
     }
   };
 

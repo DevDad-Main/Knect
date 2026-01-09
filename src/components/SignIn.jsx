@@ -81,7 +81,6 @@ function SignIn() {
   };
 
   const errorMessage = (error) => {
-    console.log(error);
     toast.error("Google login failed", {
       position: "top-center",
       autoClose: 3000,

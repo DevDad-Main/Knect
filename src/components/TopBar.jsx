@@ -17,7 +17,7 @@ const TopBar = () => {
     const fetchNotifications = async () => {
       try {
         const data = await getNotifications();
-        console.log("Notifications", data);
+        
         if (data) {
           // Filter out self-generated notifications
           const filteredNotifications = (data.notifications || []).filter(
@@ -38,12 +38,12 @@ const TopBar = () => {
 
   const signoutUser = async () => {
     try {
-      console.log("Clicked Logout button");
+      
 
       const response = await updateUser("v1/users/logout", {}, "POST");
 
       if (response) {
-        console.log("Logout response", response);
+        
         if (user?.authProvider === "google") {
           // Clears the Google OAuth session and above because if we have a success we clear the cookies as well
           googleLogout();
@@ -56,7 +56,7 @@ const TopBar = () => {
       }
     } catch (error) {
       toast.error(error.message || "Logout failed");
-      console.log(error);
+      
     }
   };
 

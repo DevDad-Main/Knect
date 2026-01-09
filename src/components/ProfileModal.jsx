@@ -50,8 +50,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
       const method = (hasExistingProfilePhoto && profilePhoto) || (hasExistingCoverPhoto && coverPhoto) ? "PUT" : "POST";
       const endpoint = "v1/media/upload-user-media";
       
-      console.log(`Using ${method} method for media upload`);
-      console.log(`Existing profile photo: ${!!hasExistingProfilePhoto}, Existing cover photo: ${!!hasExistingCoverPhoto}`);
+      
       
       const mediaData = await updateWithFormData(endpoint, mediaFormData, {}, method);
       return mediaData;
@@ -69,15 +68,14 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
     const hasProfilePhoto = editForm.profile_photo instanceof File;
     const hasCoverPhoto = editForm.cover_photo instanceof File;
 
-    console.log("hasProfilePhoto:", hasProfilePhoto, "hasCoverPhoto:", hasCoverPhoto);
-    console.log("editForm:", editForm);
+    
 
     try {
       let data;
 
       // First, handle media uploads if there are any
       if (hasProfilePhoto || hasCoverPhoto) {
-        console.log("Uploading media to /upload-user-media");
+        
         await uploadMedia(
           hasProfilePhoto ? editForm.profile_photo : null,
           hasCoverPhoto ? editForm.cover_photo : null
@@ -92,15 +90,15 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
         fullName: editForm.fullName,
       };
 
-      console.log("Updating user data with /update-user");
+      
       data = await updateUser("v1/auth/update-user", userData, "PUT");
 
-      console.log("UPDATE USER DATA", data);
+      
 
       if (data) {
         // If media was uploaded, fetch fresh user data to get the new media URLs
         if (hasProfilePhoto || hasCoverPhoto) {
-          console.log("Media uploaded, fetching fresh user data...");
+          
           const freshUserData = await fetchData("v1/auth/get-user");
           
           if (freshUserData) {
@@ -114,7 +112,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
               fullName: data.fullName || freshUserData.fullName,
             };
             
-            console.log("FINAL USER DATA WITH NEW MEDIA", finalData);
+            
             onSaved?.(finalData);
           } else {
             // Fallback: use the text update data
@@ -129,7 +127,7 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
             cover_photo: user.cover_photo,
           };
           
-          console.log("FINAL USER DATA WITH PRESERVED MEDIA", finalData);
+          
           onSaved?.(finalData);
         }
         
@@ -138,11 +136,11 @@ const ProfileModal = ({ setShowEdit, onSaved }) => {
       }
     } catch (error) {
       toast.error(error.message);
-      console.log(error);
+      
     }
   };
 
-  console.log("USER UPDATE DATA", editForm);
+  
   // fetch user once
   useEffect(() => {
     fetchUser();

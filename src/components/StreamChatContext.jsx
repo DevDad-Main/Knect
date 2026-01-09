@@ -32,14 +32,14 @@ export const StreamChatProvider = ({ children }) => {
 
       // Check if API key is available
       const apiKey = import.meta.env.VITE_STREAM_CHAT_API_KEY;
-      console.log('Stream Chat API Key available:', !!apiKey);
+      
       if (!apiKey || apiKey === 'your_stream_chat_api_key') {
         throw new Error('VITE_STREAM_CHAT_API_KEY not configured properly');
       }
 
       // Get token from backend
       const token = await getStreamChatToken();
-      console.log('Stream Chat token received:', !!token);
+      
 
       // Initialize Stream Chat client
       const client = StreamChat.getInstance(apiKey);
@@ -57,7 +57,7 @@ export const StreamChatProvider = ({ children }) => {
 
       setChatClient(client);
       setIsConnecting(false);
-      console.log('Stream Chat connected successfully');
+      
     } catch (err) {
       console.error('Failed to initialize Stream Chat:', err);
       setError(`Stream Chat Error: ${err.message}`);
@@ -70,13 +70,8 @@ export const StreamChatProvider = ({ children }) => {
     try {
       // Try the endpoint path from your backend
       const backendUrl = `${import.meta.env.VITE_BASEURL}/v1/auth/stream/chat/token`;
-      console.log('Fetching token from:', backendUrl);
-      console.log('Request body:', {
-        userId: user._id,
-        username: user.username,
-        name: user.fullName,
-        image: user.profile_photo,
-      });
+      
+      
 
       const response = await fetch(backendUrl, {
         method: 'POST',
@@ -93,17 +88,17 @@ export const StreamChatProvider = ({ children }) => {
         }),
       });
 
-      console.log('Token response status:', response.status);
-      console.log('Token response ok:', response.ok);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      
+      
+      
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Token response data:', data);
+        
         return data.data.token; // Token is nested under data.token
       } else {
         const errorText = await response.text();
-        console.error('Token endpoint error:', response.status, errorText);
+        
 
         // Try to parse error as JSON
         try {

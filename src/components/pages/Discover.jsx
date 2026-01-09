@@ -18,7 +18,7 @@ const Discover = () => {
         const data = await fetchData(`v1/auth/search?query=${encodeURIComponent(input.trim())}`);
         // const data = await updateData(`v1/search/all`, { nothing: "Hello" });
 
-        console.log("Search results:", data);
+        
         if (data) {
           setUsers(data);
         } else {

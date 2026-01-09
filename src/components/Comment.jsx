@@ -44,7 +44,7 @@ function Comment({ comment, onReply, level = 0 }) {
         window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -59,7 +59,7 @@ function Comment({ comment, onReply, level = 0 }) {
         setDislikes(data.dislikes);
       }
     } catch (error) {
-      console.log(error);
+      
     }
   };
 

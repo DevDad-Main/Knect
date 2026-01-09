@@ -50,7 +50,7 @@ function Register() {
       formDataToSend.append("cover_photo", formData.cover_photo);
     }
 
-    console.log("FormData being sent to register:", formDataToSend);
+    
 
     try {
       // Send all data to register and trigger OTP sending
@@ -65,7 +65,7 @@ function Register() {
         setShowOTP(true); // Show OTP verification component
       }
     } catch (err) {
-      console.log(err);
+      
       if (err.errors) {
         err.errors.forEach((error) =>
           toast.error(error.msg, { position: "top-center" }),

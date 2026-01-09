@@ -6,7 +6,7 @@ const AuthErrorHandler = () => {
 
   useEffect(() => {
     const handleAuthError = () => {
-      console.log("AuthErrorHandler: Redirecting to login");
+      
       navigate("/login");
     };
 

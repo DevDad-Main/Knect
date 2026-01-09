@@ -109,7 +109,7 @@ export const AppProvider = ({ children }) => {
     };
 
     const handleAuthError = () => {
-      console.log("Authentication error detected in AppContext");
+      
       setUser(null);
       setLoading(false);
     };

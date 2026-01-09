@@ -98,7 +98,7 @@ export default function PostDetails() {
         // const data = await fetchData(`v1/posts/get-post/${postId}`);
         const data = await getPost(postId);
 
-        console.log("Post data received:", data);
+        
 
         if (data) {
           setPost(data.post);
@@ -108,29 +108,29 @@ export default function PostDetails() {
             const commentMap = {};
             const topLevelComments = [];
 
-            console.log("Building nested from flat comments:", flatComments);
+            
 
             // Create a map of all comments by ID
             flatComments.forEach(comment => {
               commentMap[comment._id] = { ...comment, replies: [] };
             });
 
-            console.log("Comment map created:", commentMap);
+            
 
             // Build the nested structure
             flatComments.forEach(comment => {
               if (comment.parent === null) {
                 // Top-level comment
                 topLevelComments.push(commentMap[comment._id]);
-                console.log("Added top-level comment:", commentMap[comment._id]);
+                
               } else {
                 // Reply - find parent and add to replies
                 const parentComment = commentMap[comment.parent];
                 if (parentComment) {
                   parentComment.replies.push(commentMap[comment._id]);
-                  console.log(`Added reply ${comment._id} to parent ${comment.parent}`);
+                  
                 } else {
-                  console.log(`Warning: Could not find parent ${comment.parent} for comment ${comment._id}`);
+                  
                 }
               }
             });
@@ -148,7 +148,7 @@ export default function PostDetails() {
 
             const sortedComments = sortReplies(topLevelComments);
 
-            console.log("Final nested structure:", sortedComments);
+            
             return sortedComments;
           };
 
@@ -159,7 +159,7 @@ export default function PostDetails() {
           setCommentCount(data.post.comments.length);
         }
       } catch (error) {
-        console.log(error);
+
       }
     };
     fetchPost();
@@ -178,7 +178,7 @@ export default function PostDetails() {
         window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
-      console.log(error);
+      // Error handled silently
     }
   };
 
@@ -188,7 +188,7 @@ export default function PostDetails() {
         parentId,
         content: replyText,
       });
-      console.log("Reply data received:", data);
+      
 
       if (data) {
         // Add reply to nested structure
@@ -215,12 +215,12 @@ export default function PostDetails() {
         };
 
         const updatedComments = insertReplyIntoNested(comments);
-        console.log("Updated comments after adding reply:", updatedComments);
+        
         setComments(updatedComments);
         window.dispatchEvent(new Event("refreshNotifications"));
       }
     } catch (error) {
-      console.log(error);
+      
     }
   };
 

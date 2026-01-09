@@ -66,7 +66,7 @@ const PostCard = ({ post, onDelete }) => {
 
   const isOwner = post.user?._id === currentUser?._id;
 
-  console.log("POST", post);
+  
 
   return (
     <div className="bg-primary rounded-xl shadow-lg p-4 space-y-4 w-full max-w-2xl relative hover:shadow-xl transition-all duration-200 ">
