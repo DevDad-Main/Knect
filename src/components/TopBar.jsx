@@ -19,7 +19,11 @@ const TopBar = () => {
         const data = await getNotifications();
         console.log("Notifications", data);
         if (data) {
-          setNotifications(data.notifications || []);
+          // Filter out self-generated notifications
+          const filteredNotifications = (data.notifications || []).filter(
+            (notification) => notification.fromUser._id !== user?._id
+          );
+          setNotifications(filteredNotifications);
         }
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
@@ -30,7 +34,7 @@ const TopBar = () => {
     const refresh = () => fetchNotifications();
     window.addEventListener("refreshNotifications", refresh);
     return () => window.removeEventListener("refreshNotifications", refresh);
-  }, [getNotifications]);
+  }, [getNotifications, user?._id]);
 
   const signoutUser = async () => {
     try {

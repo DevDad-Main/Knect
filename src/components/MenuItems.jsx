@@ -8,7 +8,7 @@ const MenuItems = ({ setSideBarOpen }) => {
   const menuItemsData = [
     { to: "/feed", label: "Feed", Icon: Home },
     { to: "/messages", label: "Messages", Icon: MessageCircle },
-    { to: "/connections", label: "Connections", Icon: Users },
+    // { to: "/connections", label: "Connections", Icon: Users },
     { to: "/discover", label: "Discover", Icon: Search },
     {
       to: `/profile/${currentUser?._id || ""}`, // your profile

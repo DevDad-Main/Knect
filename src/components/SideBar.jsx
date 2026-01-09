@@ -10,10 +10,33 @@ import { googleLogout } from "@react-oauth/google";
 
 const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
   const [notifications, setNotifications] = useState([]);
-  const { user, updateUser } = useApp();
+  const { user, updateUser, getNotifications } = useApp();
   const location = useLocation();
   const unreadCount = notifications.filter((n) => !n.read).length;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const data = await getNotifications();
+        console.log("Sidebar Notifications", data);
+        if (data) {
+          // Filter out self-generated notifications
+          const filteredNotifications = (data.notifications || []).filter(
+            (notification) => notification.fromUser._id !== user?._id
+          );
+          setNotifications(filteredNotifications);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+    const refresh = () => fetchNotifications();
+    window.addEventListener("refreshNotifications", refresh);
+    return () => window.removeEventListener("refreshNotifications", refresh);
+  }, [getNotifications, user?._id]);
 
   const signoutUser = async () => {
     try {
@@ -75,16 +98,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
 
         <MenuItems setSideBarOpen={setSideBarOpen} />
 
-        <Link
-          to="/create-post"
-          className="flex items-center justify-center gap-2 py-2.5 mt-6 mx-6 rounded-lg
-          bg-gradient-to-r from-indigo-500 to-purple-600
-          hover:from-indigo-700 hover:to-purple-800
-          active:scale-95 transition text-white cursor-pointer"
-        >
-          <CirclePlus className="w-5 h-5" />
-          Create Post
-        </Link>
+
       </div>
 
       {/* Bottom user section (now stays pinned) */}
@@ -115,7 +129,7 @@ const SideBar = ({ sideBarOpen, setSideBarOpen }) => {
           className="w-4.5 text-tertiary hover:text-primary transition cursor-pointer"
         />
       </div>
-    </div>
+    </div >
   );
 };
 

@@ -23,7 +23,13 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     try {
       const data = await getNotifications();
-      if (data) setNotifications(data.notifications || []);
+      if (data) {
+        // Filter out self-generated notifications
+        const filteredNotifications = (data.notifications || []).filter(
+          (notification) => notification.fromUser._id !== user?._id
+        );
+        setNotifications(filteredNotifications);
+      }
     } catch (err) {
       console.error(err);
     }

@@ -3,6 +3,8 @@ import { assets } from "../../assets/assets";
 import Loading from "../Loading";
 import StoriesBar from "../StoriesBar";
 import PostCard from "../PostCard";
+import CreatePostBox from "../CreatePostBox";
+import { useIsMobile } from "../../hooks/use-mobile";
 
 import { useApp } from "../AppContext";
 import toast from "react-hot-toast";
@@ -14,6 +16,11 @@ const Feed = () => {
   const [loading, setLoading] = useState(false);
 
   const { getPosts } = useApp();
+  const isMobile = useIsMobile();
+
+  const handlePostCreated = (newPost) => {
+    setFeeds((prev) => [newPost, ...prev]);
+  };
 
   const fetchFeeds = useCallback(async () => {
     if (!hasMore || loading) return;
@@ -62,6 +69,8 @@ const Feed = () => {
       {/* Stories and List of Posts */}
       <div>
         <StoriesBar />
+        {/* Create Post Box - Desktop Only */}
+        {!isMobile && <CreatePostBox onPostCreated={handlePostCreated} />}
         <div className="p-4 space-y-6">
           {feeds.map((post) => (
             <PostCard key={post._id} post={post} />
@@ -90,7 +99,7 @@ const Feed = () => {
           </p>
         </div>
 
-        
+
       </div>
     </div>
   );
